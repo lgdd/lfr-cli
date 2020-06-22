@@ -1,7 +1,6 @@
 package gen
 
 import (
-	"github.com/iancoleman/strcase"
 	"github.com/lgdd/deba/util"
 	"os"
 	"path/filepath"
@@ -152,7 +151,7 @@ func createGradleFiles(base string, version string) error {
 }
 
 func updateGradleProps(base, version string) error {
-	project, err := util.GetProject(version)
+	project, err := util.NewProjectMetadata(base, version)
 	if err != nil {
 		return err
 	}
@@ -203,13 +202,10 @@ func createMavenFiles(base, version string) error {
 }
 
 func updatePoms(base, version string) error {
-	project, err := util.GetProject(version)
+	project, err := util.NewProjectMetadata(base, version)
 	if err != nil {
 		return err
 	}
-	project.GroupId = strcase.ToDelimited(base, '.')
-	project.ArtifactId = base
-	project.Name = strcase.ToCamel(base)
 
 	poms := []string{
 		filepath.Join(base, "pom.xml"),

@@ -35,7 +35,7 @@ func CopyPkgedFile(sourcePath, destPath string, wg *sync.WaitGroup) {
 	}
 }
 
-func UpdateFile(pomPath string, metadata *Project) error {
+func UpdateFile(pomPath string, metadata *ProjectMetadata) error {
 	pomContent, err := ioutil.ReadFile(pomPath)
 	if err != nil {
 		return err
