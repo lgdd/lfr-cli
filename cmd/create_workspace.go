@@ -7,7 +7,6 @@ import (
 	"github.com/spf13/cobra"
 	"os"
 	"runtime"
-	"time"
 )
 
 var (
@@ -21,14 +20,12 @@ var (
 
 func run(cmd *cobra.Command, args []string) {
 	name := args[0]
-	start := time.Now()
 	err := gen.CreateWorkspace(name, Build, Version)
 	if err != nil {
 		util.PrintError(err.Error())
 		os.Exit(1)
 	}
-	util.PrintSuccess(fmt.Sprintf("Successfully created a Liferay Workspace '%s' in %.2fms",
-		name, float64(time.Since(start))/float64(time.Millisecond)))
+	util.PrintSuccess(fmt.Sprintf("Successfully created a Liferay Workspace '%s' ", name))
 	printInitCmd(name, Build)
 }
 

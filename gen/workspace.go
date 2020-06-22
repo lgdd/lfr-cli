@@ -5,6 +5,7 @@ import (
 	"github.com/lgdd/deba/util"
 	"os"
 	"path/filepath"
+	"sync"
 )
 
 const (
@@ -43,6 +44,7 @@ func CreateWorkspace(base, build, version string) error {
 }
 
 func createCommonDirs(base string) error {
+	var wg sync.WaitGroup
 	dirs := []string{
 		filepath.Join("gradle", "wrapper"),
 		filepath.Join("configs", "common"),
@@ -56,12 +58,11 @@ func createCommonDirs(base string) error {
 		"wars"}
 
 	for _, dir := range dirs {
-		err := os.MkdirAll(filepath.Join(base, dir), os.ModePerm)
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go createDirs(filepath.Join(base, dir), &wg)
 	}
 
+	wg.Wait()
 	return nil
 }
 
@@ -76,24 +77,19 @@ func createCommonFiles(base string) error {
 		"/tpl/ws/configs/prod/es.config":              filepath.Join(base, "configs", "prod", "osgi", "configs", "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration.config"),
 	}
 
+	var wg sync.WaitGroup
 	for source, dest := range files {
-		err := util.CopyPkgedFile(source, dest)
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go util.CopyPkgedFile(source, dest, &wg)
 	}
+	wg.Wait()
 
 	emptyFiles := []string{
 		filepath.Join(base, "configs", "common", ".touch"),
 		filepath.Join(base, "configs", "docker", ".touch"),
 	}
 
-	for _, emptyFile := range emptyFiles {
-		_, err := os.Create(emptyFile)
-		if err != nil {
-			return err
-		}
-	}
+	createFiles(emptyFiles)
 
 	return nil
 }
@@ -121,19 +117,14 @@ func createGradleFiles(base string, version string) error {
 		filepath.Join(base, "build.gradle"),
 	}
 
+	var wg sync.WaitGroup
 	for source, dest := range files {
-		err := util.CopyPkgedFile(source, dest)
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go util.CopyPkgedFile(source, dest, &wg)
 	}
+	wg.Wait()
 
-	for _, emptyFile := range emptyFiles {
-		_, err := os.Create(emptyFile)
-		if err != nil {
-			return err
-		}
-	}
+	createFiles(emptyFiles)
 
 	err = os.Chmod(filepath.Join(base, "gradlew"), 0774)
 
@@ -179,12 +170,12 @@ func createMavenFiles(base, version string) error {
 		"/tpl/ws/maven/wars-pom.xml":             filepath.Join(base, "wars", "pom.xml"),
 	}
 
+	var wg sync.WaitGroup
 	for source, dest := range files {
-		err := util.CopyPkgedFile(source, dest)
-		if err != nil {
-			return err
-		}
+		wg.Add(1)
+		go util.CopyPkgedFile(source, dest, &wg)
 	}
+	wg.Wait()
 
 	err = os.Chmod(filepath.Join(base, "mvnw"), 0774)
 
@@ -224,4 +215,31 @@ func updatePoms(base, version string) error {
 	}
 
 	return nil
+}
+
+func createDirs(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	err := os.MkdirAll(path, os.ModePerm)
+	if err != nil {
+		util.PrintError(err.Error())
+		os.Exit(1)
+	}
+}
+
+func createFiles(paths []string) {
+	var wg sync.WaitGroup
+	for _, path := range paths {
+		wg.Add(1)
+		go createFile(path, &wg)
+	}
+	wg.Wait()
+}
+
+func createFile(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	_, err := os.Create(path)
+	if err != nil {
+		util.PrintError(err.Error())
+		os.Exit(1)
+	}
 }
