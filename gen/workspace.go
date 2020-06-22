@@ -5,6 +5,7 @@ import (
 	"github.com/lgdd/deba/util"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 )
 
@@ -67,14 +68,24 @@ func createCommonDirs(base string) error {
 }
 
 func createCommonFiles(base string) error {
+	esConfigFilename := strings.Join([]string{
+		"com",
+		"liferay",
+		"portal",
+		"search",
+		"elasticsearch",
+		"configuration",
+		"ElasticsearchConfiguration",
+		"config",
+	}, ".")
 	files := map[string]string{
 		"/tpl/ws/gitignore":                           filepath.Join(base, ".gitignore"),
 		"/tpl/ws/configs/dev/portal-ext.properties":   filepath.Join(base, "configs", "dev", "portal-ext.properties"),
 		"/tpl/ws/configs/local/portal-ext.properties": filepath.Join(base, "configs", "local", "portal-ext.properties"),
 		"/tpl/ws/configs/uat/portal-ext.properties":   filepath.Join(base, "configs", "uat", "portal-ext.properties"),
 		"/tpl/ws/configs/prod/portal-ext.properties":  filepath.Join(base, "configs", "prod", "portal-ext.properties"),
-		"/tpl/ws/configs/uat/es.config":               filepath.Join(base, "configs", "uat", "osgi", "configs", "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration.config"),
-		"/tpl/ws/configs/prod/es.config":              filepath.Join(base, "configs", "prod", "osgi", "configs", "com.liferay.portal.search.elasticsearch.configuration.ElasticsearchConfiguration.config"),
+		"/tpl/ws/configs/uat/es.config":               filepath.Join(base, "configs", "uat", "osgi", "configs", esConfigFilename),
+		"/tpl/ws/configs/prod/es.config":              filepath.Join(base, "configs", "prod", "osgi", "configs", esConfigFilename),
 	}
 
 	var wg sync.WaitGroup
@@ -164,10 +175,10 @@ func createMavenFiles(base, version string) error {
 		"/tpl/ws/maven/maven-wrapper.jar":        filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.jar"),
 		"/tpl/ws/maven/mvnw":                     filepath.Join(base, "mvnw"),
 		"/tpl/ws/maven/mvnw.cmd":                 filepath.Join(base, "mvnw.cmd"),
-		"/tpl/ws/maven/parent-pom.xml":           filepath.Join(base, "pom.xml"),
-		"/tpl/ws/maven/modules-pom.xml":          filepath.Join(base, "modules", "pom.xml"),
-		"/tpl/ws/maven/themes-pom.xml":           filepath.Join(base, "themes", "pom.xml"),
-		"/tpl/ws/maven/wars-pom.xml":             filepath.Join(base, "wars", "pom.xml"),
+		"/tpl/ws/maven/pom.xml":                  filepath.Join(base, "pom.xml"),
+		"/tpl/ws/maven/modules/pom.xml":          filepath.Join(base, "modules", "pom.xml"),
+		"/tpl/ws/maven/themes/pom.xml":           filepath.Join(base, "themes", "pom.xml"),
+		"/tpl/ws/maven/wars/pom.xml":             filepath.Join(base, "wars", "pom.xml"),
 	}
 
 	var wg sync.WaitGroup
