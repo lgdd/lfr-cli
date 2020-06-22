@@ -3,11 +3,11 @@ package util
 import (
 	"bytes"
 	"github.com/markbates/pkger"
-	"html/template"
 	"io"
 	"io/ioutil"
 	"os"
 	"sync"
+	"text/template"
 )
 
 func CopyPkgedFile(sourcePath, destPath string, wg *sync.WaitGroup) {
