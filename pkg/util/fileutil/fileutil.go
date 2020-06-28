@@ -2,12 +2,15 @@ package fileutil
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/lgdd/deba/pkg/project"
 	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/markbates/pkger"
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
+	"strings"
 	"sync"
 	"text/template"
 )
@@ -61,3 +64,85 @@ func UpdateWithData(pomPath string, metadata *project.Metadata) error {
 
 	return nil
 }
+
+func VerifyCurrentDirAsWorkspace(build string) bool {
+	files := make(map[string]void)
+	dir, err := os.Getwd()
+
+	if err != nil {
+		printutil.Error(err.Error())
+		os.Exit(1)
+	}
+
+	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		files[strings.Split(path, dir)[1]] = void{}
+		return nil
+	})
+
+	if err != nil {
+		printutil.Error(err.Error())
+		os.Exit(1)
+	}
+
+	switch {
+	case build == project.Gradle && isGradleWorkspace(files):
+		return true
+	case build == project.Maven && isMavenWorkspace(files):
+		return true
+	case build == project.Gradle && isMavenWorkspace(files):
+		printutil.Warning("Oops! It looks like you're trying to do Gradle stuff in a Maven workspace.")
+		fmt.Print("Try again with the flag: ")
+		printutil.Info("-b maven")
+		os.Exit(1)
+	case build == project.Maven && isGradleWorkspace(files):
+		printutil.Warning("Oops! It looks like you're trying to do Maven stuff in a Gradle workspace.")
+		fmt.Print("Try again with the flag: ")
+		printutil.Info("-b gradle")
+		fmt.Print("or without the flag: ")
+		printutil.Info("-b maven")
+		os.Exit(1)
+	}
+	return false
+}
+
+func isGradleWorkspace(files map[string]void) bool {
+	sep := string(os.PathSeparator)
+	expectedFiles := []string{
+		sep + "configs",
+		sep + "modules",
+		sep + "themes",
+		sep + "wars",
+		sep + "gradle.properties",
+		sep + "settings.gradle",
+		sep + "gradle" + sep + "wrapper",
+		sep + "build.gradle",
+		sep + "gradlew",
+	}
+	for _, expectedFile := range expectedFiles {
+		if _, ok := files[expectedFile]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+func isMavenWorkspace(files map[string]void) bool {
+	sep := string(os.PathSeparator)
+	expectedFiles := []string{
+		sep + "configs",
+		sep + "modules" + sep + "pom.xml",
+		sep + "themes" + sep + "pom.xml",
+		sep + "wars" + sep + "pom.xml",
+		sep + ".mvn" + sep + "wrapper",
+		sep + "pom.xml",
+		sep + "mvnw",
+	}
+	for _, expectedFile := range expectedFiles {
+		if _, ok := files[expectedFile]; !ok {
+			return false
+		}
+	}
+	return true
+}
+
+type void struct{}

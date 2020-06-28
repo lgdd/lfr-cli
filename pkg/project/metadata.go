@@ -15,6 +15,11 @@ type Metadata struct {
 	Name           string
 }
 
+const (
+	Gradle string = "gradle"
+	Maven         = "maven"
+)
+
 func NewMetadata(base, version string) (*Metadata, error) {
 	switch version {
 	case "7.3":

@@ -3,6 +3,8 @@ package create
 import (
 	"fmt"
 	"github.com/lgdd/deba/pkg/generate/workspace"
+	"github.com/lgdd/deba/pkg/project"
+	"github.com/lgdd/deba/pkg/util/fileutil"
 	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/spf13/cobra"
 	"os"
@@ -19,6 +21,7 @@ var (
 )
 
 func run(cmd *cobra.Command, args []string) {
+	fileutil.VerifyCurrentDirAsWorkspace(Build)
 	name := args[0]
 	err := workspace.Generate(name, Build, Version)
 	if err != nil {
@@ -33,16 +36,16 @@ func printInitCmd(name, build string) {
 	fmt.Println("\nInitialize your Liferay bundle:")
 	if runtime.GOOS == "windows" {
 		switch build {
-		case workspace.Gradle:
+		case project.Gradle:
 			printutil.Info(fmt.Sprintf("cd %s && gradlew.bat initBundle", name))
-		case workspace.Maven:
+		case project.Maven:
 			printutil.Info(fmt.Sprintf("cd %s && mvnw.cmd bundle-support:init", name))
 		}
 	} else {
 		switch build {
-		case workspace.Gradle:
+		case project.Gradle:
 			printutil.Info(fmt.Sprintf("cd %s && ./gradlew initBundle", name))
-		case workspace.Maven:
+		case project.Maven:
 			printutil.Info(fmt.Sprintf("cd %s && ./mvnw bundle-support:init", name))
 		}
 	}
