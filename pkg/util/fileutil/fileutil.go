@@ -1,7 +1,9 @@
-package util
+package fileutil
 
 import (
 	"bytes"
+	"github.com/lgdd/deba/pkg/project"
+	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/markbates/pkger"
 	"io"
 	"io/ioutil"
@@ -10,11 +12,11 @@ import (
 	"text/template"
 )
 
-func CopyPkgedFile(sourcePath, destPath string, wg *sync.WaitGroup) {
+func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	source, err := pkger.Open(sourcePath)
 	if err != nil {
-		PrintError(err.Error())
+		printutil.Error(err.Error())
 		os.Exit(1)
 	}
 
@@ -22,7 +24,7 @@ func CopyPkgedFile(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 	dest, err := os.Create(destPath)
 	if err != nil {
-		PrintError(err.Error())
+		printutil.Error(err.Error())
 		os.Exit(1)
 	}
 
@@ -30,12 +32,12 @@ func CopyPkgedFile(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 	_, err = io.Copy(dest, source)
 	if err != nil {
-		PrintError(err.Error())
+		printutil.Error(err.Error())
 		os.Exit(1)
 	}
 }
 
-func UpdateFile(pomPath string, metadata *ProjectMetadata) error {
+func UpdateWithData(pomPath string, metadata *project.Metadata) error {
 	pomContent, err := ioutil.ReadFile(pomPath)
 	if err != nil {
 		return err

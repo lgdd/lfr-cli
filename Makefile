@@ -1,3 +1,3 @@
 default:
-	pkger -include /tpl
+	pkger -include /assets
 	go install github.com/lgdd/deba

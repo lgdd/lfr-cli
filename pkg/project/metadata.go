@@ -1,11 +1,11 @@
-package util
+package project
 
 import (
 	"fmt"
 	"github.com/iancoleman/strcase"
 )
 
-type ProjectMetadata struct {
+type Metadata struct {
 	BundleUrl      string
 	TomcatVersion  string
 	TargetPlatform string
@@ -15,10 +15,10 @@ type ProjectMetadata struct {
 	Name           string
 }
 
-func NewProjectMetadata(base, version string) (*ProjectMetadata, error) {
+func NewMetadata(base, version string) (*Metadata, error) {
 	switch version {
 	case "7.3":
-		return &ProjectMetadata{
+		return &Metadata{
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.3.2-ga3/liferay-ce-portal-tomcat-7.3.2-ga3-20200519164024819.tar.gz",
 			TomcatVersion:  "9.0.33",
 			TargetPlatform: "7.3.2",
@@ -28,7 +28,7 @@ func NewProjectMetadata(base, version string) (*ProjectMetadata, error) {
 			Name : strcase.ToCamel(base),
 		}, nil
 	case "7.2":
-		return &ProjectMetadata{
+		return &Metadata{
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.tar.gz",
 			TomcatVersion:  "9.0.17",
 			TargetPlatform: "7.2.1",
@@ -38,7 +38,7 @@ func NewProjectMetadata(base, version string) (*ProjectMetadata, error) {
 			Name : strcase.ToCamel(base),
 		}, nil
 	case "7.1":
-		return &ProjectMetadata{
+		return &Metadata{
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.tar.gz",
 			TomcatVersion:  "9.0.17",
 			TargetPlatform: "7.1.3",
@@ -48,7 +48,7 @@ func NewProjectMetadata(base, version string) (*ProjectMetadata, error) {
 			Name : strcase.ToCamel(base),
 		}, nil
 	case "7.0":
-		return &ProjectMetadata{
+		return &Metadata{
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip",
 			TomcatVersion:  "8.0.32",
 			TargetPlatform: "7.0.6",

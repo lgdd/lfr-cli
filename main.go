@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/lgdd/deba/cmd"
+	"github.com/lgdd/deba/pkg/cmd"
 	"os"
 )
 

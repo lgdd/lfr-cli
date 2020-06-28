@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/lgdd/deba/pkg/cmd/create"
+	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/spf13/cobra"
 )
 
@@ -10,7 +12,8 @@ var deba = &cobra.Command{
 }
 
 func init() {
-	deba.AddCommand(create)
+	deba.AddCommand(create.Cmd)
+	deba.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "--no-color (disable color output)")
 }
 
 func Execute() error {
