@@ -3,7 +3,6 @@ package create
 import (
 	"fmt"
 	"github.com/lgdd/deba/pkg/generate/workspace"
-	"github.com/lgdd/deba/pkg/util/fileutil"
 	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/spf13/cobra"
 	"os"
