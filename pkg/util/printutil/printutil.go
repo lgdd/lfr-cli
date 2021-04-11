@@ -12,27 +12,27 @@ var (
 func Info(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgCyan)
-	fmt.Println(msg)
+	fmt.Print(msg)
 	color.Unset()
 }
 
 func Warning(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgYellow)
-	fmt.Println(msg)
+	fmt.Print(msg)
 	color.Unset()
 }
 
 func Error(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgRed)
-	fmt.Println(msg)
+	fmt.Print(msg)
 	color.Unset()
 }
 
 func Success(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgGreen)
-	fmt.Println(msg)
+	fmt.Print(msg)
 	color.Unset()
 }

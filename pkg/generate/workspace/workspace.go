@@ -1,13 +1,15 @@
 package workspace
 
 import (
-	"github.com/lgdd/deba/pkg/project"
-	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	"github.com/lgdd/deba/pkg/project"
+	"github.com/lgdd/deba/pkg/util/fileutil"
+	"github.com/lgdd/deba/pkg/util/printutil"
 )
 
 const (
@@ -80,13 +82,13 @@ func createCommonFiles(base string) error {
 		"config",
 	}, ".")
 	files := map[string]string{
-		"/assets/ws/gitignore":                           filepath.Join(base, ".gitignore"),
-		"/assets/ws/configs/dev/portal-ext.properties":   filepath.Join(base, "configs", "dev", "portal-ext.properties"),
-		"/assets/ws/configs/local/portal-ext.properties": filepath.Join(base, "configs", "local", "portal-ext.properties"),
-		"/assets/ws/configs/uat/portal-ext.properties":   filepath.Join(base, "configs", "uat", "portal-ext.properties"),
-		"/assets/ws/configs/prod/portal-ext.properties":  filepath.Join(base, "configs", "prod", "portal-ext.properties"),
-		"/assets/ws/configs/uat/es.config":               filepath.Join(base, "configs", "uat", "osgi", "configs", esConfigFilename),
-		"/assets/ws/configs/prod/es.config":              filepath.Join(base, "configs", "prod", "osgi", "configs", esConfigFilename),
+		"tmpl/ws/gitignore":                           filepath.Join(base, ".gitignore"),
+		"tmpl/ws/configs/dev/portal-ext.properties":   filepath.Join(base, "configs", "dev", "portal-ext.properties"),
+		"tmpl/ws/configs/local/portal-ext.properties": filepath.Join(base, "configs", "local", "portal-ext.properties"),
+		"tmpl/ws/configs/uat/portal-ext.properties":   filepath.Join(base, "configs", "uat", "portal-ext.properties"),
+		"tmpl/ws/configs/prod/portal-ext.properties":  filepath.Join(base, "configs", "prod", "portal-ext.properties"),
+		"tmpl/ws/configs/uat/es.config":               filepath.Join(base, "configs", "uat", "osgi", "configs", esConfigFilename),
+		"tmpl/ws/configs/prod/es.config":              filepath.Join(base, "configs", "prod", "osgi", "configs", esConfigFilename),
 	}
 
 	var wg sync.WaitGroup
@@ -113,12 +115,12 @@ func createGradleFiles(base string, version string) error {
 	}
 
 	files := map[string]string{
-		"/assets/ws/gradle/gradle-wrapper.properties": filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.properties"),
-		"/assets/ws/gradle/gradle-wrapper.jar":        filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.jar"),
-		"/assets/ws/gradle/gradlew":                   filepath.Join(base, "gradlew"),
-		"/assets/ws/gradle/gradlew.bat":               filepath.Join(base, "gradlew.bat"),
-		"/assets/ws/gradle/settings.gradle":           filepath.Join(base, "settings.gradle"),
-		"/assets/ws/gradle/gradle.properties":         filepath.Join(base, "gradle.properties"),
+		"tmpl/ws/gradle/gradle-wrapper.properties": filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.properties"),
+		"tmpl/ws/gradle/gradle-wrapper.jar":        filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.jar"),
+		"tmpl/ws/gradle/gradlew":                   filepath.Join(base, "gradlew"),
+		"tmpl/ws/gradle/gradlew.bat":               filepath.Join(base, "gradlew.bat"),
+		"tmpl/ws/gradle/settings.gradle":           filepath.Join(base, "settings.gradle"),
+		"tmpl/ws/gradle/gradle.properties":         filepath.Join(base, "gradle.properties"),
 	}
 
 	emptyFiles := []string{
@@ -172,14 +174,14 @@ func createMavenFiles(base, version string) error {
 	}
 
 	files := map[string]string{
-		"/assets/ws/maven/maven-wrapper.properties": filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.properties"),
-		"/assets/ws/maven/maven-wrapper.jar":        filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.jar"),
-		"/assets/ws/maven/mvnw":                     filepath.Join(base, "mvnw"),
-		"/assets/ws/maven/mvnw.cmd":                 filepath.Join(base, "mvnw.cmd"),
-		"/assets/ws/maven/pom.xml":                  filepath.Join(base, "pom.xml"),
-		"/assets/ws/maven/modules/pom.xml":          filepath.Join(base, "modules", "pom.xml"),
-		"/assets/ws/maven/themes/pom.xml":           filepath.Join(base, "themes", "pom.xml"),
-		"/assets/ws/maven/wars/pom.xml":             filepath.Join(base, "wars", "pom.xml"),
+		"tmpl/ws/maven/maven-wrapper.properties": filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.properties"),
+		"tmpl/ws/maven/maven-wrapper.jar":        filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.jar"),
+		"tmpl/ws/maven/mvnw":                     filepath.Join(base, "mvnw"),
+		"tmpl/ws/maven/mvnw.cmd":                 filepath.Join(base, "mvnw.cmd"),
+		"tmpl/ws/maven/pom.xml":                  filepath.Join(base, "pom.xml"),
+		"tmpl/ws/maven/modules/pom.xml":          filepath.Join(base, "modules", "pom.xml"),
+		"tmpl/ws/maven/themes/pom.xml":           filepath.Join(base, "themes", "pom.xml"),
+		"tmpl/ws/maven/wars/pom.xml":             filepath.Join(base, "wars", "pom.xml"),
 	}
 
 	var wg sync.WaitGroup
@@ -230,7 +232,7 @@ func createDirs(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 }
@@ -248,7 +250,7 @@ func createFile(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	_, err := os.Create(path)
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 }

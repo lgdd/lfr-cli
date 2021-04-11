@@ -3,9 +3,6 @@ package fileutil
 import (
 	"bytes"
 	"fmt"
-	"github.com/lgdd/deba/pkg/project"
-	"github.com/lgdd/deba/pkg/util/printutil"
-	"github.com/markbates/pkger"
 	"io"
 	"io/ioutil"
 	"os"
@@ -13,13 +10,17 @@ import (
 	"strings"
 	"sync"
 	"text/template"
+
+	"github.com/lgdd/deba/pkg/assets"
+	"github.com/lgdd/deba/pkg/project"
+	"github.com/lgdd/deba/pkg/util/printutil"
 )
 
 func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	defer wg.Done()
-	source, err := pkger.Open(sourcePath)
+	source, err := assets.Templates.Open(sourcePath)
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -27,7 +28,7 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 	dest, err := os.Create(destPath)
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -35,9 +36,12 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 	_, err = io.Copy(dest, source)
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
+
+	printutil.Success("create ")
+	fmt.Printf("%s\n", destPath)
 }
 
 func UpdateWithData(pomPath string, metadata *project.Metadata) error {
@@ -70,7 +74,7 @@ func VerifyCurrentDirAsWorkspace(build string) bool {
 	dir, err := os.Getwd()
 
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -80,7 +84,7 @@ func VerifyCurrentDirAsWorkspace(build string) bool {
 	})
 
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -90,16 +94,16 @@ func VerifyCurrentDirAsWorkspace(build string) bool {
 	case build == project.Maven && isMavenWorkspace(files):
 		return true
 	case build == project.Gradle && isMavenWorkspace(files):
-		printutil.Warning("Oops! It looks like you're trying to do Gradle stuff in a Maven workspace.")
+		printutil.Warning(fmt.Sprintln("Oops! It looks like you're trying to do Gradle stuff in a Maven workspace."))
 		fmt.Print("Try again with the flag: ")
 		printutil.Info("-b maven")
 		os.Exit(1)
 	case build == project.Maven && isGradleWorkspace(files):
-		printutil.Warning("Oops! It looks like you're trying to do Maven stuff in a Gradle workspace.")
+		printutil.Warning(fmt.Sprintln("Oops! It looks like you're trying to do Maven stuff in a Gradle workspace."))
 		fmt.Print("Try again with the flag: ")
-		printutil.Info("-b gradle")
+		printutil.Info(fmt.Sprintln("-b gradle"))
 		fmt.Print("or without the flag: ")
-		printutil.Info("-b maven")
+		printutil.Info(fmt.Sprintln("-b maven"))
 		os.Exit(1)
 	}
 	return false
