@@ -12,29 +12,31 @@
     <version>1.0.0</version>
     <name>{{.Name}}</name>
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<liferay.bom.version>{{.TargetPlatform}}</liferay.bom.version>
         <liferay.workspace.bundle.url>{{.BundleUrl}}</liferay.workspace.bundle.url>
+		<liferay.repository.url>https://repository-cdn.liferay.com/nexus/content/groups/public/</liferay.repository.url>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.liferay.portal</groupId>
                 <artifactId>release.portal.bom</artifactId>
-                <version>{{.TargetPlatform}}</version>
+				<version>${liferay.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.liferay.portal</groupId>
                 <artifactId>release.portal.bom.compile.only</artifactId>
-                <version>{{.TargetPlatform}}</version>
+				<version>${liferay.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
             <dependency>
                 <groupId>com.liferay.portal</groupId>
                 <artifactId>release.portal.bom.third.party</artifactId>
-                <version>{{.TargetPlatform}}</version>
+				<version>${liferay.bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

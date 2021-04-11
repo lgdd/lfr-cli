@@ -83,6 +83,7 @@ func createCommonFiles(base string) error {
 	}, ".")
 	files := map[string]string{
 		"tmpl/ws/gitignore":                           filepath.Join(base, ".gitignore"),
+		"tmpl/ws/platform.bndrun":                     filepath.Join(base, "platform.bndrun"),
 		"tmpl/ws/configs/dev/portal-ext.properties":   filepath.Join(base, "configs", "dev", "portal-ext.properties"),
 		"tmpl/ws/configs/local/portal-ext.properties": filepath.Join(base, "configs", "local", "portal-ext.properties"),
 		"tmpl/ws/configs/uat/portal-ext.properties":   filepath.Join(base, "configs", "uat", "portal-ext.properties"),
