@@ -30,6 +30,7 @@ func run(cmd *cobra.Command, args []string) {
 
 	wrapperCmd := exec.Command(wrapper, args...)
 	wrapperCmd.Stdout = os.Stdout
+	wrapperCmd.Stderr = os.Stderr
 
 	err = wrapperCmd.Run()
 
