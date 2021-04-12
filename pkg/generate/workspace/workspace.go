@@ -13,8 +13,8 @@ import (
 )
 
 const (
-	Gradle string = "gradle"
-	Maven         = "maven"
+	Gradle = "gradle"
+	Maven  = "maven"
 )
 
 func Generate(base, build, version string) error {

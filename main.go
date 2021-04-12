@@ -2,8 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/lgdd/deba/pkg/cmd"
 	"os"
+
+	"github.com/lgdd/deba/pkg/cmd"
 )
 
 func main() {

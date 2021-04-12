@@ -6,7 +6,7 @@ import (
 
 var (
 	Cmd = &cobra.Command{
-		Use:   "create [type] [name]",
+		Use:   "create TYPE NAME",
 		Short: "Create a Liferay project",
 	}
 

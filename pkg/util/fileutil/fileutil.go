@@ -96,14 +96,14 @@ func VerifyCurrentDirAsWorkspace(build string) bool {
 	case build == project.Gradle && isMavenWorkspace(files):
 		printutil.Warning(fmt.Sprintln("Oops! It looks like you're trying to do Gradle stuff in a Maven workspace."))
 		fmt.Print("Try again with the flag: ")
-		printutil.Info("-b maven")
+		printutil.Info("-b maven\n")
 		os.Exit(1)
 	case build == project.Maven && isGradleWorkspace(files):
 		printutil.Warning(fmt.Sprintln("Oops! It looks like you're trying to do Maven stuff in a Gradle workspace."))
 		fmt.Print("Try again with the flag: ")
-		printutil.Info(fmt.Sprintln("-b gradle"))
+		printutil.Info("-b gradle\n")
 		fmt.Print("or without the flag: ")
-		printutil.Info(fmt.Sprintln("-b maven"))
+		printutil.Info("-b maven\n")
 		os.Exit(1)
 	}
 	return false
@@ -113,14 +113,12 @@ func isGradleWorkspace(files map[string]void) bool {
 	sep := string(os.PathSeparator)
 	expectedFiles := []string{
 		sep + "configs",
-		sep + "modules",
-		sep + "themes",
-		sep + "wars",
 		sep + "gradle.properties",
 		sep + "settings.gradle",
 		sep + "gradle" + sep + "wrapper",
 		sep + "build.gradle",
 		sep + "gradlew",
+		sep + "platform.bndrun",
 	}
 	for _, expectedFile := range expectedFiles {
 		if _, ok := files[expectedFile]; !ok {
@@ -134,12 +132,10 @@ func isMavenWorkspace(files map[string]void) bool {
 	sep := string(os.PathSeparator)
 	expectedFiles := []string{
 		sep + "configs",
-		sep + "modules" + sep + "pom.xml",
-		sep + "themes" + sep + "pom.xml",
-		sep + "wars" + sep + "pom.xml",
 		sep + ".mvn" + sep + "wrapper",
 		sep + "pom.xml",
 		sep + "mvnw",
+		sep + "platform.bndrun",
 	}
 	for _, expectedFile := range expectedFiles {
 		if _, ok := files[expectedFile]; !ok {
@@ -147,6 +143,36 @@ func isMavenWorkspace(files map[string]void) bool {
 		}
 	}
 	return true
+}
+
+func FindFileInParent(fileName string) (string, error) {
+
+	dir, err := os.Getwd()
+
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	var filePath string
+	pathSeparator := string(os.PathSeparator)
+
+	slice := strings.Split(dir, pathSeparator)
+	slice = slice[1:]
+
+	for len(slice) > 0 {
+		filePath =
+			fmt.Sprintf("%s%s%s%s",
+				pathSeparator, strings.Join(slice, string(os.PathSeparator)),
+				pathSeparator, fileName)
+
+		if _, err := os.Stat(filePath); !os.IsNotExist(err) {
+			return filePath, nil
+		}
+		slice = slice[:len(slice)-1]
+	}
+
+	return "", fmt.Errorf("%s not found", fileName)
 }
 
 type void struct{}

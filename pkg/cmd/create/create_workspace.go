@@ -14,7 +14,7 @@ import (
 
 var (
 	createWorkspace = &cobra.Command{
-		Use:     "workspace [name]",
+		Use:     "workspace NAME",
 		Aliases: []string{"ws"},
 		Args:    cobra.ExactArgs(1),
 		Run:     run,

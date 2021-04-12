@@ -2,6 +2,7 @@ package printutil
 
 import (
 	"fmt"
+
 	"github.com/fatih/color"
 )
 
