@@ -2,11 +2,13 @@ package fileutil
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 	"text/template"
@@ -173,6 +175,87 @@ func FindFileInParent(fileName string) (string, error) {
 	}
 
 	return "", fmt.Errorf("%s not found", fileName)
+}
+
+func FindFileParentInDir(dirPath string, fileName string) (string, error) {
+	filePath := ""
+
+	err := filepath.Walk(dirPath,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.Name() == fileName {
+				filePath = filepath.Dir(path)
+			}
+			return nil
+		})
+
+	if err != nil {
+		return filePath, err
+	}
+
+	if filePath == "" {
+		return filePath, fmt.Errorf("%s not found in directories under %s", fileName, dirPath)
+	}
+
+	return filePath, nil
+}
+
+func GetLiferayWorkspacePath() (string, error) {
+	workspace, err := FindFileInParent("platform.bndrun")
+
+	if err != nil {
+		return "", errors.New("couldn't find Liferay Workspace in the current directory or any parent directory")
+	}
+
+	return filepath.Dir(workspace), nil
+}
+
+func GetLiferayHomePath() (string, error) {
+	workspacePath, err := GetLiferayWorkspacePath()
+
+	if err != nil {
+		return "", err
+	}
+
+	liferayHome, err := FindFileParentInDir(workspacePath, ".liferay-home")
+
+	if err != nil {
+		return "", errors.New("couldn't find Liferay Home in the current directory or any subdirectory")
+	}
+
+	return liferayHome, nil
+}
+
+func GetTomcatScriptPath(script string) (string, error) {
+
+	pathSeparator := string(os.PathSeparator)
+	liferayHome, err := GetLiferayHomePath()
+
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n\n", err.Error()))
+		fmt.Println("Did you initialize the bundle from the root of your Liferay Workspace?")
+		os.Exit(1)
+	}
+
+	scriptName := fmt.Sprintf("%s.sh", script)
+
+	if runtime.GOOS == "windows" {
+		scriptName = fmt.Sprintf("%s.bat", script)
+
+	}
+
+	scriptParentDir, err := FindFileParentInDir(liferayHome, scriptName)
+
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	scriptPath := fmt.Sprintf("%s%s%s", scriptParentDir, pathSeparator, scriptName)
+
+	return scriptPath, nil
 }
 
 type void struct{}

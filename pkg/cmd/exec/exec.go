@@ -31,7 +31,12 @@ func run(cmd *cobra.Command, args []string) {
 	wrapperCmd := exec.Command(wrapper, args...)
 	wrapperCmd.Stdout = os.Stdout
 
-	wrapperCmd.Run()
+	err = wrapperCmd.Run()
+
+	if err != nil {
+		printutil.Error(err.Error())
+		os.Exit(1)
+	}
 }
 
 func getWrapper() (string, error) {
