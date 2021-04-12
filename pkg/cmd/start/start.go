@@ -1,6 +1,7 @@
 package start
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 
@@ -38,4 +39,7 @@ func run(cmd *cobra.Command, args []string) {
 		printutil.Error(err.Error())
 		os.Exit(1)
 	}
+
+	fmt.Println("\nFollow the logs:")
+	printutil.Info("deba logs -f\n\n")
 }
