@@ -2,12 +2,12 @@ package exec
 
 import (
 	"fmt"
+	"github.com/lgdd/deba/pkg/util/printutil"
 	"os"
 	"os/exec"
 	"runtime"
 
 	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/spf13/cobra"
 )
 
@@ -21,6 +21,10 @@ var (
 )
 
 func run(cmd *cobra.Command, args []string) {
+	RunWrapperCmd(args)
+}
+
+func RunWrapperCmd(args []string) {
 	wrapper, err := getWrapper()
 
 	if err != nil {
