@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/nxadm/tail"
 	"io"
 	"io/ioutil"
 	"os"
@@ -14,10 +13,39 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/nxadm/tail"
+
 	"github.com/lgdd/deba/pkg/assets"
 	"github.com/lgdd/deba/pkg/project"
 	"github.com/lgdd/deba/pkg/util/printutil"
 )
+
+func CreateDirs(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	err := os.MkdirAll(path, os.ModePerm)
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+}
+
+func CreateFiles(paths []string) {
+	var wg sync.WaitGroup
+	for _, path := range paths {
+		wg.Add(1)
+		go createFile(path, &wg)
+	}
+	wg.Wait()
+}
+
+func createFile(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	_, err := os.Create(path)
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+}
 
 func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	defer wg.Done()

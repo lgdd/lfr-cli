@@ -1,7 +1,6 @@
 package workspace
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -9,7 +8,6 @@ import (
 
 	"github.com/lgdd/deba/pkg/project"
 	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
 )
 
 const (
@@ -63,7 +61,7 @@ func createCommonDirs(base string) error {
 
 	for _, dir := range dirs {
 		wg.Add(1)
-		go createDirs(filepath.Join(base, dir), &wg)
+		go fileutil.CreateDirs(filepath.Join(base, dir), &wg)
 	}
 
 	wg.Wait()
@@ -104,7 +102,7 @@ func createCommonFiles(base string) error {
 		filepath.Join(base, "configs", "docker", ".touch"),
 	}
 
-	createFiles(emptyFiles)
+	fileutil.CreateFiles(emptyFiles)
 
 	return nil
 }
@@ -139,7 +137,7 @@ func createGradleFiles(base string, version string) error {
 	}
 	wg.Wait()
 
-	createFiles(emptyFiles)
+	fileutil.CreateFiles(emptyFiles)
 
 	err = os.Chmod(filepath.Join(base, "gradlew"), 0774)
 
@@ -227,31 +225,4 @@ func updatePoms(base, version string) error {
 	}
 
 	return nil
-}
-
-func createDirs(path string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	err := os.MkdirAll(path, os.ModePerm)
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-}
-
-func createFiles(paths []string) {
-	var wg sync.WaitGroup
-	for _, path := range paths {
-		wg.Add(1)
-		go createFile(path, &wg)
-	}
-	wg.Wait()
-}
-
-func createFile(path string, wg *sync.WaitGroup) {
-	defer wg.Done()
-	_, err := os.Create(path)
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
 }

@@ -17,11 +17,11 @@ var (
 		Use:     "workspace NAME",
 		Aliases: []string{"ws"},
 		Args:    cobra.ExactArgs(1),
-		Run:     run,
+		Run:     generateWorkspace,
 	}
 )
 
-func run(cmd *cobra.Command, args []string) {
+func generateWorkspace(cmd *cobra.Command, args []string) {
 	fileutil.VerifyCurrentDirAsWorkspace(Build)
 	name := args[0]
 	err := workspace.Generate(name, Build, Version)
