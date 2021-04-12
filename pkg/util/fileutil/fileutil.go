@@ -158,16 +158,15 @@ func FindFileInParent(fileName string) (string, error) {
 	}
 
 	var filePath string
-	pathSeparator := string(os.PathSeparator)
+	sep := string(os.PathSeparator)
 
-	slice := strings.Split(dir, pathSeparator)
+	slice := strings.Split(dir, sep)
 	slice = slice[1:]
 
 	for len(slice) > 0 {
-		filePath =
-			fmt.Sprintf("%s%s%s%s",
-				pathSeparator, strings.Join(slice, string(os.PathSeparator)),
-				pathSeparator, fileName)
+		elemsPath := append([]string{sep}, slice...)
+		elemsPath = append(elemsPath, fileName)
+		filePath = filepath.Join(elemsPath...)
 
 		if _, err := os.Stat(filePath); !os.IsNotExist(err) {
 			return filePath, nil
@@ -240,8 +239,6 @@ func GetLiferayHomePath() (string, error) {
 }
 
 func GetTomcatScriptPath(script string) (string, error) {
-
-	pathSeparator := string(os.PathSeparator)
 	liferayHome, err := GetLiferayHomePath()
 
 	if err != nil {
@@ -264,7 +261,7 @@ func GetTomcatScriptPath(script string) (string, error) {
 		os.Exit(1)
 	}
 
-	scriptPath := fmt.Sprintf("%s%s%s", scriptParentDir, pathSeparator, scriptName)
+	scriptPath := filepath.Join(scriptParentDir, scriptName)
 
 	return scriptPath, nil
 }
