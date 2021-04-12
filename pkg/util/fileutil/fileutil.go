@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"github.com/nxadm/tail"
 	"io"
 	"io/ioutil"
 	"os"
@@ -178,6 +179,16 @@ func FindFileInParent(fileName string) (string, error) {
 }
 
 func FindFileParentInDir(dirPath string, fileName string) (string, error) {
+	filePath, err := FindFileInDir(dirPath, fileName)
+
+	if err != nil {
+		return "", err
+	}
+
+	return filepath.Dir(filePath), nil
+}
+
+func FindFileInDir(dirPath string, fileName string) (string, error) {
 	filePath := ""
 
 	err := filepath.Walk(dirPath,
@@ -186,7 +197,7 @@ func FindFileParentInDir(dirPath string, fileName string) (string, error) {
 				return err
 			}
 			if info.Name() == fileName {
-				filePath = filepath.Dir(path)
+				filePath = path
 			}
 			return nil
 		})
@@ -256,6 +267,28 @@ func GetTomcatScriptPath(script string) (string, error) {
 	scriptPath := fmt.Sprintf("%s%s%s", scriptParentDir, pathSeparator, scriptName)
 
 	return scriptPath, nil
+}
+
+func GetCatalinaLogFile() (string, error) {
+	liferayHome, err := GetLiferayHomePath()
+
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	return FindFileInDir(liferayHome, "catalina.out")
+}
+
+func Tail(logFile string, follow bool) {
+	t, err := tail.TailFile(logFile, tail.Config{Follow: follow})
+	if err != nil {
+		panic(err)
+	}
+
+	for line := range t.Lines {
+		fmt.Println(line.Text)
+	}
 }
 
 type void struct{}
