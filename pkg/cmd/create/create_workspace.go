@@ -32,7 +32,10 @@ func init() {
 }
 
 func generateWorkspace(cmd *cobra.Command, args []string) {
-	fileutil.VerifyCurrentDirAsWorkspace(Build)
+	if fileutil.IsInWorkspaceDir() {
+		printutil.Error("You're already in a Liferay Workspace and I can't create a new one in it.\n")
+		os.Exit(1)
+	}
 	name := args[0]
 	err := workspace.Generate(name, Build, Version)
 	if err != nil {

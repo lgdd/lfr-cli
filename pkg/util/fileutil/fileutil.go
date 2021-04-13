@@ -100,79 +100,57 @@ func UpdateWithData(pomPath string, metadata *project.Metadata) error {
 	return nil
 }
 
-func VerifyCurrentDirAsWorkspace(build string) bool {
-	files := make(map[string]void)
-	dir, err := os.Getwd()
+func IsInWorkspaceDir() bool {
+	_, err := GetLiferayWorkspacePath()
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		return false
 	}
 
-	err = filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		files[strings.Split(path, dir)[1]] = void{}
-		return nil
-	})
-
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-
-	switch {
-	case build == project.Gradle && isGradleWorkspace(files):
-		return true
-	case build == project.Maven && isMavenWorkspace(files):
-		return true
-	case build == project.Gradle && isMavenWorkspace(files):
-		printutil.Warning(fmt.Sprintln("Oops! It looks like you're trying to do Gradle stuff in a Maven workspace."))
-		fmt.Print("Try again with the flag: ")
-		printutil.Info("-b maven\n")
-		os.Exit(1)
-	case build == project.Maven && isGradleWorkspace(files):
-		printutil.Warning(fmt.Sprintln("Oops! It looks like you're trying to do Maven stuff in a Gradle workspace."))
-		fmt.Print("Try again with the flag: ")
-		printutil.Info("-b gradle\n")
-		fmt.Print("or without the flag: ")
-		printutil.Info("-b maven\n")
-		os.Exit(1)
-	}
-	return false
-}
-
-func isGradleWorkspace(files map[string]void) bool {
-	sep := string(os.PathSeparator)
-	expectedFiles := []string{
-		sep + "configs",
-		sep + "gradle.properties",
-		sep + "settings.gradle",
-		sep + "gradle" + sep + "wrapper",
-		sep + "build.gradle",
-		sep + "gradlew",
-		sep + "platform.bndrun",
-	}
-	for _, expectedFile := range expectedFiles {
-		if _, ok := files[expectedFile]; !ok {
-			return false
-		}
-	}
 	return true
 }
 
-func isMavenWorkspace(files map[string]void) bool {
-	sep := string(os.PathSeparator)
-	expectedFiles := []string{
-		sep + "configs",
-		sep + ".mvn" + sep + "wrapper",
-		sep + "pom.xml",
-		sep + "mvnw",
-		sep + "platform.bndrun",
+func IsGradleWorkspace() bool {
+	workspace, err := GetLiferayWorkspacePath()
+
+	if err != nil {
+		return false
 	}
-	for _, expectedFile := range expectedFiles {
-		if _, ok := files[expectedFile]; !ok {
+
+	expectedFiles := []string{
+		filepath.Join(workspace, "configs"),
+		filepath.Join(workspace, "gradle.properties"),
+		filepath.Join(workspace, "settings.gradle"),
+		filepath.Join(workspace, "build.gradle"),
+		filepath.Join(workspace, "gradlew"),
+	}
+
+	return FilesExists(expectedFiles)
+}
+
+func IsMavenWorkspace() bool {
+	workspace, err := GetLiferayWorkspacePath()
+
+	if err != nil {
+		return false
+	}
+
+	expectedFiles := []string{
+		filepath.Join(workspace, "configs"),
+		filepath.Join(workspace, "pom.xml"),
+		filepath.Join(workspace, "mvnw"),
+	}
+
+	return FilesExists(expectedFiles)
+}
+
+func FilesExists(files []string) bool {
+	for _, file := range files {
+		if _, err := os.Stat(file); os.IsNotExist(err) {
 			return false
 		}
 	}
+
 	return true
 }
 
@@ -316,4 +294,10 @@ func Tail(logFile string, follow bool) {
 	}
 }
 
-type void struct{}
+func NormalizeXmlString(xml string) string {
+	newXML := xml
+	newXML = strings.ReplaceAll(xml, "&#xA;", "")
+	newXML = strings.ReplaceAll(xml, "&#x9;", "")
+
+	return newXML
+}
