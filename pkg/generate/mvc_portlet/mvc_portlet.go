@@ -1,19 +1,16 @@
 package mvc_portlet
 
 import (
-	"bytes"
 	"encoding/xml"
 	"fmt"
+	"github.com/lgdd/deba/pkg/project"
+	"github.com/lgdd/deba/pkg/util/fileutil"
+	"github.com/lgdd/deba/pkg/util/printutil"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
-	"text/template"
-
-	"github.com/lgdd/deba/pkg/project"
-	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
 )
 
 type MvcPortletData struct {
@@ -112,7 +109,7 @@ func Generate(name string) {
 
 	wg.Add(len(dirs))
 	for _, dir := range dirs {
-		go fileutil.CreateDirs(filepath.Join(base, dir), &wg)
+		go createDirs(filepath.Join(base, dir), &wg)
 	}
 	wg.Wait()
 
@@ -141,31 +138,12 @@ func Generate(name string) {
 	wg.Wait()
 }
 
+func createDirs(path string, wg *sync.WaitGroup) {
+	defer wg.Done()
+	fileutil.CreateDirs(path)
+}
+
 func updateMvcPortletWithData(wg *sync.WaitGroup, file string, data *MvcPortletData) {
 	defer wg.Done()
-
-	content, err := ioutil.ReadFile(file)
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-
-	tpl, err := template.New(file).Parse(string(content))
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-
-	var result bytes.Buffer
-	err = tpl.Execute(&result, data)
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-
-	err = ioutil.WriteFile(file, result.Bytes(), 0664)
-	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
+	fileutil.UpdateWithData(file, data)
 }

@@ -3,8 +3,6 @@ package workspace
 import (
 	"os"
 	"path/filepath"
-	"strings"
-	"sync"
 
 	"github.com/lgdd/deba/pkg/project"
 	"github.com/lgdd/deba/pkg/util/fileutil"
@@ -17,16 +15,6 @@ const (
 
 func Generate(base, build, version string) error {
 	err := os.Mkdir(base, os.ModePerm)
-	if err != nil {
-		return err
-	}
-
-	err = createCommonDirs(base)
-	if err != nil {
-		return err
-	}
-
-	err = createCommonFiles(base)
 	if err != nil {
 		return err
 	}
@@ -45,99 +33,24 @@ func Generate(base, build, version string) error {
 	return nil
 }
 
-func createCommonDirs(base string) error {
-	var wg sync.WaitGroup
-	dirs := []string{
-		filepath.Join("gradle", "wrapper"),
-		filepath.Join("configs", "common"),
-		filepath.Join("configs", "dev"),
-		filepath.Join("configs", "docker"),
-		filepath.Join("configs", "local"),
-		filepath.Join("configs", "prod", "osgi", "configs"),
-		filepath.Join("configs", "uat", "osgi", "configs"),
-		"modules",
-		"themes",
-		"wars"}
-
-	for _, dir := range dirs {
-		wg.Add(1)
-		go fileutil.CreateDirs(filepath.Join(base, dir), &wg)
-	}
-
-	wg.Wait()
-	return nil
-}
-
-func createCommonFiles(base string) error {
-	esConfigFilename := strings.Join([]string{
-		"com",
-		"liferay",
-		"portal",
-		"search",
-		"elasticsearch",
-		"configuration",
-		"ElasticsearchConfiguration",
-		"config",
-	}, ".")
-	files := map[string]string{
-		"tmpl/ws/gitignore":                           filepath.Join(base, ".gitignore"),
-		"tmpl/ws/platform.bndrun":                     filepath.Join(base, "platform.bndrun"),
-		"tmpl/ws/configs/dev/portal-ext.properties":   filepath.Join(base, "configs", "dev", "portal-ext.properties"),
-		"tmpl/ws/configs/local/portal-ext.properties": filepath.Join(base, "configs", "local", "portal-ext.properties"),
-		"tmpl/ws/configs/uat/portal-ext.properties":   filepath.Join(base, "configs", "uat", "portal-ext.properties"),
-		"tmpl/ws/configs/prod/portal-ext.properties":  filepath.Join(base, "configs", "prod", "portal-ext.properties"),
-		"tmpl/ws/configs/uat/es.config":               filepath.Join(base, "configs", "uat", "osgi", "configs", esConfigFilename),
-		"tmpl/ws/configs/prod/es.config":              filepath.Join(base, "configs", "prod", "osgi", "configs", esConfigFilename),
-	}
-
-	var wg sync.WaitGroup
-	for source, dest := range files {
-		wg.Add(1)
-		go fileutil.CopyFromAssets(source, dest, &wg)
-	}
-	wg.Wait()
-
-	emptyFiles := []string{
-		filepath.Join(base, "configs", "common", ".touch"),
-		filepath.Join(base, "configs", "docker", ".touch"),
-	}
-
-	fileutil.CreateFiles(emptyFiles)
-
-	return nil
-}
-
 func createGradleFiles(base string, version string) error {
-	err := os.MkdirAll(filepath.Join(base, filepath.Join("gradle", "wrapper")), os.ModePerm)
+	err := fileutil.CreateDirsFromAssets("tmpl/ws/gradle", base)
+
 	if err != nil {
 		return err
 	}
 
-	files := map[string]string{
-		"tmpl/ws/gradle/gradle-wrapper.properties": filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.properties"),
-		"tmpl/ws/gradle/gradle-wrapper.jar":        filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.jar"),
-		"tmpl/ws/gradle/gradlew":                   filepath.Join(base, "gradlew"),
-		"tmpl/ws/gradle/gradlew.bat":               filepath.Join(base, "gradlew.bat"),
-		"tmpl/ws/gradle/settings.gradle":           filepath.Join(base, "settings.gradle"),
-		"tmpl/ws/gradle/gradle.properties":         filepath.Join(base, "gradle.properties"),
+	err = fileutil.CreateFilesFromAssets("tmpl/ws/gradle", base)
+
+	if err != nil {
+		return err
 	}
 
-	emptyFiles := []string{
-		filepath.Join(base, "modules", ".touch"),
-		filepath.Join(base, "themes", ".touch"),
-		filepath.Join(base, "wars", ".touch"),
-		filepath.Join(base, "gradle-local.properties"),
-		filepath.Join(base, "build.gradle"),
-	}
+	err = os.Rename(filepath.Join(base, "gitignore"), filepath.Join(base, ".gitignore"))
 
-	var wg sync.WaitGroup
-	wg.Add(len(files))
-	for source, dest := range files {
-		go fileutil.CopyFromAssets(source, dest, &wg)
+	if err != nil {
+		return err
 	}
-	wg.Wait()
-
-	fileutil.CreateFiles(emptyFiles)
 
 	err = os.Chmod(filepath.Join(base, "gradlew"), 0774)
 
@@ -167,28 +80,29 @@ func updateGradleProps(base, version string) error {
 }
 
 func createMavenFiles(base, version string) error {
-	err := os.MkdirAll(filepath.Join(base, filepath.Join(".mvn", "wrapper")), os.ModePerm)
+	err := fileutil.CreateDirsFromAssets("tmpl/ws/maven", base)
+
 	if err != nil {
 		return err
 	}
 
-	files := map[string]string{
-		"tmpl/ws/maven/maven-wrapper.properties": filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.properties"),
-		"tmpl/ws/maven/maven-wrapper.jar":        filepath.Join(base, ".mvn", "wrapper", "maven-wrapper.jar"),
-		"tmpl/ws/maven/mvnw":                     filepath.Join(base, "mvnw"),
-		"tmpl/ws/maven/mvnw.cmd":                 filepath.Join(base, "mvnw.cmd"),
-		"tmpl/ws/maven/pom.xml":                  filepath.Join(base, "pom.xml"),
-		"tmpl/ws/maven/modules/pom.xml":          filepath.Join(base, "modules", "pom.xml"),
-		"tmpl/ws/maven/themes/pom.xml":           filepath.Join(base, "themes", "pom.xml"),
-		"tmpl/ws/maven/wars/pom.xml":             filepath.Join(base, "wars", "pom.xml"),
+	err = fileutil.CreateFilesFromAssets("tmpl/ws/maven", base)
+
+	if err != nil {
+		return err
 	}
 
-	var wg sync.WaitGroup
-	for source, dest := range files {
-		wg.Add(1)
-		go fileutil.CopyFromAssets(source, dest, &wg)
+	err = os.Rename(filepath.Join(base, "gitignore"), filepath.Join(base, ".gitignore"))
+
+	if err != nil {
+		return err
 	}
-	wg.Wait()
+
+	err = os.Rename(filepath.Join(base, "mvn"), filepath.Join(base, ".mvn"))
+
+	if err != nil {
+		return err
+	}
 
 	err = os.Chmod(filepath.Join(base, "mvnw"), 0774)
 

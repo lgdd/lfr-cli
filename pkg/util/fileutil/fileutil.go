@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -16,12 +17,10 @@ import (
 	"github.com/nxadm/tail"
 
 	"github.com/lgdd/deba/pkg/assets"
-	"github.com/lgdd/deba/pkg/project"
 	"github.com/lgdd/deba/pkg/util/printutil"
 )
 
-func CreateDirs(path string, wg *sync.WaitGroup) {
-	defer wg.Done()
+func CreateDirs(path string) {
 	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
 		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
@@ -45,6 +44,65 @@ func createFile(path string, wg *sync.WaitGroup) {
 		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
+}
+
+func CreateDirsFromAssets(assetsRoot, baseDest string) error {
+	return fs.WalkDir(assets.Templates, assetsRoot, func(path string, file fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if file.IsDir() {
+			relativePath := strings.Split(path, assetsRoot)[1]
+			if len(relativePath) > 0 {
+				destPath := baseDest + relativePath
+				CreateDirs(destPath)
+			}
+		}
+		return nil
+	})
+}
+
+func CreateFilesFromAssets(assetsRoot, baseDest string) error {
+	return fs.WalkDir(assets.Templates, assetsRoot, func(path string, file fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if !file.IsDir() {
+			relativePath := strings.Split(path, assetsRoot)[1]
+			if len(relativePath) > 0 {
+				destPath := baseDest + relativePath
+				CopyFromTemplates(path, destPath)
+			}
+		}
+		return nil
+	})
+}
+
+func CopyFromTemplates(sourcePath, destPath string) {
+	source, err := assets.Templates.Open(sourcePath)
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	defer source.Close()
+
+	dest, err := os.Create(destPath)
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	defer dest.Close()
+
+	_, err = io.Copy(dest, source)
+	if err != nil {
+		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	printutil.Success("create ")
+	fmt.Printf("%s\n", destPath)
 }
 
 func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
@@ -75,24 +133,24 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	fmt.Printf("%s\n", destPath)
 }
 
-func UpdateWithData(pomPath string, metadata *project.Metadata) error {
-	pomContent, err := ioutil.ReadFile(pomPath)
+func UpdateWithData(file string, data interface{}) error {
+	content, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
 	}
 
-	tpl, err := template.New(pomPath).Parse(string(pomContent))
+	tpl, err := template.New(file).Parse(string(content))
 	if err != nil {
 		return err
 	}
 
 	var result bytes.Buffer
-	err = tpl.Execute(&result, metadata)
+	err = tpl.Execute(&result, data)
 	if err != nil {
 		return err
 	}
 
-	err = ioutil.WriteFile(pomPath, result.Bytes(), 0664)
+	err = ioutil.WriteFile(file, result.Bytes(), 0664)
 	if err != nil {
 		return err
 	}
