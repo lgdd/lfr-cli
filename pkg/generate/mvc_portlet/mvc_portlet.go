@@ -96,9 +96,8 @@ func Generate(name string) {
 		pom.SchemaLocation = "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 
 		finalPomBytes, _ := xml.MarshalIndent(pom, "", "  ")
-		finalPom := fileutil.NormalizeXmlString(string(finalPomBytes))
 
-		err = ioutil.WriteFile(pomParentPath, []byte(project.XMLHeader+finalPom), 0644)
+		err = ioutil.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
 			printutil.Error(fmt.Sprintf("%s\n", err.Error()))

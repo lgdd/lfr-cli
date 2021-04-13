@@ -293,11 +293,3 @@ func Tail(logFile string, follow bool) {
 		fmt.Println(line.Text)
 	}
 }
-
-func NormalizeXmlString(xml string) string {
-	newXML := xml
-	newXML = strings.ReplaceAll(xml, "&#xA;", "")
-	newXML = strings.ReplaceAll(xml, "&#x9;", "")
-
-	return newXML
-}
