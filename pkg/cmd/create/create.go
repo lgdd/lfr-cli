@@ -14,4 +14,5 @@ var (
 func init() {
 	Cmd.AddCommand(createWorkspace)
 	Cmd.AddCommand(createMvcPortlet)
+	Cmd.AddCommand(createApiModule)
 }
