@@ -5,6 +5,7 @@ import (
 	"github.com/lgdd/deba/pkg/cmd/exec"
 	"github.com/lgdd/deba/pkg/cmd/logs"
 	"github.com/lgdd/deba/pkg/cmd/start"
+	"github.com/lgdd/deba/pkg/cmd/status"
 	"github.com/lgdd/deba/pkg/cmd/stop"
 	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/spf13/cobra"
@@ -20,6 +21,7 @@ func init() {
 	deba.AddCommand(exec.Cmd)
 	deba.AddCommand(start.Cmd)
 	deba.AddCommand(stop.Cmd)
+	deba.AddCommand(status.Cmd)
 	deba.AddCommand(logs.Cmd)
 	deba.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "--no-color (disable color output)")
 }

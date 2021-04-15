@@ -28,7 +28,12 @@ func run(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	procutil.SetCatalinaPid()
+	err = procutil.SetCatalinaPid()
+
+	if err != nil {
+		printutil.Danger(err.Error())
+		os.Exit(1)
+	}
 
 	shutdownCmd := exec.Command(shutdownScript)
 	shutdownCmd.Stdout = os.Stdout
@@ -39,4 +44,5 @@ func run(cmd *cobra.Command, args []string) {
 		printutil.Danger(err.Error())
 		os.Exit(1)
 	}
+
 }
