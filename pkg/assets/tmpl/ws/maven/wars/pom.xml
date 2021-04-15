@@ -13,6 +13,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>{{.ArtifactId}}-wars</artifactId>
-    <name>{{.Name}} Wars</name>
+    <name>{{.Name}} :: WARs</name>
     <packaging>pom</packaging>
 </project>

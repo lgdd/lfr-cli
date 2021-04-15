@@ -33,13 +33,13 @@ func init() {
 
 func generateWorkspace(cmd *cobra.Command, args []string) {
 	if fileutil.IsInWorkspaceDir() {
-		printutil.Error("You're already in a Liferay Workspace and I can't create a new one in it.\n")
+		printutil.Danger("You're already in a Liferay Workspace and I can't create a new one in it.\n")
 		os.Exit(1)
 	}
 	name := args[0]
 	err := workspace.Generate(name, Build, Version)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 	printutil.Success(fmt.Sprintf("\nSuccessfully created a Liferay Workspace '%s'\n", name))
@@ -53,7 +53,7 @@ func generateWorkspace(cmd *cobra.Command, args []string) {
 
 func runInit(name, build string) {
 	if err := os.Chdir(name); err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 

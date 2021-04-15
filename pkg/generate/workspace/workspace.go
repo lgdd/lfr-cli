@@ -119,7 +119,7 @@ func createMavenFiles(base, version string) error {
 }
 
 func updatePoms(base, version string) error {
-	project, err := project.NewMetadata(base, version)
+	data, err := project.NewMetadata(base, version)
 	if err != nil {
 		return err
 	}
@@ -132,7 +132,7 @@ func updatePoms(base, version string) error {
 	}
 
 	for _, pomPath := range poms {
-		err = fileutil.UpdateWithData(pomPath, project)
+		err = fileutil.UpdateWithData(pomPath, data)
 		if err != nil {
 			return err
 		}

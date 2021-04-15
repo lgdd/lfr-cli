@@ -28,7 +28,7 @@ func RunWrapperCmd(args []string) {
 	wrapper, err := getWrapper()
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -39,7 +39,7 @@ func RunWrapperCmd(args []string) {
 	err = wrapperCmd.Run()
 
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Danger(err.Error())
 		os.Exit(1)
 	}
 }

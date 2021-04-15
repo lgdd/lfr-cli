@@ -24,7 +24,7 @@ func Warning(msg string) {
 	color.Unset()
 }
 
-func Error(msg string) {
+func Danger(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgRed)
 	fmt.Print(msg)

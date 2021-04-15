@@ -23,7 +23,7 @@ import (
 func CreateDirs(path string) {
 	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 }
@@ -41,7 +41,7 @@ func createFile(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	_, err := os.Create(path)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 }
@@ -81,7 +81,7 @@ func CreateFilesFromAssets(assetsRoot, baseDest string) error {
 func CopyFromTemplates(sourcePath, destPath string) {
 	source, err := assets.Templates.Open(sourcePath)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -89,7 +89,7 @@ func CopyFromTemplates(sourcePath, destPath string) {
 
 	dest, err := os.Create(destPath)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -97,7 +97,7 @@ func CopyFromTemplates(sourcePath, destPath string) {
 
 	_, err = io.Copy(dest, source)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -109,7 +109,7 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	source, err := assets.Templates.Open(sourcePath)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -117,7 +117,7 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 	dest, err := os.Create(destPath)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -125,7 +125,7 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 	_, err = io.Copy(dest, source)
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -217,7 +217,7 @@ func FindFileInParent(fileName string) (string, error) {
 	dir, err := os.Getwd()
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -306,7 +306,7 @@ func GetTomcatScriptPath(script string) (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n\n", err.Error()))
 		fmt.Println("Did you initialize the bundle from the root of your Liferay Workspace?")
 		os.Exit(1)
 	}
@@ -321,7 +321,7 @@ func GetTomcatScriptPath(script string) (string, error) {
 	scriptParentDir, err := FindFileParentInDir(liferayHome, scriptName)
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
@@ -334,7 +334,7 @@ func GetCatalinaLogFile() (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 

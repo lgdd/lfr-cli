@@ -27,7 +27,7 @@ func run(cmd *cobra.Command, args []string) {
 	logFile, err := fileutil.GetCatalinaLogFile()
 
 	if err != nil {
-		printutil.Error(fmt.Sprintf("%s\n", err.Error()))
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 

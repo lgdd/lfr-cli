@@ -24,7 +24,7 @@ func run(cmd *cobra.Command, args []string) {
 	shutdownScript, err := fileutil.GetTomcatScriptPath("shutdown")
 
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Danger(err.Error())
 		os.Exit(1)
 	}
 
@@ -36,7 +36,7 @@ func run(cmd *cobra.Command, args []string) {
 	err = shutdownCmd.Run()
 
 	if err != nil {
-		printutil.Error(err.Error())
+		printutil.Danger(err.Error())
 		os.Exit(1)
 	}
 }
