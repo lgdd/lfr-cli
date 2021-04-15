@@ -14,7 +14,7 @@ import (
 var (
 	Cmd = &cobra.Command{
 		Use:   "start",
-		Short: "Start Liferay bundle",
+		Short: "Start a Liferay Tomcat bundle",
 		Args:  cobra.NoArgs,
 		Run:   run,
 	}

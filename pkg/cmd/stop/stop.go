@@ -13,14 +13,13 @@ import (
 var (
 	Cmd = &cobra.Command{
 		Use:   "stop",
-		Short: "Stop Liferay bundle",
+		Short: "Stop a Liferay Tomcat bundle",
 		Args:  cobra.NoArgs,
 		Run:   run,
 	}
 )
 
 func run(cmd *cobra.Command, args []string) {
-
 	shutdownScript, err := fileutil.GetTomcatScriptPath("shutdown")
 
 	if err != nil {
@@ -28,7 +27,7 @@ func run(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	err = procutil.SetCatalinaPid()
+	_, err = procutil.GetCatalinaPid()
 
 	if err != nil {
 		printutil.Danger(err.Error())

@@ -5,12 +5,13 @@ import (
 	"github.com/lgdd/deba/pkg/util/printutil"
 	"github.com/lgdd/deba/pkg/util/procutil"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 var (
 	Cmd = &cobra.Command{
 		Use:   "status",
-		Short: "Status of the Liferay bundle",
+		Short: "Status (running or stopped) of a Liferay Tomcat bundle",
 		Args:  cobra.NoArgs,
 		Run:   run,
 	}
@@ -19,7 +20,8 @@ var (
 func run(cmd *cobra.Command, args []string) {
 	isRunning, pid, err := procutil.IsCatalinaRunning()
 	if err != nil {
-		panic(err)
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
 	}
 	if isRunning {
 		fmt.Print("Liferay is ")

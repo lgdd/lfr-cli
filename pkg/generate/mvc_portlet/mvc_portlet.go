@@ -44,14 +44,14 @@ func Generate(name string) {
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
 	workspacePackage := strcase.ToDelimited(workspaceName, '.')
 
-	err = fileutil.CreateDirsFromAssets("tmpl/mvc-portlet", destPortletPath)
+	err = fileutil.CreateDirsFromAssets("tpl/mvc-portlet", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
-	err = fileutil.CreateFilesFromAssets("tmpl/mvc-portlet", destPortletPath)
+	err = fileutil.CreateFilesFromAssets("tpl/mvc-portlet", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))

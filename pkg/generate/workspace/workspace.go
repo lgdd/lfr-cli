@@ -34,13 +34,13 @@ func Generate(base, build, version string) error {
 }
 
 func createGradleFiles(base string, version string) error {
-	err := fileutil.CreateDirsFromAssets("tmpl/ws/gradle", base)
+	err := fileutil.CreateDirsFromAssets("tpl/ws/gradle", base)
 
 	if err != nil {
 		return err
 	}
 
-	err = fileutil.CreateFilesFromAssets("tmpl/ws/gradle", base)
+	err = fileutil.CreateFilesFromAssets("tpl/ws/gradle", base)
 
 	if err != nil {
 		return err
@@ -80,13 +80,13 @@ func updateGradleProps(base, version string) error {
 }
 
 func createMavenFiles(base, version string) error {
-	err := fileutil.CreateDirsFromAssets("tmpl/ws/maven", base)
+	err := fileutil.CreateDirsFromAssets("tpl/ws/maven", base)
 
 	if err != nil {
 		return err
 	}
 
-	err = fileutil.CreateFilesFromAssets("tmpl/ws/maven", base)
+	err = fileutil.CreateFilesFromAssets("tpl/ws/maven", base)
 
 	if err != nil {
 		return err

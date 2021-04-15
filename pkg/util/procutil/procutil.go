@@ -14,20 +14,26 @@ import (
 )
 
 func SetCatalinaPid() error {
-	workspacePath, err := fileutil.GetLiferayWorkspacePath()
+	workingPath, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		return errors.Unwrap(err)
+		workingPath, err = fileutil.GetLiferayHomePath()
+		if err != nil {
+			return errors.Unwrap(err)
+		}
 	}
 
-	return os.Setenv("CATALINA_PID", filepath.Join(workspacePath, ".liferay-pid"))
+	return os.Setenv("CATALINA_PID", filepath.Join(workingPath, ".liferay-pid"))
 }
 
 func GetCatalinaPid() (int, error) {
-	workspacePath, err := fileutil.GetLiferayWorkspacePath()
+	workingPath, err := fileutil.GetLiferayHomePath()
 
 	if err != nil {
-		return 0, err
+		workingPath, err = fileutil.GetLiferayWorkspacePath()
+		if err != nil {
+			return 0, err
+		}
 	}
 
 	pidString := os.Getenv("CATALINA_PID")
@@ -42,7 +48,7 @@ func GetCatalinaPid() (int, error) {
 		return pid, nil
 	}
 
-	pidPath := filepath.Join(workspacePath, ".liferay-pid")
+	pidPath := filepath.Join(workingPath, ".liferay-pid")
 	pidFile, err := os.Open(pidPath)
 
 	if err != nil {
@@ -76,7 +82,7 @@ func IsCatalinaRunning() (bool, int, error) {
 	pid, err := GetCatalinaPid()
 
 	if err != nil {
-		return false, 0, nil
+		return false, 0, errors.New("couldn't find the PID of a Liferay Tomcat bundle running")
 	}
 
 	proc, err := ps.FindProcess(pid)

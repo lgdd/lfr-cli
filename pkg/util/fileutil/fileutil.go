@@ -213,7 +213,6 @@ func FilesExists(files []string) bool {
 }
 
 func FindFileInParent(fileName string) (string, error) {
-
 	dir, err := os.Getwd()
 
 	if err != nil {
@@ -252,7 +251,7 @@ func FindFileParentInDir(dirPath string, fileName string) (string, error) {
 }
 
 func FindFileInDir(dirPath string, fileName string) (string, error) {
-	filePath := ""
+	targetFilePath := ""
 
 	err := filepath.Walk(dirPath,
 		func(path string, info os.FileInfo, err error) error {
@@ -260,20 +259,20 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 				return err
 			}
 			if info.Name() == fileName {
-				filePath = path
+				targetFilePath = path
 			}
 			return nil
 		})
 
 	if err != nil {
-		return filePath, err
+		return targetFilePath, err
 	}
 
-	if filePath == "" {
-		return filePath, fmt.Errorf("%s not found in directories under %s", fileName, dirPath)
+	if targetFilePath == "" {
+		return targetFilePath, fmt.Errorf("%s not found in directories under %s", fileName, dirPath)
 	}
 
-	return filePath, nil
+	return targetFilePath, nil
 }
 
 func GetLiferayWorkspacePath() (string, error) {
@@ -287,16 +286,28 @@ func GetLiferayWorkspacePath() (string, error) {
 }
 
 func GetLiferayHomePath() (string, error) {
-	workspacePath, err := GetLiferayWorkspacePath()
+	workingPath, err := GetLiferayWorkspacePath()
 
 	if err != nil {
-		return "", err
+		workingPath, err = os.Getwd()
+		if err != nil {
+			return "", err
+		}
 	}
 
-	liferayHome, err := FindFileParentInDir(workspacePath, ".liferay-home")
+	liferayHome, err := FindFileParentInDir(workingPath, ".liferay-home")
 
 	if err != nil {
-		return "", errors.New("couldn't find Liferay Home in the current directory or any subdirectory")
+		liferayHome, err = FindFileInParent(".liferay-home")
+		if err != nil {
+			return "", errors.New("couldn't find a Liferay Tomcat bundle")
+		}
+	}
+
+	if strings.HasSuffix(liferayHome, ".liferay-home") {
+		liferayHomeSplit := strings.Split(liferayHome, string(os.PathSeparator))
+		liferayHomeSplit = liferayHomeSplit[:len(liferayHomeSplit)-1]
+		liferayHome = strings.Join(liferayHomeSplit, string(os.PathSeparator))
 	}
 
 	return liferayHome, nil
@@ -307,7 +318,7 @@ func GetTomcatScriptPath(script string) (string, error) {
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n\n", err.Error()))
-		fmt.Println("Did you initialize the bundle from the root of your Liferay Workspace?")
+		fmt.Println("Did you initialize the Tomcat bundle from the root of your Liferay Workspace?")
 		os.Exit(1)
 	}
 
@@ -315,7 +326,6 @@ func GetTomcatScriptPath(script string) (string, error) {
 
 	if runtime.GOOS == "windows" {
 		scriptName = fmt.Sprintf("%s.bat", script)
-
 	}
 
 	scriptParentDir, err := FindFileParentInDir(liferayHome, scriptName)
