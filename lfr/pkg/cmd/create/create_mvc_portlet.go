@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/liferay-cli/lfr/pkg/generate/mvc_portlet"
+	"github.com/lgdd/liferay-cli/lfr/pkg/generate/mvc"
 	"github.com/spf13/cobra"
 )
 
@@ -16,5 +16,5 @@ var (
 
 func generateMvcPortlet(cmd *cobra.Command, args []string) {
 	name := args[0]
-	mvc_portlet.Generate(name)
+	mvc.Generate(name)
 }

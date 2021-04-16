@@ -1,4 +1,4 @@
-package mvc_portlet
+package mvc
 
 import (
 	"encoding/xml"
@@ -14,15 +14,15 @@ import (
 	"strings"
 )
 
-type MvcPortletData struct {
+type PortletData struct {
 	Package                string
 	Name                   string
 	CamelCaseName          string
 	WorkspaceName          string
 	WorkspaceCamelCaseName string
 	WorkspacePackage       string
-	PortletIdKey           string
-	PortletIdValue         string
+	PortletIDKey           string
+	PortletIDValue         string
 }
 
 func Generate(name string) {
@@ -130,16 +130,16 @@ func Generate(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	portletIdKey := strcase.ToScreamingDelimited(name, '_', 0, true)
-	portletIdKey = strings.ToUpper(portletIdKey)
-	portletIdValue := strings.ToLower(portletIdKey) + "_" + camelCaseName
+	portletIDKey := strcase.ToScreamingDelimited(name, '_', 0, true)
+	portletIDKey = strings.ToUpper(portletIDKey)
+	portletIDValue := strings.ToLower(portletIDKey) + "_" + camelCaseName
 
-	portletData := &MvcPortletData{
+	portletData := &PortletData{
 		Package:                strcase.ToDelimited(name, '.'),
 		Name:                   name,
 		CamelCaseName:          camelCaseName,
-		PortletIdKey:           portletIdKey,
-		PortletIdValue:         portletIdValue,
+		PortletIDKey:           portletIDKey,
+		PortletIDValue:         portletIDValue,
 		WorkspaceName:          workspaceName,
 		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
 		WorkspacePackage:       workspacePackage,
@@ -173,7 +173,7 @@ func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
 
 }
 
-func updateMvcPortletWithData(destPortletPath string, portletData *MvcPortletData) error {
+func updateMvcPortletWithData(destPortletPath string, portletData *PortletData) error {
 	return filepath.Walk(destPortletPath, func(path string, info fs.FileInfo, err error) error {
 
 		if err != nil {
