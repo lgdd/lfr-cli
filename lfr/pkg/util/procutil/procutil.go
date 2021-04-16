@@ -27,10 +27,10 @@ func SetCatalinaPid() error {
 }
 
 func GetCatalinaPid() (int, error) {
-	workingPath, err := fileutil.GetLiferayHomePath()
+	workingPath, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		workingPath, err = fileutil.GetLiferayWorkspacePath()
+		workingPath, err = fileutil.GetLiferayHomePath()
 		if err != nil {
 			return 0, err
 		}
