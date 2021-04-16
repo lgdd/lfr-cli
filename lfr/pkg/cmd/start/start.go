@@ -41,5 +41,5 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	fmt.Println("\nFollow the logs:")
-	printutil.Info("deba logs -f\n\n")
+	printutil.Info("lfr logs -f\n\n")
 }
