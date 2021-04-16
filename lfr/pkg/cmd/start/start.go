@@ -28,6 +28,20 @@ func run(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
+	tomcatPath, err := fileutil.GetTomcatPath()
+
+	if err != nil {
+		printutil.Danger(err.Error())
+		os.Exit(1)
+	}
+
+	err = os.Setenv("CATALINA_HOME", tomcatPath)
+
+	if err != nil {
+		printutil.Danger(err.Error())
+		os.Exit(1)
+	}
+
 	procutil.SetCatalinaPid()
 
 	startupCmd := exec.Command(startupScript)

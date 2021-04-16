@@ -340,6 +340,16 @@ func GetTomcatScriptPath(script string) (string, error) {
 	return scriptPath, nil
 }
 
+func GetTomcatPath() (string, error) {
+	catalinaScriptPath, err := GetTomcatScriptPath("catalina")
+
+	if err != nil {
+		return "", err
+	}
+	catalinaScriptPathSplit := strings.Split(catalinaScriptPath, string(os.PathSeparator))
+	return strings.Join(catalinaScriptPathSplit[:len(catalinaScriptPathSplit)-2], string(os.PathSeparator)), nil
+}
+
 func GetCatalinaLogFile() (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
