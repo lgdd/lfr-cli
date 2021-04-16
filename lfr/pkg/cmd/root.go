@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/completion"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/create"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/exec"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/logs"
@@ -17,6 +18,7 @@ var root = &cobra.Command{
 }
 
 func init() {
+	root.AddCommand(completion.Cmd)
 	root.AddCommand(create.Cmd)
 	root.AddCommand(exec.Cmd)
 	root.AddCommand(start.Cmd)
