@@ -5,11 +5,11 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/lgdd/deba/pkg/cmd/exec"
-	"github.com/lgdd/deba/pkg/generate/workspace"
-	"github.com/lgdd/deba/pkg/project"
-	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/exec"
+	"github.com/lgdd/liferay-cli/lfr/pkg/generate/workspace"
+	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/spf13/cobra"
 )
 

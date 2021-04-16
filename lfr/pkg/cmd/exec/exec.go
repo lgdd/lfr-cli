@@ -2,12 +2,12 @@ package exec
 
 import (
 	"fmt"
-	"github.com/lgdd/deba/pkg/util/printutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"os"
 	"os/exec"
 	"runtime"
 
-	"github.com/lgdd/deba/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 	"github.com/spf13/cobra"
 )
 

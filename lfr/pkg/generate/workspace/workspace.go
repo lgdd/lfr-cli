@@ -4,8 +4,8 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lgdd/deba/pkg/project"
-	"github.com/lgdd/deba/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 )
 
 const (

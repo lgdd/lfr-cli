@@ -4,9 +4,9 @@ import (
 	"os"
 	"os/exec"
 
-	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
-	"github.com/lgdd/deba/pkg/util/procutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
 

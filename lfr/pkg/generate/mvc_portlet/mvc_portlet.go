@@ -1,12 +1,12 @@
-package api
+package mvc_portlet
 
 import (
 	"encoding/xml"
 	"fmt"
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/deba/pkg/project"
-	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"io/fs"
 	"io/ioutil"
 	"os"
@@ -14,13 +14,15 @@ import (
 	"strings"
 )
 
-type ApiData struct {
+type MvcPortletData struct {
 	Package                string
 	Name                   string
 	CamelCaseName          string
 	WorkspaceName          string
 	WorkspaceCamelCaseName string
 	WorkspacePackage       string
+	PortletIdKey           string
+	PortletIdValue         string
 }
 
 func Generate(name string) {
@@ -42,14 +44,14 @@ func Generate(name string) {
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
 	workspacePackage := strcase.ToDelimited(workspaceName, '.')
 
-	err = fileutil.CreateDirsFromAssets("tpl/api", destPortletPath)
+	err = fileutil.CreateDirsFromAssets("tpl/mvc-portlet", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/api", destPortletPath)
+	err = fileutil.CreateFilesFromAssets("tpl/mvc-portlet", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -63,13 +65,7 @@ func Generate(name string) {
 		os.Exit(1)
 	}
 
-	if !strings.HasSuffix(packagePath, "api") {
-		packagePath = filepath.Join(packagePath, "api")
-	}
-
 	fileutil.CreateDirs(packagePath)
-	fileutil.CreateDirs(filepath.Join(destPortletPath, "src", "main", "resources"))
-	fileutil.CreateFiles([]string{filepath.Join(destPortletPath, "src", "main", "resources", ".gitkeep")})
 
 	updateJavaFiles(camelCaseName, destPortletPath, packagePath)
 
@@ -134,16 +130,22 @@ func Generate(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	data := &ApiData{
+	portletIdKey := strcase.ToScreamingDelimited(name, '_', 0, true)
+	portletIdKey = strings.ToUpper(portletIdKey)
+	portletIdValue := strings.ToLower(portletIdKey) + "_" + camelCaseName
+
+	portletData := &MvcPortletData{
 		Package:                strcase.ToDelimited(name, '.'),
 		Name:                   name,
 		CamelCaseName:          camelCaseName,
+		PortletIdKey:           portletIdKey,
+		PortletIdValue:         portletIdValue,
 		WorkspaceName:          workspaceName,
 		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
 		WorkspacePackage:       workspacePackage,
 	}
 
-	err = updateMvcPortletWithData(destPortletPath, data)
+	err = updateMvcPortletWithData(destPortletPath, portletData)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -153,15 +155,25 @@ func Generate(name string) {
 
 func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
 	defaultSrcPath := filepath.Join(modulePath, "src", "main", "java")
-	err := os.Rename(filepath.Join(defaultSrcPath, "Api.java"), filepath.Join(packagePath, camelCaseName+".java"))
+	err := os.Rename(filepath.Join(defaultSrcPath, "Portlet.java"), filepath.Join(packagePath, camelCaseName+".java"))
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
+
+	fileutil.CreateDirs(filepath.Join(packagePath, "constants"))
+
+	err = os.Rename(filepath.Join(defaultSrcPath, "PortletKeys.java"), filepath.Join(packagePath, "constants", camelCaseName+"Keys.java"))
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
 }
 
-func updateMvcPortletWithData(destPortletPath string, data *ApiData) error {
+func updateMvcPortletWithData(destPortletPath string, portletData *MvcPortletData) error {
 	return filepath.Walk(destPortletPath, func(path string, info fs.FileInfo, err error) error {
 
 		if err != nil {
@@ -169,7 +181,7 @@ func updateMvcPortletWithData(destPortletPath string, data *ApiData) error {
 		}
 
 		if !info.IsDir() {
-			err = fileutil.UpdateWithData(path, data)
+			err = fileutil.UpdateWithData(path, portletData)
 		}
 
 		if err != nil {

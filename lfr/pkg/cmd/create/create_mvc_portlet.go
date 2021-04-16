@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/deba/pkg/generate/mvc_portlet"
+	"github.com/lgdd/liferay-cli/lfr/pkg/generate/mvc_portlet"
 	"github.com/spf13/cobra"
 )
 

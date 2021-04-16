@@ -10,7 +10,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/lgdd/deba/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 )
 
 func SetCatalinaPid() error {

@@ -16,8 +16,8 @@ import (
 
 	"github.com/nxadm/tail"
 
-	"github.com/lgdd/deba/pkg/assets"
-	"github.com/lgdd/deba/pkg/util/printutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/assets"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
 func CreateDirs(path string) {

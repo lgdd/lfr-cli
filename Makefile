@@ -1,2 +1,2 @@
 default:
-	go install github.com/lgdd/deba
+	go install ./...

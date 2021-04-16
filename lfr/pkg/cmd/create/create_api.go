@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/deba/pkg/generate/api"
+	"github.com/lgdd/liferay-cli/lfr/pkg/generate/api"
 	"github.com/spf13/cobra"
 )
 

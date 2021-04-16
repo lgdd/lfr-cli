@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lgdd/deba/pkg/util/fileutil"
-	"github.com/lgdd/deba/pkg/util/printutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/spf13/cobra"
 )
 

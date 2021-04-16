@@ -1,4 +1,4 @@
-module github.com/lgdd/deba
+module github.com/lgdd/liferay-cli
 
 go 1.16
 
