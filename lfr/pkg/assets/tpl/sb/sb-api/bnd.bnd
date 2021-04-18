@@ -1,0 +1,10 @@
+Bundle-Name: {{.CamelCaseName}} API
+Bundle-SymbolicName: {{.Package}}.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	{{.Package}}.exception,\
+	{{.Package}}.model,\
+	{{.Package}}.service,\
+	{{.Package}}.service.persistence
+-check: EXPORTS
+-includeresource: META-INF/service.xml=../{{.Name}}-service/service.xml

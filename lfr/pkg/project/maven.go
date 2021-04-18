@@ -24,4 +24,10 @@ type Pom struct {
 	Modules    struct {
 		Module []string `xml:"module"`
 	} `xml:"modules"`
+	Properties struct {
+		LiferayBomVersion          string `xml:"liferay.bom.version"`
+		LiferayWorkspaceBundleURL  string `xml:"liferay.workspace.bundle.url"`
+		LiferayRepositoryURL       string `xml:"liferay.repository.url"`
+		ProjectBuildSourceEncoding string `xml:"project.build.sourceEncoding"`
+	} `xml:"properties"`
 }
