@@ -1,0 +1,48 @@
+FROM azul/zulu-openjdk-alpine:{{.JavaVersion}} AS builder
+
+ENV MVND_VERSION=0.4.3
+ENV MVND_PLATFORM=linux-amd64
+ENV MVND_HOME=/home/liferay/mvnd-$MVND_VERSION-$MVND_PLATFORM
+ENV PATH=$PATH:$MVND_HOME/bin
+
+ARG LIFERAY_UID
+
+RUN apk --update --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.10/main/ add \
+    gcompat \
+    zip \
+    dos2unix && \
+    addgroup -S liferay && \
+    adduser -S liferay -G liferay -u ${LIFERAY_UID:-100}
+
+USER liferay
+WORKDIR /home/liferay
+
+RUN wget https://github.com/mvndaemon/mvnd/releases/download/$MVND_VERSION/mvnd-$MVND_VERSION-$MVND_PLATFORM.zip && \
+    unzip mvnd-$MVND_VERSION-$MVND_PLATFORM.zip
+
+ARG TARGET_ENV=prod
+
+COPY --chown=liferay:liferay pom.xml .
+COPY --chown=liferay:liferay platform.bndrun .
+COPY --chown=liferay:liferay configs/common configs/common
+COPY --chown=liferay:liferay configs/$TARGET_ENV configs/$TARGET_ENV
+COPY --chown=liferay:liferay themes themes
+COPY --chown=liferay:liferay modules modules
+COPY --chown=liferay:liferay wars wars
+
+RUN mvnd bundle-support:init \
+    -Dliferay.workspace.environment=$TARGET_ENV
+
+RUN rm -r bundles/osgi/state
+
+RUN mvnd package bundle-support:deploy \
+    -Dliferay.workspace.environment=$TARGET_ENV
+
+FROM {{.Image}}
+
+ENV JAVA_VERSION=zulu{{.JavaVersion}}
+
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/deploy /opt/liferay/deploy
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/osgi/modules /opt/liferay/osgi/modules
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/osgi/configs /opt/liferay/osgi/configs
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/*.properties /opt/liferay/

@@ -1,0 +1,56 @@
+FROM azul/zulu-openjdk-alpine:{{.JavaVersion}} AS builder
+
+ENV NPM_CONFIG_PREFIX=/home/liferay/.npm-global
+ENV PATH=$PATH:/home/liferay/.npm-global/bin
+ENV PATH=$PATH:/home/liferay/.npm-global/lib
+ENV NODE_ENV=production
+
+ARG LIFERAY_UID
+
+RUN apk --update --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.10/main/ add \
+    gcompat \
+    nodejs=10.24.0-r0 \
+    nodejs-npm \
+    dos2unix && \
+    addgroup -S liferay && \
+    adduser -S liferay -G liferay -u ${LIFERAY_UID:-100}
+
+USER liferay
+WORKDIR /home/liferay
+
+COPY --chown=liferay:liferay gradle gradle
+COPY --chown=liferay:liferay gradlew .
+COPY --chown=liferay:liferay gradle.properties .
+
+RUN mkdir -p .liferay/bundles && \
+    cat gradle.properties | grep liferay.workspace.bundle.url= | cut -d'=' -f2 | \
+    xargs wget -P .liferay/bundles && \
+    dos2unix gradlew && \
+    ./gradlew
+
+ARG TARGET_ENV=prod
+
+COPY --chown=liferay:liferay settings.gradle .
+COPY --chown=liferay:liferay build.gradle .
+COPY --chown=liferay:liferay configs/common configs/common
+COPY --chown=liferay:liferay configs/$TARGET_ENV configs/$TARGET_ENV
+COPY --chown=liferay:liferay themes themes
+COPY --chown=liferay:liferay modules modules
+
+RUN ./gradlew initBundle \
+    -Pliferay.workspace.environment=$TARGET_ENV
+
+RUN rm -r bundles/osgi/state
+
+RUN ./gradlew deploy \
+    -PnodeDownload=false
+
+FROM {{.Image}}
+
+ENV JAVA_VERSION=zulu{{.JavaVersion}}
+
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/deploy/*.war /opt/liferay/osgi/war
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/osgi/modules /opt/liferay/osgi/modules
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/osgi/configs /opt/liferay/osgi/configs
+COPY --chown=liferay:liferay --from=builder /home/liferay/bundles/*.properties /opt/liferay/
+

@@ -16,4 +16,5 @@ func init() {
 	Cmd.AddCommand(createMvcPortlet)
 	Cmd.AddCommand(createApiModule)
 	Cmd.AddCommand(createServiceBuilder)
+	Cmd.AddCommand(createDocker)
 }
