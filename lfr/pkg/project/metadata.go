@@ -62,7 +62,7 @@ func NewMetadata(base, version string) (*Metadata, error) {
 			Product:        "portal-7.0-ga7",
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip",
 			TomcatVersion:  "8.0.32",
-			TargetPlatform: "7.0.6",
+			TargetPlatform: "7.0.6-2",
 			DockerImage:    "liferay/portal:7.0.6-ga7",
 			GroupId:        strcase.ToDelimited(base, '.'),
 			ArtifactId:     base,
