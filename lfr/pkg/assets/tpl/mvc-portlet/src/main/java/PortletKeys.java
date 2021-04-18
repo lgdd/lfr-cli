@@ -2,7 +2,7 @@ package {{.Package}}.constants;
 
 public class {{.CamelCaseName}}Keys {
 
-	public static final String {{.PortletIdKey}} =
-		"{{.PortletIdValue}}";
+	public static final String {{.PortletIDKey}} =
+		"{{.PortletIDValue}}";
 
 }

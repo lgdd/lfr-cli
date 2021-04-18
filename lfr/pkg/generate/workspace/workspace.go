@@ -30,6 +30,8 @@ func Generate(base, build, version string) error {
 		}
 	}
 
+	createCommonEmptyDirs(base)
+
 	return nil
 }
 
@@ -139,4 +141,13 @@ func updatePoms(base, version string) error {
 	}
 
 	return nil
+}
+
+func createCommonEmptyDirs(base string) {
+	configCommonDir := filepath.Join(base, "configs", "common")
+	configDockerDir := filepath.Join(base, "configs", "docker")
+	fileutil.CreateDirs(configCommonDir)
+	fileutil.CreateDirs(configDockerDir)
+	fileutil.CreateFiles([]string{filepath.Join(configCommonDir, ".gitkeep")})
+	fileutil.CreateFiles([]string{filepath.Join(configDockerDir, ".gitkeep")})
 }

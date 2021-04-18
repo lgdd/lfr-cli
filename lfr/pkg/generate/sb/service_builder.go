@@ -203,7 +203,7 @@ func getLiferayMajorVersion() (string, error) {
 		defer pomWorkspace.Close()
 		byteValue, _ := ioutil.ReadAll(pomWorkspace)
 
-		var pom project.Pom
+		var pom project.WorkspacePom
 		err = xml.Unmarshal(byteValue, &pom)
 		if err != nil {
 			return "", err
