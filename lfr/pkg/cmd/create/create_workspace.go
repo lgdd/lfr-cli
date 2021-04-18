@@ -61,10 +61,10 @@ func runInit(name, build string) {
 
 	switch build {
 	case project.Gradle:
-		printutil.Info("deba exec initBundle\n\n")
+		printutil.Info("lfr exec initBundle\n\n")
 		exec.RunWrapperCmd([]string{"initBundle"})
 	case project.Maven:
-		printutil.Info("deba exec bundle-support:init\n\n")
+		printutil.Info("lfr exec bundle-support:init\n\n")
 		exec.RunWrapperCmd([]string{"bundle-support:init"})
 	}
 }
@@ -74,16 +74,16 @@ func printInitCmd(name, build string) {
 	if runtime.GOOS == "windows" {
 		switch build {
 		case project.Gradle:
-			printutil.Info(fmt.Sprintf("cd %s && gradlew.bat initBundle\n", name))
+			printutil.Info(fmt.Sprintf("cd %s && lfr exec initBundle\n", name))
 		case project.Maven:
-			printutil.Info(fmt.Sprintf("cd %s && mvnw.cmd bundle-support:init\n", name))
+			printutil.Info(fmt.Sprintf("cd %s && lfr exec bundle-support:init\n", name))
 		}
 	} else {
 		switch build {
 		case project.Gradle:
-			printutil.Info(fmt.Sprintf("cd %s && ./gradlew initBundle\n", name))
+			printutil.Info(fmt.Sprintf("cd %s && lfr exec initBundle\n", name))
 		case project.Maven:
-			printutil.Info(fmt.Sprintf("cd %s && ./mvnw bundle-support:init\n", name))
+			printutil.Info(fmt.Sprintf("cd %s && lfr exec bundle-support:init\n", name))
 		}
 	}
 	fmt.Print("\n")
