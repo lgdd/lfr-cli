@@ -3,7 +3,9 @@ package cmd
 import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/completion"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/create"
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/deploy"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/exec"
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/initb"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/logs"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/start"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/status"
@@ -21,6 +23,8 @@ func init() {
 	root.AddCommand(completion.Cmd)
 	root.AddCommand(create.Cmd)
 	root.AddCommand(exec.Cmd)
+	root.AddCommand(deploy.Cmd)
+	root.AddCommand(initb.Cmd)
 	root.AddCommand(start.Cmd)
 	root.AddCommand(stop.Cmd)
 	root.AddCommand(status.Cmd)
