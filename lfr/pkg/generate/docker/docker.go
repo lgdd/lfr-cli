@@ -57,15 +57,10 @@ func Generate(multistage bool, java int) {
 		os.Exit(1)
 	}
 
-	bundleDir := filepath.Join(liferayWorkspace, "bundles")
+	bundleDir := filepath.Join(liferayWorkspace, "build")
 	if !fileutil.FilesExists([]string{bundleDir}) {
-		fmt.Print("\nDon't forget to initialize your bundle and deploy your modules:\n\n")
-		switch projectType {
-		case project.Gradle:
-			printutil.Info("lfr exec initBundle deploy\n\n")
-		case project.Maven:
-			printutil.Info("lfr exec bundle-support:init package bundle-support:deploy\n\n")
-		}
+		fmt.Print("\nDon't forget to deploy your modules:\n\n")
+		printutil.Info("lfr deploy\n\n")
 	}
 }
 
