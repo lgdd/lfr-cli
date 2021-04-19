@@ -1,6 +1,7 @@
 package workspace
 
 import (
+	"errors"
 	"os"
 	"path/filepath"
 
@@ -14,28 +15,37 @@ const (
 )
 
 func Generate(base, build, version string) error {
-	err := os.Mkdir(base, os.ModePerm)
+	metadata, err := project.NewMetadata(base, version)
 	if err != nil {
 		return err
 	}
 
-	switch build {
-	case Gradle:
-		if err := createGradleFiles(base, version); err != nil {
+	if build == Maven {
+		err = os.Mkdir(base, os.ModePerm)
+		if err != nil {
 			return err
 		}
-	case Maven:
-		if err := createMavenFiles(base, version); err != nil {
+		if err := createMavenFiles(base, metadata); err != nil {
 			return err
 		}
+		createCommonEmptyDirs(base)
+	} else if build == Gradle {
+		err = os.Mkdir(base, os.ModePerm)
+		if err != nil {
+			return err
+		}
+		if err := createGradleFiles(base, metadata); err != nil {
+			return err
+		}
+		createCommonEmptyDirs(base)
+	} else {
+		return errors.New("only Gradle and Maven are supported")
 	}
-
-	createCommonEmptyDirs(base)
 
 	return nil
 }
 
-func createGradleFiles(base string, version string) error {
+func createGradleFiles(base string, metadata *project.Metadata) error {
 	err := fileutil.CreateDirsFromAssets("tpl/ws/gradle", base)
 
 	if err != nil {
@@ -60,7 +70,7 @@ func createGradleFiles(base string, version string) error {
 		return err
 	}
 
-	err = updateGradleProps(base, version)
+	err = updateGradleProps(base, metadata)
 	if err != nil {
 		return err
 	}
@@ -68,20 +78,15 @@ func createGradleFiles(base string, version string) error {
 	return nil
 }
 
-func updateGradleProps(base, version string) error {
-	metadata, err := project.NewMetadata(base, version)
-	if err != nil {
-		return err
-	}
-
-	err = fileutil.UpdateWithData(filepath.Join(base, "gradle.properties"), metadata)
+func updateGradleProps(base string, metadata *project.Metadata) error {
+	err := fileutil.UpdateWithData(filepath.Join(base, "gradle.properties"), metadata)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func createMavenFiles(base, version string) error {
+func createMavenFiles(base string, metadata *project.Metadata) error {
 	err := fileutil.CreateDirsFromAssets("tpl/ws/maven", base)
 
 	if err != nil {
@@ -112,7 +117,7 @@ func createMavenFiles(base, version string) error {
 		return err
 	}
 
-	err = updatePoms(base, version)
+	err = updatePoms(base, metadata)
 	if err != nil {
 		return err
 	}
@@ -120,12 +125,7 @@ func createMavenFiles(base, version string) error {
 	return nil
 }
 
-func updatePoms(base, version string) error {
-	data, err := project.NewMetadata(base, version)
-	if err != nil {
-		return err
-	}
-
+func updatePoms(base string, metadata *project.Metadata) error {
 	poms := []string{
 		filepath.Join(base, "pom.xml"),
 		filepath.Join(base, "modules", "pom.xml"),
@@ -134,7 +134,7 @@ func updatePoms(base, version string) error {
 	}
 
 	for _, pomPath := range poms {
-		err = fileutil.UpdateWithData(pomPath, data)
+		err := fileutil.UpdateWithData(pomPath, metadata)
 		if err != nil {
 			return err
 		}
