@@ -33,7 +33,9 @@ func Generate(multistage bool, java int) {
 	}
 
 	tplDockerfile := "tpl/docker/Dockerfile"
+	tplDockerCompose := "tpl/docker/docker-compose.yml"
 	destDockerfile := filepath.Join(liferayWorkspace, "Dockerfile")
+	destDockerCompose := filepath.Join(liferayWorkspace, "docker-compose.yml")
 
 	if multistage {
 		tplDockerfile = "tpl/docker/multistage/Dockerfile." + projectType
@@ -47,6 +49,7 @@ func Generate(multistage bool, java int) {
 	}
 
 	fileutil.CopyFromTemplates(tplDockerfile, destDockerfile)
+	fileutil.CopyFromTemplates(tplDockerCompose, destDockerCompose)
 	err = fileutil.UpdateWithData(destDockerfile, &DockerData{
 		Image:       dockerImage,
 		JavaVersion: strconv.Itoa(java),
@@ -57,11 +60,19 @@ func Generate(multistage bool, java int) {
 		os.Exit(1)
 	}
 
-	bundleDir := filepath.Join(liferayWorkspace, "build")
-	if !fileutil.FilesExists([]string{bundleDir}) {
-		fmt.Print("\nDon't forget to deploy your modules:\n\n")
-		printutil.Info("lfr deploy\n\n")
-	}
+	fileutil.CreateDirs("build/docker/deploy")
+	fileutil.CreateDirs("build/docker/configs/local")
+	fileutil.CreateDirs("build/docker/configs/dev")
+	fileutil.CreateDirs("build/docker/configs/uat")
+	fileutil.CreateDirs("build/docker/configs/prod")
+
+	fmt.Print("\nTo get started:\n\n")
+	fmt.Println("Deploy your modules with:")
+	printutil.Info("lfr deploy\n\n")
+	fmt.Println("Start your docker containers with:")
+	printutil.Info("docker-compose up -d\n\n")
+	fmt.Println("And follow the logs with:")
+	printutil.Info("docker-compose logs -f\n\n")
 }
 
 func getLiferayDockerImage() (string, error) {

@@ -1,0 +1,46 @@
+version: "3"
+services:
+  liferay:
+    build:
+      dockerfile: Dockerfile
+      context: .
+      args:
+        - TARGET_ENV=local
+    ports:
+      - "8080:8080"
+    environment:
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_DRIVER_UPPERCASEC_LASS_UPPERCASEN_AME: com.mysql.cj.jdbc.Driver
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_URL: jdbc:mysql://db/lportal?characterEncoding=UTF-8&dontTrackOpenResources=true&holdResultsOpenOverStatementClose=true&serverTimezone=GMT&useFastDateParsing=false&useUnicode=true
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_USERNAME: liferay
+      LIFERAY_JDBC_PERIOD_DEFAULT_PERIOD_PASSWORD: liferay
+      LIFERAY_ADMIN_PERIOD_EMAIL_PERIOD_FROM_PERIOD_NAME: Liferay Demo
+      LIFERAY_ADMIN_PERIOD_EMAIL_PERIOD_FROM_PERIOD_ADDRESS: no-reply@liferay.demo
+      LIFERAY_MAIL_PERIOD_SESSION_PERIOD_MAIL_PERIOD_SMTP_PERIOD_HOST: mail
+      LIFERAY_MAIL_PERIOD_SESSION_PERIOD_MAIL_PERIOD_POP_NUMBER3__PERIOD_HOST: mail
+    volumes:
+      - liferay_data:/opt/liferay/data
+      - ./build/docker/deploy:/mnt/liferay/deploy
+      - ./build/docker/$TARGET_ENV:/mnt/liferay/files
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: lportal
+      MYSQL_USER: liferay
+      MYSQL_PASSWORD: liferay
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+    volumes:
+      - db_data:/var/lib/mysql
+    cap_add:
+      - SYS_NICE
+  mail:
+    image: rnwood/smtp4dev:v3
+    ports:
+      - "5000:80"
+    volumes:
+      - smtp_data:/smtp4dev
+volumes:
+  liferay_data:
+  smtp_data:
+  db_data:
