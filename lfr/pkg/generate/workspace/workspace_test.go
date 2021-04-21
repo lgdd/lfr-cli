@@ -13,13 +13,6 @@ func TestGenerate_Gradle_ShouldHaveExpectedFiles(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
 	err := Generate(workspaceDir, "gradle", "7.3")
 
-	defer t.Cleanup(func() {
-		err = os.RemoveAll(workspaceDir)
-		if err != nil {
-			t.Fatal(err)
-		}
-	})
-
 	if err != nil {
 		t.Fatal(err)
 	}
