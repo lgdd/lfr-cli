@@ -73,7 +73,7 @@ func Generate(name string) {
 
 	updateJavaFiles(camelCaseName, destPortletPath, packagePath)
 
-	if fileutil.IsGradleWorkspace() {
+	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		pomPath := filepath.Join(destPortletPath, "pom.xml")
 		err = os.Remove(pomPath)
 
@@ -86,7 +86,7 @@ func Generate(name string) {
 		fmt.Println(pomPath)
 	}
 
-	if fileutil.IsMavenWorkspace() {
+	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		buildGradlePath := filepath.Join(destPortletPath, "build.gradle")
 		err = os.Remove(buildGradlePath)
 

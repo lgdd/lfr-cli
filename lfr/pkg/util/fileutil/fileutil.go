@@ -168,35 +168,23 @@ func IsInWorkspaceDir() bool {
 	return true
 }
 
-func IsGradleWorkspace() bool {
-	workspace, err := GetLiferayWorkspacePath()
-
-	if err != nil {
-		return false
-	}
-
+func IsGradleWorkspace(path string) bool {
 	expectedFiles := []string{
-		filepath.Join(workspace, "configs"),
-		filepath.Join(workspace, "gradle.properties"),
-		filepath.Join(workspace, "settings.gradle"),
-		filepath.Join(workspace, "build.gradle"),
-		filepath.Join(workspace, "gradlew"),
+		filepath.Join(path, "configs"),
+		filepath.Join(path, "gradle.properties"),
+		filepath.Join(path, "settings.gradle"),
+		filepath.Join(path, "build.gradle"),
+		filepath.Join(path, "gradlew"),
 	}
 
 	return FilesExists(expectedFiles)
 }
 
-func IsMavenWorkspace() bool {
-	workspace, err := GetLiferayWorkspacePath()
-
-	if err != nil {
-		return false
-	}
-
+func IsMavenWorkspace(path string) bool {
 	expectedFiles := []string{
-		filepath.Join(workspace, "configs"),
-		filepath.Join(workspace, "pom.xml"),
-		filepath.Join(workspace, "mvnw"),
+		filepath.Join(path, "configs"),
+		filepath.Join(path, "pom.xml"),
+		filepath.Join(path, "mvnw"),
 	}
 
 	return FilesExists(expectedFiles)

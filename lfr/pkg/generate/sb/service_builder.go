@@ -68,7 +68,7 @@ func Generate(name string) {
 		os.Exit(1)
 	}
 
-	if fileutil.IsGradleWorkspace() {
+	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		pomPath := filepath.Join(destModulePath, "pom.xml")
 		err = os.Remove(pomPath)
 
@@ -103,7 +103,7 @@ func Generate(name string) {
 		fmt.Println(pomPath)
 	}
 
-	if fileutil.IsMavenWorkspace() {
+	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		buildGradlePath := filepath.Join(destModuleAPIPath, "build.gradle")
 		err = os.Remove(buildGradlePath)
 
@@ -194,7 +194,7 @@ func getLiferayMajorVersion() (string, error) {
 		return "", err
 	}
 
-	if fileutil.IsMavenWorkspace() {
+	if fileutil.IsMavenWorkspace(workspacePath) {
 		pomWorkspacePath := filepath.Join(workspacePath, "pom.xml")
 		pomWorkspace, err := os.Open(pomWorkspacePath)
 		if err != nil {
@@ -214,7 +214,7 @@ func getLiferayMajorVersion() (string, error) {
 		return version, nil
 	}
 
-	if fileutil.IsGradleWorkspace() {
+	if fileutil.IsGradleWorkspace(workspacePath) {
 		gradlePropsPath := filepath.Join(workspacePath, "gradle.properties")
 		gradleProps := properties.MustLoadFile(gradlePropsPath, properties.UTF8)
 		product := gradleProps.GetString("liferay.workspace.product", "portal-7.3-ga7")

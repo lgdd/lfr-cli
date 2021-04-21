@@ -2,6 +2,7 @@ package initb
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 
@@ -20,12 +21,17 @@ var (
 )
 
 func run(cmd *cobra.Command, args []string) {
-	if fileutil.IsGradleWorkspace() {
+	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		fmt.Print("\nRunning ")
 		printutil.Info("lfr exec initBundle\n\n")
 		exec.RunWrapperCmd([]string{"initBundle"})
 	}
-	if fileutil.IsMavenWorkspace() {
+	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		fmt.Print("\nRunning ")
 		printutil.Info("lfr exec bundle-support:init\n\n")
 		exec.RunWrapperCmd([]string{"bundle-support:init"})
