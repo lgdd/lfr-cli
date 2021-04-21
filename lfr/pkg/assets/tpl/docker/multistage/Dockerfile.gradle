@@ -9,7 +9,7 @@ ARG LIFERAY_UID
 
 RUN apk --update --no-cache --repository https://dl-cdn.alpinelinux.org/alpine/v3.10/main/ add \
     gcompat \
-    nodejs=10.24.0-r0 \
+    nodejs=10.24.1-r0 \
     nodejs-npm \
     dos2unix && \
     addgroup -S liferay && \
