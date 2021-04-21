@@ -28,16 +28,9 @@ type ServiceBuilderData struct {
 	DtdMajorVersion        string
 }
 
-func Generate(name string) {
+func Generate(liferayWorkspace, name string) {
 	sep := string(os.PathSeparator)
-	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
-	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-
-	name = strcase.ToKebab(name)
 	destModuleParentPath := filepath.Join(liferayWorkspace, "modules")
 	destModulePath := filepath.Join(destModuleParentPath, name)
 	destModuleAPIPath := filepath.Join(destModuleParentPath, name, name+"-api")
@@ -47,7 +40,7 @@ func Generate(name string) {
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
 	workspacePackage := strcase.ToDelimited(workspaceName, '.')
 
-	err = fileutil.CreateDirsFromAssets("tpl/sb", destModulePath)
+	err := fileutil.CreateDirsFromAssets("tpl/sb", destModulePath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -162,7 +155,7 @@ func Generate(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	version, err := getLiferayMajorVersion()
+	version, err := getLiferayMajorVersion(liferayWorkspace)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -188,12 +181,7 @@ func Generate(name string) {
 	}
 }
 
-func getLiferayMajorVersion() (string, error) {
-	workspacePath, err := fileutil.GetLiferayWorkspacePath()
-	if err != nil {
-		return "", err
-	}
-
+func getLiferayMajorVersion(workspacePath string) (string, error) {
 	if fileutil.IsMavenWorkspace(workspacePath) {
 		pomWorkspacePath := filepath.Join(workspacePath, "pom.xml")
 		pomWorkspace, err := os.Open(pomWorkspacePath)

@@ -12,4 +12,5 @@ require (
 	github.com/spf13/cobra v1.0.0
 	github.com/spf13/pflag v1.0.5 // indirect
 	golang.org/x/sys v0.0.0-20210415045647-66c3f260301c // indirect
+	golang.org/x/tools/gopls v0.6.10 // indirect
 )
