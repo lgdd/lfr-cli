@@ -2,6 +2,7 @@ package docker
 
 import (
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"github.com/lgdd/liferay-cli/lfr/pkg/project"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
@@ -18,17 +19,14 @@ type DockerData struct {
 	JavaVersion string
 }
 
-func Generate(multistage bool, java int) {
-	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
-
-	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
-	}
-
+func Generate(liferayWorkspace string, multistage bool, java int) error {
 	projectType := project.Gradle
 
-	if fileutil.IsMavenWorkspace() {
+	if !project.IsSupportedJavaVersion(java) {
+		return errors.New("java " + strconv.Itoa(java) + " is not supported\n")
+	}
+
+	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		projectType = project.Maven
 	}
 
@@ -41,11 +39,10 @@ func Generate(multistage bool, java int) {
 		tplDockerfile = "tpl/docker/multistage/Dockerfile." + projectType
 	}
 
-	dockerImage, err := getLiferayDockerImage()
+	dockerImage, err := getLiferayDockerImage(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		return err
 	}
 
 	fileutil.CopyFromTemplates(tplDockerfile, destDockerfile)
@@ -56,8 +53,7 @@ func Generate(multistage bool, java int) {
 	})
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		return err
 	}
 
 	fileutil.CreateDirs("build/docker/deploy")
@@ -73,15 +69,12 @@ func Generate(multistage bool, java int) {
 	printutil.Info("docker-compose up -d\n\n")
 	fmt.Println("And follow the logs with:")
 	printutil.Info("docker-compose logs -f\n\n")
+
+	return nil
 }
 
-func getLiferayDockerImage() (string, error) {
-	workspacePath, err := fileutil.GetLiferayWorkspacePath()
-	if err != nil {
-		return "", err
-	}
-
-	if fileutil.IsMavenWorkspace() {
+func getLiferayDockerImage(workspacePath string) (string, error) {
+	if fileutil.IsMavenWorkspace(workspacePath) {
 		pomWorkspacePath := filepath.Join(workspacePath, "pom.xml")
 		pomWorkspace, err := os.Open(pomWorkspacePath)
 		if err != nil {
@@ -98,7 +91,7 @@ func getLiferayDockerImage() (string, error) {
 		return pom.Properties.LiferayDockerImage, nil
 	}
 
-	if fileutil.IsGradleWorkspace() {
+	if fileutil.IsGradleWorkspace(workspacePath) {
 		gradlePropsPath := filepath.Join(workspacePath, "gradle.properties")
 		gradleProps := properties.MustLoadFile(gradlePropsPath, properties.UTF8)
 		dockerImage := gradleProps.GetString("liferay.workspace.docker.image.liferay", "liferay/portal:7.3.6-ga7")
