@@ -5,7 +5,7 @@ go 1.16
 require (
 	github.com/fatih/color v1.9.0
 	github.com/iancoleman/strcase v0.1.3
-	github.com/magiconair/properties v1.8.5 // indirect
+	github.com/magiconair/properties v1.8.5
 	github.com/mattn/go-isatty v0.0.12 // indirect
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/nxadm/tail v1.4.8

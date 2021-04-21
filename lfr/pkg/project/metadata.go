@@ -2,6 +2,7 @@ package project
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/iancoleman/strcase"
 )
@@ -31,31 +32,31 @@ func NewMetadata(base, version string) (*Metadata, error) {
 			TomcatVersion:  "9.0.40",
 			TargetPlatform: "7.3.6",
 			DockerImage:    "liferay/portal:7.3.6-ga7",
-			GroupId:        strcase.ToDelimited(base, '.'),
-			ArtifactId:     base,
-			Name:           strcase.ToCamel(base),
+			GroupId:        strcase.ToDelimited(strings.ToLower(base), '.'),
+			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
+			Name:           strcase.ToCamel(strings.ToLower(base)),
 		}, nil
 	case "7.2":
 		return &Metadata{
 			Product:        "portal-7.2-ga2",
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.tar.gz",
 			TomcatVersion:  "9.0.17",
-			TargetPlatform: "7.2.1",
+			TargetPlatform: "7.2.1-1",
 			DockerImage:    "liferay/portal:7.2.1-ga2",
-			GroupId:        strcase.ToDelimited(base, '.'),
-			ArtifactId:     base,
-			Name:           strcase.ToCamel(base),
+			GroupId:        strcase.ToDelimited(strings.ToLower(base), '.'),
+			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
+			Name:           strcase.ToCamel(strings.ToLower(base)),
 		}, nil
 	case "7.1":
 		return &Metadata{
 			Product:        "portal-7.1-ga4",
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.tar.gz",
 			TomcatVersion:  "9.0.17",
-			TargetPlatform: "7.1.3",
+			TargetPlatform: "7.1.3-1",
 			DockerImage:    "liferay/portal:7.1.3-ga4",
-			GroupId:        strcase.ToDelimited(base, '.'),
-			ArtifactId:     base,
-			Name:           strcase.ToCamel(base),
+			GroupId:        strcase.ToDelimited(strings.ToLower(base), '.'),
+			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
+			Name:           strcase.ToCamel(strings.ToLower(base)),
 		}, nil
 	case "7.0":
 		return &Metadata{
@@ -64,9 +65,9 @@ func NewMetadata(base, version string) (*Metadata, error) {
 			TomcatVersion:  "8.0.32",
 			TargetPlatform: "7.0.6-2",
 			DockerImage:    "liferay/portal:7.0.6-ga7",
-			GroupId:        strcase.ToDelimited(base, '.'),
-			ArtifactId:     base,
-			Name:           strcase.ToCamel(base),
+			GroupId:        strcase.ToDelimited(strings.ToLower(base), '.'),
+			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
+			Name:           strcase.ToCamel(strings.ToLower(base)),
 		}, nil
 	}
 	return nil, fmt.Errorf("invalid Liferay version")
