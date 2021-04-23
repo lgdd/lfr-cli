@@ -7,6 +7,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/exec"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/initb"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/logs"
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/shell"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/start"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/status"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/stop"
@@ -29,6 +30,7 @@ func init() {
 	root.AddCommand(stop.Cmd)
 	root.AddCommand(status.Cmd)
 	root.AddCommand(logs.Cmd)
+	root.AddCommand(shell.Cmd)
 	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "--no-color (disable color output)")
 }
 
