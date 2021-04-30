@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display {{.MajorVersion}}//EN" "http://www.liferay.com/dtd/liferay-display_{{.DtdMajorVersion}}.dtd">
+
+<display>
+	<category name="category.sample">
+		<portlet id="{{.Name}}" />
+	</category>
+</display>
