@@ -28,9 +28,17 @@ type SpringPortletData struct {
 	PortletIDValue         string
 	MajorVersion           string
 	DtdMajorVersion        string
+	TemplateEngine         string
 }
 
-func Generate(name string) {
+func Generate(name, templateEngine string) {
+
+	if templateEngine != "thymeleaf" && templateEngine != "jsp" {
+		printutil.Danger("invalid template engine\n")
+		fmt.Println("Please use thymeleaf or jsp")
+		os.Exit(1)
+	}
+
 	sep := string(os.PathSeparator)
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
@@ -71,8 +79,6 @@ func Generate(name string) {
 	}
 
 	fileutil.CreateDirs(packagePath)
-
-	updateFiles(camelCaseName, destPortletPath, packagePath)
 
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		pomPath := filepath.Join(destPortletPath, "pom.xml")
@@ -157,7 +163,10 @@ func Generate(name string) {
 		WorkspacePackage:       workspacePackage,
 		MajorVersion:           version,
 		DtdMajorVersion:        strings.ReplaceAll(version, ".", "_"),
+		TemplateEngine:         templateEngine,
 	}
+
+	updateFiles(portletData, destPortletPath, packagePath)
 
 	err = updateMvcPortletWithData(destPortletPath, portletData)
 
@@ -167,7 +176,7 @@ func Generate(name string) {
 	}
 }
 
-func updateFiles(camelCaseName, modulePath, packagePath string) {
+func updateFiles(portletData *SpringPortletData, modulePath, packagePath string) {
 	defaultSrcPath := filepath.Join(modulePath, "src", "main", "java")
 
 	fileutil.CreateDirs(filepath.Join(packagePath, "controller"))
@@ -190,12 +199,34 @@ func updateFiles(camelCaseName, modulePath, packagePath string) {
 
 	springPortletContextPath := filepath.Join(modulePath, "src", "main", "webapp", "WEB-INF", "spring-context", "portlet")
 
-	err = os.Rename(filepath.Join(springPortletContextPath, "Spring.xml"), filepath.Join(springPortletContextPath, camelCaseName+".xml"))
+	err = os.Rename(filepath.Join(springPortletContextPath, "Spring.xml"), filepath.Join(springPortletContextPath, portletData.CamelCaseName+".xml"))
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
+
+	viewsPath := filepath.Join(modulePath, "src", "main", "webapp", "WEB-INF", "views")
+	viewsExt := ".jspx"
+
+	if portletData.TemplateEngine == "thymeleaf" {
+		viewsExt = ".html"
+	}
+
+	err = os.Rename(filepath.Join(viewsPath, "user.tpl"), filepath.Join(viewsPath, "user"+viewsExt))
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	err = os.Rename(filepath.Join(viewsPath, "greeting.tpl"), filepath.Join(viewsPath, "greeting"+viewsExt))
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
 }
 
 func updateMvcPortletWithData(destPortletPath string, portletData *SpringPortletData) error {

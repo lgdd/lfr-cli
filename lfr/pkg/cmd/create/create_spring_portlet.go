@@ -12,9 +12,14 @@ var (
 		Args:    cobra.ExactArgs(1),
 		Run:     generateSpringPortlet,
 	}
+	TemplateEngine string
 )
+
+func init() {
+	createSpringPortlet.Flags().StringVarP(&TemplateEngine, "template", "t", "thymeleaf", "--template thymeleaf,jspx")
+}
 
 func generateSpringPortlet(cmd *cobra.Command, args []string) {
 	name := args[0]
-	spring.Generate(name)
+	spring.Generate(name, TemplateEngine)
 }

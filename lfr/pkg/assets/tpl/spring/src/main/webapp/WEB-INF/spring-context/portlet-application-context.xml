@@ -6,7 +6,8 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd"
 >
-	<context:annotation-config />
+    <context:annotation-config />
+{{- if eq .TemplateEngine "thymeleaf" }}
 	<bean class="org.thymeleaf.templateresolver.ServletContextTemplateResolver" id="templateResolver">
 		<property name="prefix" value="/WEB-INF/views/"/>
 		<property name="suffix" value=".html"/>
@@ -19,7 +20,15 @@
 	<bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver" id="viewResolver">
 		<property name="templateEngine" ref="templateEngine"/>
 		<property name="order" value="1"/>
-	</bean>
+    </bean>
+{{- else }}
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="viewResolver">
+        <property name="contentType" value="text/html;charset=UTF-8" />
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jspx" />
+        <property name="viewClass" value="com.liferay.portletmvc4spring.PortletJstlView" />
+    </bean>
+{{- end  }}
 	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
 		<property name="basenames">
 			<list>

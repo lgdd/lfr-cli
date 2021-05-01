@@ -7,7 +7,7 @@
 		<portlet-class>com.liferay.portletmvc4spring.DispatcherPortlet</portlet-class>
 		<init-param>
 			<name>contextConfigLocation</name>
-			<value>/WEB-INF/spring-context/portlet/Spring.xml</value>
+            <value>/WEB-INF/spring-context/portlet/{{.CamelCaseName}}.xml</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
