@@ -1,4 +1,4 @@
-{{- if  eq .TemplateEngine "thymeleaf" }}
+{{- if  eq .TemplateEngine "thymeleaf" -}}
 <?xml version="1.0" encoding="UTF-8"?>
 <div xmlns:th="http://www.thymeleaf.org">
 	<form th:id="|${namespace}mainForm|" th:action="${mainFormActionURL}" class="user-form" method="post" th:object="${user}">
@@ -20,7 +20,7 @@
 		<input class="btn btn-primary" th:text="${submit}" type="submit"/>
 	</form>
 </div>
-{{- else }}
+{{- else -}}
 <?xml version="1.0" encoding="UTF-8"?>
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page"
           xmlns:portlet="http://xmlns.jcp.org/portlet_3_0"
@@ -56,4 +56,4 @@
         <input class="btn btn-primary" value="${submit}" type="submit"/>
     </form:form>
 </jsp:root>
-{{- end  }}
+{{- end  -}}
