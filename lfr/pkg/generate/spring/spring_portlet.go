@@ -72,7 +72,7 @@ func Generate(name string) {
 
 	fileutil.CreateDirs(packagePath)
 
-	updateJavaFiles(camelCaseName, destPortletPath, packagePath)
+	updateFiles(camelCaseName, destPortletPath, packagePath)
 
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		pomPath := filepath.Join(destPortletPath, "pom.xml")
@@ -167,7 +167,7 @@ func Generate(name string) {
 	}
 }
 
-func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
+func updateFiles(camelCaseName, modulePath, packagePath string) {
 	defaultSrcPath := filepath.Join(modulePath, "src", "main", "java")
 
 	fileutil.CreateDirs(filepath.Join(packagePath, "controller"))
@@ -188,6 +188,14 @@ func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
 		os.Exit(1)
 	}
 
+	springPortletContextPath := filepath.Join(modulePath, "src", "main", "webapp", "WEB-INF", "spring-context", "portlet")
+
+	err = os.Rename(filepath.Join(springPortletContextPath, "Spring.xml"), filepath.Join(springPortletContextPath, camelCaseName+".xml"))
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
 }
 
 func updateMvcPortletWithData(destPortletPath string, portletData *SpringPortletData) error {
