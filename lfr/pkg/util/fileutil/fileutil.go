@@ -177,7 +177,7 @@ func IsGradleWorkspace(path string) bool {
 		filepath.Join(path, "gradlew"),
 	}
 
-	return FilesExists(expectedFiles)
+	return FilesExist(expectedFiles)
 }
 
 func IsMavenWorkspace(path string) bool {
@@ -187,10 +187,10 @@ func IsMavenWorkspace(path string) bool {
 		filepath.Join(path, "mvnw"),
 	}
 
-	return FilesExists(expectedFiles)
+	return FilesExist(expectedFiles)
 }
 
-func FilesExists(files []string) bool {
+func FilesExist(files []string) bool {
 	for _, file := range files {
 		if _, err := os.Stat(file); os.IsNotExist(err) {
 			return false
