@@ -13,8 +13,10 @@ import (
 	"strings"
 	"sync"
 	"text/template"
+	"time"
 
 	"github.com/nxadm/tail"
+	"github.com/schollz/progressbar/v3"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/assets"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
@@ -241,16 +243,24 @@ func FindFileParentInDir(dirPath string, fileName string) (string, error) {
 func FindFileInDir(dirPath string, fileName string) (string, error) {
 	targetFilePath := ""
 
+	bar := progressbar.NewOptions(-1,
+		progressbar.OptionSetDescription(fmt.Sprintf("Scanning files under %s", dirPath)),
+		progressbar.OptionSpinnerType(11),
+		progressbar.OptionThrottle(65*time.Millisecond))
+
 	err := filepath.Walk(dirPath,
 		func(path string, info os.FileInfo, err error) error {
 			if err != nil {
 				return err
 			}
+			bar.Add(1)
 			if info.Name() == fileName {
 				targetFilePath = path
 			}
 			return nil
 		})
+
+	bar.Clear()
 
 	if err != nil {
 		return targetFilePath, err
@@ -259,6 +269,8 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 	if targetFilePath == "" {
 		return targetFilePath, fmt.Errorf("%s not found in directories under %s", fileName, dirPath)
 	}
+
+	fmt.Printf("Found %s\n\n", targetFilePath)
 
 	return targetFilePath, nil
 }
