@@ -88,9 +88,6 @@ func Generate(name, templateEngine string) {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)
 		}
-
-		printutil.Danger("remove ")
-		fmt.Println(pomPath)
 	}
 
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
@@ -101,9 +98,6 @@ func Generate(name, templateEngine string) {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)
 		}
-
-		printutil.Danger("remove ")
-		fmt.Println(buildGradlePath)
 
 		pomParentPath := filepath.Join(destPortletPath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
@@ -174,6 +168,18 @@ func Generate(name, templateEngine string) {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
+
+	_ = filepath.Walk(destPortletPath,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				printutil.Success("created ")
+				fmt.Printf("%s\n", path)
+			}
+			return nil
+		})
 }
 
 func updateFiles(portletData *SpringPortletData, modulePath, packagePath string) {

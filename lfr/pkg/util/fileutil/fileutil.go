@@ -103,8 +103,6 @@ func CopyFromTemplates(sourcePath, destPath string) {
 		os.Exit(1)
 	}
 
-	printutil.Success("create ")
-	fmt.Printf("%s\n", destPath)
 }
 
 func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
@@ -130,9 +128,6 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
-
-	printutil.Success("create ")
-	fmt.Printf("%s\n", destPath)
 }
 
 func UpdateWithData(file string, data interface{}) error {

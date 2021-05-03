@@ -4,14 +4,15 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/lgdd/liferay-cli/lfr/pkg/project"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
-	"github.com/magiconair/properties"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
+
+	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/magiconair/properties"
 )
 
 type DockerData struct {
@@ -61,6 +62,21 @@ func Generate(liferayWorkspace string, multistage bool, java int) error {
 	fileutil.CreateDirs("build/docker/configs/dev")
 	fileutil.CreateDirs("build/docker/configs/uat")
 	fileutil.CreateDirs("build/docker/configs/prod")
+
+	_ = filepath.Walk("build/docker",
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			printutil.Success("created ")
+			fmt.Printf("%s\n", path)
+			return nil
+		})
+
+	printutil.Success("created ")
+	fmt.Println("Dockerfile")
+	printutil.Success("created ")
+	fmt.Println("docker-compose.yml")
 
 	fmt.Print("\nTo get started:\n\n")
 	fmt.Println("Deploy your modules with:")

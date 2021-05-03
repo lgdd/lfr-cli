@@ -3,12 +3,13 @@ package sb
 import (
 	"encoding/xml"
 	"fmt"
-	"github.com/magiconair/properties"
 	"io/fs"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/magiconair/properties"
 
 	"github.com/iancoleman/strcase"
 
@@ -70,9 +71,6 @@ func Generate(liferayWorkspace, name string) {
 			os.Exit(1)
 		}
 
-		printutil.Danger("remove ")
-		fmt.Println(pomPath)
-
 		pomPath = filepath.Join(destModuleAPIPath, "pom.xml")
 		err = os.Remove(pomPath)
 
@@ -81,9 +79,6 @@ func Generate(liferayWorkspace, name string) {
 			os.Exit(1)
 		}
 
-		printutil.Danger("remove ")
-		fmt.Println(pomPath)
-
 		pomPath = filepath.Join(destModuleServicePath, "pom.xml")
 		err = os.Remove(pomPath)
 
@@ -91,9 +86,6 @@ func Generate(liferayWorkspace, name string) {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)
 		}
-
-		printutil.Danger("remove ")
-		fmt.Println(pomPath)
 	}
 
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
@@ -105,9 +97,6 @@ func Generate(liferayWorkspace, name string) {
 			os.Exit(1)
 		}
 
-		printutil.Danger("remove ")
-		fmt.Println(buildGradlePath)
-
 		buildGradlePath = filepath.Join(destModuleServicePath, "build.gradle")
 		err = os.Remove(buildGradlePath)
 
@@ -115,9 +104,6 @@ func Generate(liferayWorkspace, name string) {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)
 		}
-
-		printutil.Danger("remove ")
-		fmt.Println(buildGradlePath)
 
 		pomParentPath := filepath.Join(destModulePath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
@@ -179,6 +165,18 @@ func Generate(liferayWorkspace, name string) {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
+
+	_ = filepath.Walk(destModulePath,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				printutil.Success("created ")
+				fmt.Printf("%s\n", path)
+			}
+			return nil
+		})
 }
 
 func getLiferayMajorVersion(workspacePath string) (string, error) {

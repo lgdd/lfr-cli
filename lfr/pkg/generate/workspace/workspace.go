@@ -2,11 +2,13 @@ package workspace
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/project"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
 const (
@@ -41,6 +43,18 @@ func Generate(base, build, version string) error {
 	} else {
 		return errors.New("only Gradle and Maven are supported")
 	}
+
+	_ = filepath.Walk(base,
+		func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				printutil.Success("created ")
+				fmt.Printf("%s\n", path)
+			}
+			return nil
+		})
 
 	return nil
 }
