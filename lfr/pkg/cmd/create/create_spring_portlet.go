@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	createSpringPortlet.Flags().StringVarP(&TemplateEngine, "template", "t", "thymeleaf", "--template thymeleaf,jspx")
+	createSpringPortlet.Flags().StringVarP(&TemplateEngine, "template", "t", "thymeleaf", "template engine (thymeleaf or jsp)")
 }
 
 func generateSpringPortlet(cmd *cobra.Command, args []string) {

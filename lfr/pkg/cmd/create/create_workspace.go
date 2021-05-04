@@ -26,9 +26,9 @@ var (
 )
 
 func init() {
-	createWorkspace.Flags().StringVarP(&Version, "version", "v", "7.3", "--version 7.3")
-	createWorkspace.Flags().StringVarP(&Build, "build", "b", "gradle", "--build gradle")
-	createWorkspace.Flags().BoolVarP(&Init, "init", "i", false, "--init")
+	createWorkspace.Flags().StringVarP(&Version, "version", "v", "7.3", "Liferay major version (7.x)")
+	createWorkspace.Flags().StringVarP(&Build, "build", "b", "gradle", "build tool (gradle or maven)")
+	createWorkspace.Flags().BoolVarP(&Init, "init", "i", false, "executes Liferay bundle initalization (i.e. download & unzip in the workspace)")
 }
 
 func generateWorkspace(cmd *cobra.Command, args []string) {

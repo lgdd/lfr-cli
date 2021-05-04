@@ -31,7 +31,7 @@ func init() {
 	root.AddCommand(status.Cmd)
 	root.AddCommand(logs.Cmd)
 	root.AddCommand(shell.Cmd)
-	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "--no-color (disable color output)")
+	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "disable colors for output messages")
 }
 
 func Execute() error {

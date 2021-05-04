@@ -2,11 +2,12 @@ package create
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/lgdd/liferay-cli/lfr/pkg/generate/docker"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var (
@@ -20,8 +21,8 @@ var (
 )
 
 func init() {
-	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", false, "--multi-stage")
-	createDocker.Flags().IntVarP(&Java, "java", "j", 8, "--java")
+	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", false, "use multi-stage build")
+	createDocker.Flags().IntVarP(&Java, "java", "j", 8, "Java version (8 or 11)")
 }
 func generateDocker(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
