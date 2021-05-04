@@ -265,8 +265,6 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 		return targetFilePath, fmt.Errorf("%s not found in directories under %s", fileName, dirPath)
 	}
 
-	fmt.Printf("Found %s\n\n", targetFilePath)
-
 	return targetFilePath, nil
 }
 
