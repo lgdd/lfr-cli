@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
+
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/completion"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/create"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/deploy"
@@ -11,8 +13,8 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/start"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/status"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/stop"
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/version"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
-	"github.com/spf13/cobra"
 )
 
 var root = &cobra.Command{
@@ -31,6 +33,7 @@ func init() {
 	root.AddCommand(status.Cmd)
 	root.AddCommand(logs.Cmd)
 	root.AddCommand(shell.Cmd)
+	root.AddCommand(version.Cmd)
 	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "disable colors for output messages")
 }
 
