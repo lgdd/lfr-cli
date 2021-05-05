@@ -21,6 +21,68 @@
 			<groupId>com.liferay.portal</groupId>
 			<artifactId>release.portal.api</artifactId>
 			<scope>provided</scope>
-		</dependency>
+        </dependency>
+        {{- if eq .MajorVersion "7.0.0" "7.1.0" "7.2.0" }}
+        <dependency>
+            <groupId>biz.aQute.bnd</groupId>
+            <artifactId>biz.aQute.bnd.annotation</artifactId>
+            <version>5.2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.liferay</groupId>
+            <artifactId>com.liferay.petra.io</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.liferay</groupId>
+            <artifactId>com.liferay.portal.spring.extender</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>com.liferay.portal.kernel</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.osgi</groupId>
+            <artifactId>org.osgi.service.component.annotations</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        {{- end }}
+        <dependency>
+	        <groupId>{{.Package}}</groupId>
+	        <artifactId>{{.Name}}-api</artifactId>
+	        <version>1.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.liferay</groupId>
+				<artifactId>com.liferay.portal.tools.service.builder</artifactId>
+				<version>1.0.380</version>
+				<configuration>
+					<apiDirName>../{{.Name}}-api/src/main/java</apiDirName>
+					<autoNamespaceTables>true</autoNamespaceTables>
+					<buildNumberIncrement>true</buildNumberIncrement>
+					<hbmFileName>src/main/resources/META-INF/module-hbm.xml</hbmFileName>
+					<implDirName>src/main/java</implDirName>
+					<mergeModelHintsConfigs>src/main/resources/META-INF/portlet-model-hints.xml</mergeModelHintsConfigs>
+					<modelHintsFileName>src/main/resources/META-INF/portlet-model-hints.xml</modelHintsFileName>
+					<osgiModule>true</osgiModule>
+					<propsUtil>my.service.builder.service.util.ServiceProps</propsUtil>
+					<resourcesDirName>src/main/resources</resourcesDirName>
+					<sqlDirName>src/main/resources/META-INF/sql</sqlDirName>
+					<sqlFileName>tables.sql</sqlFileName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

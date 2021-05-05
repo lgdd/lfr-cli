@@ -1,14 +1,17 @@
 <?xml version="1.0"?>
 <!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder {{.MajorVersion}}//EN" "http://www.liferay.com/dtd/liferay-service-builder_{{.DtdMajorVersion}}.dtd">
-
-<service-builder dependency-injector="ds" package-path="{{.Name}}">
-	<namespace>{{.CamelCaseName}}</namespace>
+{{ if eq .MajorVersion  "7.0.0" "7.1.0" }}
+<service-builder package-path="{{.Package}}">
+{{- else }}    
+<service-builder dependency-injector="ds" package-path="{{.Package}}">
+{{ end }}
+	<namespace>FOO</namespace>
 	<!--<entity data-source="sampleDataSource" local-service="true" name="Foo" remote-service="false" session-factory="sampleSessionFactory" table="foo" tx-manager="sampleTransactionManager uuid="true"">-->
-	<entity name="{{.CamelCaseName}}" local-service="true"  remote-service="false" uuid="true">
+	<entity name="Foo" local-service="true"  remote-service="false" uuid="true">
 
 		<!-- PK fields -->
 
-		<column name="{{.Name}}Id" primary="true" type="long" />
+		<column name="fooId" primary="true" type="long" />
 
 		<!-- Group instance -->
 
