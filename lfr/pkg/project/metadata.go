@@ -91,6 +91,17 @@ func GetGroupId() (string, error) {
 
 func NewMetadata(base, version string) (*Metadata, error) {
 	switch version {
+	case "7.4":
+		return &Metadata{
+			Product:        "portal-7.4-ga2",
+			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.4.1-ga2/liferay-ce-portal-tomcat-7.4.1-ga2-20210609223456272.tar.gz",
+			TomcatVersion:  "9.0.43",
+			TargetPlatform: "7.4.1-1",
+			DockerImage:    "liferay/portal:7.4.1-ga2",
+			GroupId:        strcase.ToDelimited(PackageName, '.'),
+			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
+			Name:           strcase.ToCamel(strings.ToLower(base)),
+		}, nil
 	case "7.3":
 		return &Metadata{
 			Product:        "portal-7.3-ga8",
