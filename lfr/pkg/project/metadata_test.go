@@ -89,7 +89,6 @@ func Test_NewMetadata_WithWrongVersion_ShouldFail(t *testing.T) {
 func Test_NewMetadata_WithGivenName_ShouldReturnFormattedData(t *testing.T) {
 	name := "ExAmPle-WorkSpace"
 	expectedName := "ExampleWorkspace"
-	expectedGroupID := "example.workspace"
 	expectedArtifactID := "example-workspace"
 	metadataArray, err := getMetadataArrayForAllVersion(name)
 	if err != nil {
@@ -99,10 +98,6 @@ func Test_NewMetadata_WithGivenName_ShouldReturnFormattedData(t *testing.T) {
 		if metadata.Name != expectedName {
 			t.Fatalf("Metadata %v\nFound Name: '%s'\nExpected Name: '%s'",
 				metadata.Product, metadata.Name, expectedName)
-		}
-		if metadata.GroupId != expectedGroupID {
-			t.Fatalf("Metadata %v\nFound GroupId: '%s'\nExpected GroupId: '%s'",
-				metadata.Product, metadata.GroupId, expectedGroupID)
 		}
 		if metadata.ArtifactId != expectedArtifactID {
 			t.Fatalf("Metadata %v\nFound ArtifactId: '%s'\nExpected ArtifactId: '%s'",

@@ -97,6 +97,10 @@ func updateGradleProps(base string, metadata *project.Metadata) error {
 	if err != nil {
 		return err
 	}
+	err = fileutil.UpdateWithData(filepath.Join(base, "build.gradle"), metadata)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

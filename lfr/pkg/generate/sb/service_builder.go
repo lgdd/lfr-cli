@@ -32,6 +32,13 @@ type ServiceBuilderData struct {
 func Generate(liferayWorkspace, name string) {
 	sep := string(os.PathSeparator)
 
+	modulePackage := project.PackageName
+	workspacePackage, _ := project.GetGroupId()
+
+	if modulePackage == "org.acme" && workspacePackage != "org.acme" {
+		modulePackage = strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
+	}
+
 	destModuleParentPath := filepath.Join(liferayWorkspace, "modules")
 	destModulePath := filepath.Join(destModuleParentPath, name)
 	destModuleAPIPath := filepath.Join(destModuleParentPath, name, name+"-api")
@@ -39,7 +46,6 @@ func Generate(liferayWorkspace, name string) {
 	camelCaseName := strcase.ToCamel(name)
 	workspaceSplit := strings.Split(liferayWorkspace, sep)
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
-	workspacePackage := strcase.ToDelimited(workspaceName, '.')
 
 	err := fileutil.CreateDirsFromAssets("tpl/sb", destModulePath)
 
@@ -149,7 +155,7 @@ func Generate(liferayWorkspace, name string) {
 	}
 
 	data := &ServiceBuilderData{
-		Package:                strcase.ToDelimited(name, '.'),
+		Package:                modulePackage,
 		Name:                   name,
 		CamelCaseName:          camelCaseName,
 		WorkspaceName:          workspaceName,

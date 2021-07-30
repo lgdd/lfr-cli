@@ -33,15 +33,21 @@ func Generate(name string) {
 		os.Exit(1)
 	}
 
+	portletPackage := project.PackageName
+	workspacePackage, _ := project.GetGroupId()
+
+	if portletPackage == "org.acme" && workspacePackage != "org.acme" {
+		portletPackage = strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
+	}
+
 	name = strcase.ToKebab(name)
 	destPortletParentPath := filepath.Join(liferayWorkspace, "modules")
 	destPortletPath := filepath.Join(destPortletParentPath, name)
-	packagePath := strings.ReplaceAll(name, "-", string(os.PathSeparator))
+	packagePath := strings.ReplaceAll(portletPackage, ".", string(os.PathSeparator))
 	packagePath = filepath.Join(destPortletPath, "src", "main", "java", packagePath)
 	camelCaseName := strcase.ToCamel(name)
 	workspaceSplit := strings.Split(liferayWorkspace, sep)
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
-	workspacePackage := strcase.ToDelimited(workspaceName, '.')
 
 	err = fileutil.CreateDirsFromAssets("tpl/api", destPortletPath)
 
@@ -130,7 +136,7 @@ func Generate(name string) {
 	}
 
 	data := &ApiData{
-		Package:                strcase.ToDelimited(name, '.'),
+		Package:                portletPackage,
 		Name:                   name,
 		CamelCaseName:          camelCaseName,
 		WorkspaceName:          workspaceName,

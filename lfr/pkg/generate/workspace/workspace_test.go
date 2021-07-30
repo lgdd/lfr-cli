@@ -241,6 +241,7 @@ func TestGenerateWorkspace_WithWrongVersion_ShouldFail(t *testing.T) {
 		t.Fatal("workspace should not be created")
 	}
 }
+
 func TestGenerateWorkspace_WithWrongBuildTool_ShouldFail(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
 	err := Generate(workspaceDir, "ant", "7.3")
@@ -253,5 +254,31 @@ func TestGenerateWorkspace_WithWrongBuildTool_ShouldFail(t *testing.T) {
 
 	if err == nil {
 		t.Fatal("workspace should not be created")
+	}
+}
+
+func TestGenerateWorkspace_WithMaven_ShouldHaveDefaultPackageName(t *testing.T) {
+	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
+	project.PackageName = "org.acme"
+	err := Generate(workspaceDir, "maven", "7.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	pomXml, err := os.ReadFile(filepath.Join(workspaceDir, "pom.xml"))
+	if !strings.Contains(string(pomXml), "org.acme") {
+		t.Fatal("workspace pom.xml doesn't contain default packag 'org.acme'")
+	}
+}
+
+func TestGenerateWorkspace_WithGradle_ShouldHaveDefaultPackageName(t *testing.T) {
+	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
+	project.PackageName = "org.acme"
+	err := Generate(workspaceDir, "gradle", "7.3")
+	if err != nil {
+		t.Fatal(err)
+	}
+	buildGradle, err := os.ReadFile(filepath.Join(workspaceDir, "build.gradle"))
+	if !strings.Contains(string(buildGradle), "org.acme") {
+		t.Fatal("workspace build.gradle doesn't contain default packag 'org.acme'")
 	}
 }

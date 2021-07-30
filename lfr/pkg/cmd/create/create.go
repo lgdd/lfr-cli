@@ -2,6 +2,8 @@ package create
 
 import (
 	"github.com/spf13/cobra"
+
+	"github.com/lgdd/liferay-cli/lfr/pkg/project"
 )
 
 var (
@@ -18,4 +20,5 @@ func init() {
 	Cmd.AddCommand(createApiModule)
 	Cmd.AddCommand(createServiceBuilder)
 	Cmd.AddCommand(createDocker)
+	Cmd.PersistentFlags().StringVarP(&project.PackageName, "package", "p", "org.acme", "base package name")
 }

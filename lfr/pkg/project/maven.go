@@ -18,6 +18,7 @@ type Pom struct {
 		Version      string `xml:"version"`
 		RelativePath string `xml:"relativePath"`
 	} `xml:"parent"`
+	GroupId    string `xml:"groupId"`
 	ArtifactId string `xml:"artifactId"`
 	Name       string `xml:"name"`
 	Packaging  string `xml:"packaging"`
