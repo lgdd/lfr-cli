@@ -3,7 +3,6 @@ package create
 import (
 	"fmt"
 	"os"
-	"runtime"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/exec"
 	"github.com/lgdd/liferay-cli/lfr/pkg/generate/workspace"
@@ -71,20 +70,6 @@ func runInit(name, build string) {
 
 func printInitCmd(name, build string) {
 	fmt.Println("\nInitialize your Liferay bundle:")
-	if runtime.GOOS == "windows" {
-		switch build {
-		case project.Gradle:
-			printutil.Info(fmt.Sprintf("cd %s && lfr exec initBundle\n", name))
-		case project.Maven:
-			printutil.Info(fmt.Sprintf("cd %s && lfr exec bundle-support:init\n", name))
-		}
-	} else {
-		switch build {
-		case project.Gradle:
-			printutil.Info(fmt.Sprintf("cd %s && lfr exec initBundle\n", name))
-		case project.Maven:
-			printutil.Info(fmt.Sprintf("cd %s && lfr exec bundle-support:init\n", name))
-		}
-	}
+	printutil.Info(fmt.Sprintf("cd %s && lfr init\n", name))
 	fmt.Print("\n")
 }
