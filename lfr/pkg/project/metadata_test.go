@@ -9,8 +9,8 @@ import (
 
 func Test_NewMetadata_With73_ShouldReturnLatestValid(t *testing.T) {
 	liferayProductsInfo := getProductsInfo(t)
-	expectedTargetPlatform := liferayProductsInfo.Portal73Ga7.TargetPlatformVersion
-	expectedTomcatVersion := liferayProductsInfo.Portal73Ga7.TomcatVersion
+	expectedTargetPlatform := liferayProductsInfo.Portal73Ga8.TargetPlatformVersion
+	expectedTomcatVersion := liferayProductsInfo.Portal73Ga8.TomcatVersion
 	metadata, err := NewMetadata("liferay-workspace", "7.3")
 	if err != nil {
 		t.Fatal(err)
@@ -667,7 +667,7 @@ type LiferayProductsInfo struct {
 		ReleaseDate           string `json:"releaseDate"`
 		TargetPlatformVersion string `json:"targetPlatformVersion"`
 	} `json:"dxp-7.3-sp1"`
-	Portal73Ga7 struct {
+	Portal73Ga8 struct {
 		TomcatVersion         string `json:"appServerTomcatVersion"`
 		BundleURL             string `json:"bundleUrl"`
 		BundleChecksumMD5     string `json:"bundleChecksumMD5"`
@@ -677,7 +677,7 @@ type LiferayProductsInfo struct {
 		Promoted              string `json:"promoted"`
 		ReleaseDate           string `json:"releaseDate"`
 		TargetPlatformVersion string `json:"targetPlatformVersion"`
-	} `json:"portal-7.3-ga7"`
+	} `json:"portal-7.3-ga8"`
 	Dxp71Fp22 struct {
 		TomcatVersion         string `json:"appServerTomcatVersion"`
 		BundleURL             string `json:"bundleUrl"`

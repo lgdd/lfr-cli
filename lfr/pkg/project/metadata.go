@@ -93,11 +93,11 @@ func NewMetadata(base, version string) (*Metadata, error) {
 	switch version {
 	case "7.3":
 		return &Metadata{
-			Product:        "portal-7.3-ga7",
-			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.3.6-ga7/liferay-ce-portal-tomcat-7.3.6-ga7-20210301155526191.tar.gz",
-			TomcatVersion:  "9.0.40",
-			TargetPlatform: "7.3.6",
-			DockerImage:    "liferay/portal:7.3.6-ga7",
+			Product:        "portal-7.3-ga8",
+			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.tar.gz",
+			TomcatVersion:  "9.0.43",
+			TargetPlatform: "7.3.7",
+			DockerImage:    "liferay/portal:7.3.6-ga8",
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
 			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
 			Name:           strcase.ToCamel(strings.ToLower(base)),
