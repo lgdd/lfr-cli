@@ -75,7 +75,7 @@ func Generate(name string) {
 	}
 
 	fileutil.CreateDirs(packagePath)
-	fileutil.CreateDirs(filepath.Join(destPortletPath, "src", "main", "resources"))
+	fileutil.CreateDirs(filepath.Join(destPortletPath, "src", "main", "resources", "META-INF", "resources"))
 	fileutil.CreateFiles([]string{filepath.Join(destPortletPath, "src", "main", "resources", ".gitkeep")})
 
 	updateJavaFiles(camelCaseName, destPortletPath, packagePath)
