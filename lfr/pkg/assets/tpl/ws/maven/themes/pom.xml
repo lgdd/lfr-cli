@@ -12,6 +12,7 @@
         <version>1.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+    <groupId>{{.GroupId}}</groupId>
     <artifactId>{{.ArtifactId}}-themes</artifactId>
     <name>{{.Name}} :: Themes</name>
     <packaging>pom</packaging>
