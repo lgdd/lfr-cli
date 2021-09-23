@@ -10,6 +10,8 @@ on:
 jobs:
   pre_release:
     runs-on: ubuntu-latest
+    env:
+      GH_API_TOKEN: "${{ secrets.GH_API_TOKEN  }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2

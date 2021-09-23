@@ -5,6 +5,8 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      GH_API_TOKEN: "${{ secrets.GH_API_TOKEN  }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v2
