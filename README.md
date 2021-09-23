@@ -11,8 +11,34 @@ Also, I get sometimes frustrated by [Blade](https://github.com/liferay/liferay-b
 - Better performances (cf. [benchmarks](benchmarks))
 - Better support for Maven
 - Shorter commands
+- More consistent commands names and ordering
 - Details after any command execution
 - Shell completion
+
+## Getting Started
+
+This tool is still in `alpha`, so checkout the [release page](https://github.com/lgdd/liferay-cli/releases) to download the binary for your distribution.
+
+Examples:
+
+Create a Liferay workspace:
+```shell
+lfr create workspace my-liferay-workspace
+# or
+lfr create ws my-liferay-workspace
+```
+
+Get a completion script for your shell:
+```shell
+lfr completion bash
+```
+> bash, zsh, fish and powershell are supported.
+
+Start Liferay and follow the logs:
+```shell
+lfr start
+lfr logs -f
+```
 
 ## Benchmarks
 
