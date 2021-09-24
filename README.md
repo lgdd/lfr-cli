@@ -21,6 +21,12 @@ This tool is still in `alpha`, so checkout the [release page](https://github.com
 
 Examples:
 
+Get a completion script for your shell:
+```shell
+lfr completion bash
+```
+> bash, zsh, fish and powershell are supported.
+
 Create a Liferay workspace:
 ```shell
 lfr create workspace my-liferay-workspace
@@ -28,11 +34,14 @@ lfr create workspace my-liferay-workspace
 lfr create ws my-liferay-workspace
 ```
 
-Get a completion script for your shell:
+Run a Gradle or Maven task:
 ```shell
-lfr completion bash
+# Gradle
+lfr exec build
+
+# Maven
+lfr exec clean install
 ```
-> bash, zsh, fish and powershell are supported.
 
 Start Liferay and follow the logs:
 ```shell
