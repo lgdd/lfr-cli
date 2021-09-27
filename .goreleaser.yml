@@ -29,6 +29,7 @@ nfpms:
   - description: Liferay CLI (lfr) is an unofficial tool written in Go that helps you create & manage your Liferay projects.
     homepage: https://github.com/lgdd/liferay-cli
     license: MIT
+    maintainer: Louis-Guillaume Durand <louis-guillaume.durand@liferay.com>
     formats:
       - deb
       - rpm
