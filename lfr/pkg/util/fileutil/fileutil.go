@@ -158,11 +158,7 @@ func UpdateWithData(file string, data interface{}) error {
 func IsInWorkspaceDir() bool {
 	_, err := GetLiferayWorkspacePath()
 
-	if err != nil {
-		return false
-	}
-
-	return true
+	return err == nil
 }
 
 func IsGradleWorkspace(path string) bool {
@@ -248,17 +244,26 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 			if err != nil {
 				return err
 			}
-			bar.Add(1)
+			err = bar.Add(1)
+			if err != nil {
+				printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+				os.Exit(1)
+			}
 			if info.Name() == fileName {
 				targetFilePath = path
 			}
 			return nil
 		})
 
-	bar.Clear()
-
 	if err != nil {
 		return targetFilePath, err
+	}
+
+	err = bar.Clear()
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
 	}
 
 	if targetFilePath == "" {

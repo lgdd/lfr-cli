@@ -42,7 +42,12 @@ func run(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	procutil.SetCatalinaPid()
+	err = procutil.SetCatalinaPid()
+
+	if err != nil {
+		printutil.Danger(err.Error())
+		os.Exit(1)
+	}
 
 	startupCmd := exec.Command(startupScript)
 	startupCmd.Stdout = os.Stdout

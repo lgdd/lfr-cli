@@ -8,6 +8,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )
@@ -78,7 +79,13 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 			os.Args = append(os.Args, template, "-j", javaVersion)
 		}
 
-		cmd.Execute()
+		err = cmd.Execute()
+
+		if err != nil {
+			printutil.Danger(err.Error())
+			os.Exit(1)
+		}
+
 		return
 	}
 
@@ -138,10 +145,22 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 		}
 
 		os.Args = append(os.Args, template, name, "-p", packageName, "-t", templateEngine)
-		cmd.Execute()
+		err = cmd.Execute()
+
+		if err != nil {
+			printutil.Danger(err.Error())
+			os.Exit(1)
+		}
+
 		return
 	}
 
 	os.Args = append(os.Args, template, name, "-p", packageName)
-	cmd.Execute()
+	err = cmd.Execute()
+
+	if err != nil {
+		printutil.Danger(err.Error())
+		os.Exit(1)
+	}
+
 }
