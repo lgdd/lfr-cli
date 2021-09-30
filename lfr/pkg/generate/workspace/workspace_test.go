@@ -265,6 +265,9 @@ func TestGenerateWorkspace_WithMaven_ShouldHaveDefaultPackageName(t *testing.T) 
 		t.Fatal(err)
 	}
 	pomXml, err := os.ReadFile(filepath.Join(workspaceDir, "pom.xml"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	if !strings.Contains(string(pomXml), "org.acme") {
 		t.Fatal("workspace pom.xml doesn't contain default packag 'org.acme'")
 	}
@@ -278,6 +281,9 @@ func TestGenerateWorkspace_WithGradle_ShouldHaveDefaultPackageName(t *testing.T)
 		t.Fatal(err)
 	}
 	buildGradle, err := os.ReadFile(filepath.Join(workspaceDir, "build.gradle"))
+	if err != nil {
+		t.Fatal(err)
+	}
 	if !strings.Contains(string(buildGradle), "org.acme") {
 		t.Fatal("workspace build.gradle doesn't contain default packag 'org.acme'")
 	}
