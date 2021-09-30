@@ -1,3 +1,8 @@
+[![version](https://img.shields.io/github/v/tag/lgdd/liferay-cli)](https://github.com/lgdd/liferay-cli/releases)
+[![status](https://img.shields.io/github/workflow/status/lgdd/liferay-cli/Test)](https://github.com/lgdd/liferay-cli/actions/workflows/test.yml)
+[![report](https://goreportcard.com/badge/github.com/lgdd/liferay-cli)](https://goreportcard.com/report/github.com/lgdd/liferay-cli)
+[![license](https://img.shields.io/github/license/lgdd/liferay-cli)](https://github.com/lgdd/liferay-cli/blob/main/LICENSE)
+
 # Liferay CLI
 
 Liferay CLI - `lfr` - is an unofficial tool written in Go that helps you create & manage Liferay projects.
