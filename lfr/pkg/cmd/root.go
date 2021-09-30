@@ -39,6 +39,7 @@ func init() {
 	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "disable colors for output messages")
 }
 
+// Run the the main command
 func Execute() error {
 	return root.Execute()
 }

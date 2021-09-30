@@ -16,8 +16,10 @@ var (
 		Args: cobra.NoArgs,
 		Run:  generateDocker,
 	}
+	// MultiStage holds the option to create a Dockerfile with multi-stage build
 	MultiStage bool
-	Java       int
+	// Java is the Java version to use in the Dockerfile
+	Java int
 )
 
 func init() {

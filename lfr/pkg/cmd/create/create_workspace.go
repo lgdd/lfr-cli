@@ -19,9 +19,12 @@ var (
 		Args:    cobra.ExactArgs(1),
 		Run:     generateWorkspace,
 	}
+	// Version is the Liferay version
 	Version string
-	Build   string
-	Init    bool
+	// Build is Maven or Gradle
+	Build string
+	// Init holds the option to initialize the Liferay bundle
+	Init bool
 )
 
 func init() {

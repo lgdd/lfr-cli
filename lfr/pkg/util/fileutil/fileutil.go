@@ -22,6 +22,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// Create all the directories of a given path
 func CreateDirs(path string) {
 	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
@@ -30,6 +31,7 @@ func CreateDirs(path string) {
 	}
 }
 
+// Create all the files from a given list of paths
 func CreateFiles(paths []string) {
 	var wg sync.WaitGroup
 	for _, path := range paths {
@@ -48,6 +50,7 @@ func createFile(path string, wg *sync.WaitGroup) {
 	}
 }
 
+// Walk through the template assets and create all the directories contained in it
 func CreateDirsFromAssets(assetsRoot, baseDest string) error {
 	return fs.WalkDir(assets.Templates, assetsRoot, func(path string, file fs.DirEntry, err error) error {
 		if err != nil {
@@ -64,6 +67,7 @@ func CreateDirsFromAssets(assetsRoot, baseDest string) error {
 	})
 }
 
+// Walk through the template assets and create all the files contained in it
 func CreateFilesFromAssets(assetsRoot, baseDest string) error {
 	return fs.WalkDir(assets.Templates, assetsRoot, func(path string, file fs.DirEntry, err error) error {
 		if err != nil {
@@ -80,6 +84,7 @@ func CreateFilesFromAssets(assetsRoot, baseDest string) error {
 	})
 }
 
+// Copy templates to a given destination
 func CopyFromTemplates(sourcePath, destPath string) {
 	source, err := assets.Templates.Open(sourcePath)
 	if err != nil {
@@ -105,6 +110,7 @@ func CopyFromTemplates(sourcePath, destPath string) {
 
 }
 
+// Copy assets to a given destination
 func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	source, err := assets.Templates.Open(sourcePath)
@@ -130,6 +136,7 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	}
 }
 
+// Update template files with given data
 func UpdateWithData(file string, data interface{}) error {
 	content, err := ioutil.ReadFile(file)
 	if err != nil {
@@ -155,12 +162,14 @@ func UpdateWithData(file string, data interface{}) error {
 	return nil
 }
 
+// Check if the current directory is under a Liferay workspace
 func IsInWorkspaceDir() bool {
 	_, err := GetLiferayWorkspacePath()
 
 	return err == nil
 }
 
+// Check if the Liferay workspace is using Gradle
 func IsGradleWorkspace(path string) bool {
 	expectedFiles := []string{
 		filepath.Join(path, "configs"),
@@ -173,6 +182,7 @@ func IsGradleWorkspace(path string) bool {
 	return FilesExist(expectedFiles)
 }
 
+// Check if the Liferay workspace is using Maven
 func IsMavenWorkspace(path string) bool {
 	expectedFiles := []string{
 		filepath.Join(path, "configs"),
@@ -183,6 +193,7 @@ func IsMavenWorkspace(path string) bool {
 	return FilesExist(expectedFiles)
 }
 
+// Check if a given list of files exist
 func FilesExist(files []string) bool {
 	for _, file := range files {
 		if _, err := os.Stat(file); os.IsNotExist(err) {
@@ -193,6 +204,7 @@ func FilesExist(files []string) bool {
 	return true
 }
 
+// Find a file with a given name in parent directories
 func FindFileInParent(fileName string) (string, error) {
 	dir, err := os.Getwd()
 
@@ -221,6 +233,7 @@ func FindFileInParent(fileName string) (string, error) {
 	return "", fmt.Errorf("%s not found", fileName)
 }
 
+// Find a file with a given name in a given directory and walk through its parents
 func FindFileParentInDir(dirPath string, fileName string) (string, error) {
 	filePath, err := FindFileInDir(dirPath, fileName)
 
@@ -231,6 +244,7 @@ func FindFileParentInDir(dirPath string, fileName string) (string, error) {
 	return filepath.Dir(filePath), nil
 }
 
+// Find a file with a given name under a give directory
 func FindFileInDir(dirPath string, fileName string) (string, error) {
 	targetFilePath := ""
 
@@ -273,6 +287,7 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 	return targetFilePath, nil
 }
 
+// Get Liferay workspace path
 func GetLiferayWorkspacePath() (string, error) {
 	workspace, err := FindFileInParent("platform.bndrun")
 
@@ -283,6 +298,7 @@ func GetLiferayWorkspacePath() (string, error) {
 	return filepath.Dir(workspace), nil
 }
 
+// Get Liferay home path (i.e. root path of the Liferay bundle)
 func GetLiferayHomePath() (string, error) {
 	workingPath, err := GetLiferayWorkspacePath()
 
@@ -311,6 +327,7 @@ func GetLiferayHomePath() (string, error) {
 	return liferayHome, nil
 }
 
+// Get the bin directory path under Tomcat home within the Liferay bundle
 func GetTomcatScriptPath(script string) (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
@@ -338,6 +355,7 @@ func GetTomcatScriptPath(script string) (string, error) {
 	return scriptPath, nil
 }
 
+// Get the Tomcat home directory within the Liferay bundle
 func GetTomcatPath() (string, error) {
 	catalinaScriptPath, err := GetTomcatScriptPath("catalina")
 
@@ -348,6 +366,7 @@ func GetTomcatPath() (string, error) {
 	return strings.Join(catalinaScriptPathSplit[:len(catalinaScriptPathSplit)-2], string(os.PathSeparator)), nil
 }
 
+// Get the main Tomcat log file
 func GetCatalinaLogFile() (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
@@ -359,6 +378,7 @@ func GetCatalinaLogFile() (string, error) {
 	return FindFileInDir(liferayHome, "catalina.out")
 }
 
+// Tail a given log file with the option to follow updates
 func Tail(logFile string, follow bool) {
 	t, err := tail.TailFile(logFile, tail.Config{Follow: follow})
 	if err != nil {

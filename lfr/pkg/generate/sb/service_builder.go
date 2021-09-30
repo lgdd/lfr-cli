@@ -18,6 +18,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// ServiceBuilderData contains the data to be injected into the template files
 type ServiceBuilderData struct {
 	Package                string
 	Name                   string
@@ -29,6 +30,7 @@ type ServiceBuilderData struct {
 	DtdMajorVersion        string
 }
 
+// Generates the structure for a Service Builder module
 func Generate(liferayWorkspace, name string) {
 	sep := string(os.PathSeparator)
 

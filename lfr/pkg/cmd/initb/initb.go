@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'init' which initialize a Liferay bundle
 	Cmd = &cobra.Command{
 		Use:   "init",
 		Short: "Shortcut to initialize your Liferay bundle",

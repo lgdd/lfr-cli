@@ -17,6 +17,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// SpringPortletData contains the data to be injected into the template files
 type SpringPortletData struct {
 	Package                string
 	Name                   string
@@ -31,6 +32,7 @@ type SpringPortletData struct {
 	TemplateEngine         string
 }
 
+// Generates the structure for a Spring portlet module (i.e. PortletMVC4Spring)
 func Generate(name, templateEngine string) {
 
 	if templateEngine != "thymeleaf" && templateEngine != "jsp" {

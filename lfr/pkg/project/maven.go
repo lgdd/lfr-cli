@@ -2,10 +2,12 @@ package project
 
 import "encoding/xml"
 
+// XMLHeader is the first line to be written in an XML file
 const (
 	XMLHeader = `<?xml version="1.0"?>` + "\n"
 )
 
+// Pom represents the common structure of a Maven pom file
 type Pom struct {
 	XMLName        xml.Name `xml:"project"`
 	Xmlns          string   `xml:"xmlns,attr"`
@@ -27,6 +29,7 @@ type Pom struct {
 	} `xml:"modules"`
 }
 
+// WorkspacePom represents the common structure of a parent Maven pom file in a Liferay Workspace
 type WorkspacePom struct {
 	XMLName        xml.Name `xml:"project"`
 	Xmlns          string   `xml:"xmlns,attr"`

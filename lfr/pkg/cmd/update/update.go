@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'update' which allows the tool to update itself
 	Cmd = &cobra.Command{
 		Use:   "update",
 		Short: "Update Liferay CLI to the latest version",

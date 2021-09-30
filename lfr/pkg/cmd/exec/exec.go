@@ -2,16 +2,18 @@ package exec
 
 import (
 	"fmt"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"os"
 	"os/exec"
 	"runtime"
+
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 	"github.com/spf13/cobra"
 )
 
 var (
+	// Cmd is the command 'exec' which executes a task using Gradle or Maven wrapper
 	Cmd = &cobra.Command{
 		Use:   "exec TASK... -- [TASK_FLAG]...",
 		Short: "Execute Gradle or Maven task(s)",
@@ -24,6 +26,7 @@ func run(cmd *cobra.Command, args []string) {
 	RunWrapperCmd(args)
 }
 
+// Get the Maven or Gradle wrapper to execute tasks
 func RunWrapperCmd(args []string) {
 	wrapper, err := getWrapper()
 

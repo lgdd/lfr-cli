@@ -11,11 +11,13 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// Build options (i.e. Maven or Gradle)
 const (
 	Gradle = "gradle"
 	Maven  = "maven"
 )
 
+// Generate the structure of a Liferay workspace
 func Generate(base, build, version string) error {
 	metadata, err := project.NewMetadata(base, version)
 	if err != nil {

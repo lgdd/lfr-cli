@@ -11,6 +11,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'stop' which shutdowns the Liferay bundle
 	Cmd = &cobra.Command{
 		Use:   "stop",
 		Short: "Stop a Liferay Tomcat bundle",

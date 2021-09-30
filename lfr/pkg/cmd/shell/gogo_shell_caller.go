@@ -13,6 +13,7 @@ import (
 	"github.com/reiver/go-telnet"
 )
 
+// Telnet caller for Gogo Shell
 var GogoShellCaller telnet.Caller = internalGogoShellCaller{}
 
 type internalGogoShellCaller struct{}

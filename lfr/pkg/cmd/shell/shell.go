@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'shell' which returns the Gogo Shell from a running Liferay bundle
 	Cmd = &cobra.Command{
 		Use:     "shell",
 		Short:   "Connect and get Liferay Gogo Shell",

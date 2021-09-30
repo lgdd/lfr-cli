@@ -15,6 +15,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// PortletData contains the data to be injected into the template files
 type PortletData struct {
 	Package                string
 	Name                   string
@@ -26,6 +27,7 @@ type PortletData struct {
 	PortletIDValue         string
 }
 
+// Generates the structure for a portlet module
 func Generate(name string) {
 	sep := string(os.PathSeparator)
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()

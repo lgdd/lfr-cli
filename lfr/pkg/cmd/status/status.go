@@ -2,13 +2,15 @@ package status
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/procutil"
 	"github.com/spf13/cobra"
-	"os"
 )
 
 var (
+	// Cmd is the command 'status' which tells if Liferay is running or not
 	Cmd = &cobra.Command{
 		Use:   "status",
 		Short: "Status (running or stopped) of a Liferay Tomcat bundle",

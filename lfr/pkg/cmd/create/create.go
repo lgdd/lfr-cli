@@ -14,6 +14,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'create' which create the structure of a given module type
 	Cmd = &cobra.Command{
 		Use:   "create TYPE NAME",
 		Short: "Create a Liferay project",

@@ -12,6 +12,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'start' which allows to start the Liferay bundle
 	Cmd = &cobra.Command{
 		Use:   "start",
 		Short: "Start a Liferay Tomcat bundle",

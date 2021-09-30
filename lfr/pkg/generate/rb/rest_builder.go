@@ -19,6 +19,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// RestBuilderData contains the data to be injected into the template files
 type RestBuilderData struct {
 	Package                string
 	Name                   string
@@ -31,6 +32,7 @@ type RestBuilderData struct {
 	User                   string
 }
 
+// Genreate the structure of a REST Builder module
 func Generate(liferayWorkspace, name string) {
 	sep := string(os.PathSeparator)
 

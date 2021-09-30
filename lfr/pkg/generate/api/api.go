@@ -15,6 +15,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
+// ApiData contains the data to be injected into the template files
 type ApiData struct {
 	Package                string
 	Name                   string
@@ -24,6 +25,7 @@ type ApiData struct {
 	WorkspacePackage       string
 }
 
+// Generates the structure for an API module
 func Generate(name string) {
 	sep := string(os.PathSeparator)
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()

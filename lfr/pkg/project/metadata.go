@@ -14,6 +14,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 )
 
+// Metadata represents the basic informations associated with a Liferay project
 type Metadata struct {
 	Product        string
 	BundleUrl      string
@@ -25,13 +26,16 @@ type Metadata struct {
 	Name           string
 }
 
+// Build options
 const (
 	Gradle = "gradle"
 	Maven  = "maven"
 )
 
+// Package name to use for the project, default is org.acme
 var PackageName string
 
+// Get the group ID (base package name) associated with the Liferay workspace
 func GetGroupId() (string, error) {
 	workspacePath, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
@@ -89,6 +93,7 @@ func GetGroupId() (string, error) {
 	return PackageName, nil
 }
 
+// Returns metadata for a given project and the chosen Liferay version
 func NewMetadata(base, version string) (*Metadata, error) {
 	switch version {
 	case "7.4":

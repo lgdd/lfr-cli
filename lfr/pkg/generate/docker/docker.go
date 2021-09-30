@@ -15,11 +15,14 @@ import (
 	"github.com/magiconair/properties"
 )
 
+// DockerData contains the data to be injected into the template files
 type DockerData struct {
 	Image       string
 	JavaVersion string
 }
 
+// Generate opinionated Docker and Docker Compose files
+// for a give Java version with an option for Docker multi-stage build
 func Generate(liferayWorkspace string, multistage bool, java int) error {
 	projectType := project.Gradle
 

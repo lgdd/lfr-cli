@@ -3,16 +3,18 @@ package procutil
 import (
 	"errors"
 	"fmt"
-	"github.com/mitchellh/go-ps"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
 
+	"github.com/mitchellh/go-ps"
+
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 )
 
+// Set the catalina pid as an environment variable
 func SetCatalinaPid() error {
 	workingPath, err := fileutil.GetLiferayWorkspacePath()
 
@@ -26,6 +28,7 @@ func SetCatalinaPid() error {
 	return os.Setenv("CATALINA_PID", filepath.Join(workingPath, ".liferay-pid"))
 }
 
+// Get the catalina pid from an environment variable or file
 func GetCatalinaPid() (int, error) {
 	workingPath, err := fileutil.GetLiferayWorkspacePath()
 
@@ -78,6 +81,7 @@ func GetCatalinaPid() (int, error) {
 	return pid, nil
 }
 
+// Checks if the Liferay bundle is running by checking its pid
 func IsCatalinaRunning() (bool, int, error) {
 	pid, err := GetCatalinaPid()
 

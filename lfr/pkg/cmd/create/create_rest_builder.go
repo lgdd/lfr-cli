@@ -22,6 +22,7 @@ var (
 		Args:    cobra.ExactArgs(1),
 		Run:     generateRestBuilder,
 	}
+	// CodeGen holds the option to run the code generation of the rest builder
 	CodeGen bool
 )
 

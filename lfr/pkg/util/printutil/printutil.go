@@ -6,10 +6,12 @@ import (
 	"github.com/fatih/color"
 )
 
+// NoColor allows to disable colors for printed messages, default is false
 var (
 	NoColor bool
 )
 
+// Display info level message
 func Info(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgCyan)
@@ -17,6 +19,7 @@ func Info(msg string) {
 	color.Unset()
 }
 
+// Display warning level message
 func Warning(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgYellow)
@@ -24,6 +27,7 @@ func Warning(msg string) {
 	color.Unset()
 }
 
+// Display critical level message
 func Danger(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgRed)
@@ -31,6 +35,7 @@ func Danger(msg string) {
 	color.Unset()
 }
 
+// Display success message
 func Success(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgGreen)

@@ -7,6 +7,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'version' displaying version, commit and date infos.
 	Cmd = &cobra.Command{
 		Use:   "version",
 		Short: "Print the version number of Liferay CLI",
