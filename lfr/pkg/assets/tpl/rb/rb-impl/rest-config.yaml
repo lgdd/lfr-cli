@@ -1,0 +1,9 @@
+apiDir: "../{{.Name}}-api/src/main/java"
+apiPackagePath: "{{.Package}}"
+application:
+    baseURI: "/{{.Name}}"
+    className: "{{.CamelCaseName}}Application"
+    name: "{{.CamelCaseName}}"
+author: "{{.User}}"
+clientDir: "../{{.Name}}-client/src/main/java"
+testDir: "../{{.Name}}-test/src/testIntegration/java"

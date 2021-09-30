@@ -1,0 +1,3 @@
+Bundle-Name: {{.CamelCaseName}} Impl
+Bundle-SymbolicName: {{.Package}}.impl
+Bundle-Version: 1.0.0

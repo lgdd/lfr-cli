@@ -1,0 +1,6 @@
+Bundle-Name: {{.CamelCaseName}} API
+Bundle-SymbolicName: {{.Package}}.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	{{.Package}}.dto.v1_0,\
+	{{.Package}}.resource.v1_0

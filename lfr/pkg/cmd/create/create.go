@@ -30,6 +30,7 @@ func init() {
 	Cmd.AddCommand(createSpringPortlet)
 	Cmd.AddCommand(createApiModule)
 	Cmd.AddCommand(createServiceBuilder)
+	Cmd.AddCommand(createRestBuilder)
 	Cmd.AddCommand(createDocker)
 	Cmd.PersistentFlags().StringVarP(&project.PackageName, "package", "p", "org.acme", "base package name")
 }
