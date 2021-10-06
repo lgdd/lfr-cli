@@ -40,7 +40,7 @@ func init() {
 func promptCreateChoices(cmd *cobra.Command, args []string) {
 	promptTemplate := promptui.Select{
 		Label: "Choose a template",
-		Items: []string{"api", "docker", "mvc-portlet", "service-builder", "spring-mvc-portlet", "workspace"},
+		Items: []string{"api", "docker", "mvc-portlet", "rest-builder", "service-builder", "spring-mvc-portlet", "workspace"},
 	}
 
 	_, template, err := promptTemplate.Run()
