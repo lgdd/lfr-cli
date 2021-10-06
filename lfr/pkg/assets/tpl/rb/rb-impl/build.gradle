@@ -5,7 +5,7 @@ dependencies {
 	compileOnly group: "com.liferay", name: "com.liferay.petra.function"
 	compileOnly group: "com.liferay", name: "com.liferay.petra.string"
 	compileOnly group: "com.liferay", name: "com.liferay.portal.odata.api"
-	compileOnly group: "com.liferay", name: "com.liferay.portal.vulcan.api", version: "7.13.0"
+	compileOnly group: "com.liferay", name: "com.liferay.portal.vulcan.api", version: "7.13.2"
 	compileOnly group: "com.liferay", name: "javax.xml.bind"
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.impl"
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel"

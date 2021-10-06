@@ -40,7 +40,7 @@
 		<dependency>
 			<groupId>com.liferay</groupId>
 			<artifactId>com.liferay.portal.vulcan.api</artifactId>
-			<version>7.13.0</version>
+			<version>7.13.2</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
