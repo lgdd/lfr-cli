@@ -2,16 +2,21 @@ package project
 
 import (
 	"bufio"
+	"encoding/json"
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/schollz/progressbar/v3"
 )
 
 // Metadata represents the basic informations associated with a Liferay project
@@ -24,6 +29,15 @@ type Metadata struct {
 	GroupId        string
 	ArtifactId     string
 	Name           string
+}
+
+type GitHubAsset struct {
+	BrowserDownloadURL string `json:"browser_download_url"`
+}
+
+type GitHubRelease struct {
+	TagName string        `json:"tag_name"`
+	Assets  []GitHubAsset `json:"assets"`
 }
 
 // Build options
@@ -97,12 +111,59 @@ func GetGroupId() (string, error) {
 func NewMetadata(base, version string) (*Metadata, error) {
 	switch version {
 	case "7.4":
+
+		bar := progressbar.NewOptions(-1,
+			progressbar.OptionSetDescription("Fetching latest info from GitHub"),
+			progressbar.OptionSpinnerType(11))
+
+		resp, err := http.Get("https://api.github.com/repos/liferay/liferay-portal/releases/latest")
+
+		release := &GitHubRelease{
+			TagName: "7.4.3.30-ga30",
+			Assets: []GitHubAsset{
+				{
+					BrowserDownloadURL: "https://github.com/liferay/liferay-portal/releases/download/7.4.3.30-ga30/liferay-ce-portal-tomcat-7.4.3.30-ga30-20220622172832884.tar.gz",
+				},
+			},
+		}
+		downloadURL := release.Assets[0].BrowserDownloadURL
+
+		if err != nil {
+			bar.Clear()
+			printutil.Warning("Can not fetch info from GitHub\n")
+			printutil.Warning("Start offline mode process\n\n")
+		} else {
+			body, _ := ioutil.ReadAll(resp.Body)
+			io.Copy(io.MultiWriter(bar), resp.Body)
+
+			defer resp.Body.Close()
+
+			if err := json.Unmarshal(body, &release); err != nil {
+				bar.Clear()
+				fmt.Println("Can not unmarshal GitHub release response")
+				fmt.Println(body)
+				fmt.Println(err.Error())
+				fmt.Println("Start offline mode process")
+			} else {
+
+				for _, asset := range release.Assets {
+					if strings.Contains(asset.BrowserDownloadURL, "tomcat") && strings.Contains(asset.BrowserDownloadURL, "tar.gz") {
+						downloadURL = asset.BrowserDownloadURL
+						break
+					}
+				}
+			}
+
+		}
+
+		bar.Clear()
+
 		return &Metadata{
-			Product:        "portal-7.4-ga2",
-			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.4.1-ga2/liferay-ce-portal-tomcat-7.4.1-ga2-20210609223456272.tar.gz",
-			TomcatVersion:  "9.0.43",
-			TargetPlatform: "7.4.1-1",
-			DockerImage:    "liferay/portal:7.4.1-ga2",
+			Product:        strings.Join([]string{"portal", release.TagName}, "-"),
+			BundleUrl:      downloadURL,
+			TomcatVersion:  "9.0.56",
+			TargetPlatform: release.TagName,
+			DockerImage:    strings.Join([]string{"liferay/portal", release.TagName}, ":"),
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
 			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
 			Name:           strcase.ToCamel(strings.ToLower(base)),
@@ -110,10 +171,10 @@ func NewMetadata(base, version string) (*Metadata, error) {
 	case "7.3":
 		return &Metadata{
 			Product:        "portal-7.3-ga8",
-			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.tar.gz",
+			BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.tar.gz",
 			TomcatVersion:  "9.0.43",
 			TargetPlatform: "7.3.7",
-			DockerImage:    "liferay/portal:7.3.6-ga8",
+			DockerImage:    "liferay/portal:7.3.7-ga8",
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
 			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
 			Name:           strcase.ToCamel(strings.ToLower(base)),
@@ -121,7 +182,7 @@ func NewMetadata(base, version string) (*Metadata, error) {
 	case "7.2":
 		return &Metadata{
 			Product:        "portal-7.2-ga2",
-			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.tar.gz",
+			BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.tar.gz",
 			TomcatVersion:  "9.0.17",
 			TargetPlatform: "7.2.1-1",
 			DockerImage:    "liferay/portal:7.2.1-ga2",
@@ -132,7 +193,7 @@ func NewMetadata(base, version string) (*Metadata, error) {
 	case "7.1":
 		return &Metadata{
 			Product:        "portal-7.1-ga4",
-			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.tar.gz",
+			BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.tar.gz",
 			TomcatVersion:  "9.0.17",
 			TargetPlatform: "7.1.3-1",
 			DockerImage:    "liferay/portal:7.1.3-ga4",
