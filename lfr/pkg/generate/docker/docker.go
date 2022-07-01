@@ -113,7 +113,7 @@ func getLiferayDockerImage(workspacePath string) (string, error) {
 	if fileutil.IsGradleWorkspace(workspacePath) {
 		gradlePropsPath := filepath.Join(workspacePath, "gradle.properties")
 		gradleProps := properties.MustLoadFile(gradlePropsPath, properties.UTF8)
-		dockerImage := gradleProps.GetString("liferay.workspace.docker.image.liferay", "liferay/portal:7.3.6-ga7")
+		dockerImage := gradleProps.GetString("liferay.workspace.docker.image.liferay", "liferay/portal:7.4.3.30-ga30")
 		return dockerImage, nil
 	}
 
