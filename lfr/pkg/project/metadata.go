@@ -161,7 +161,6 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		return &Metadata{
 			Product:        strings.Join([]string{"portal", release.TagName}, "-"),
 			BundleUrl:      downloadURL,
-			TomcatVersion:  "9.0.56",
 			TargetPlatform: release.TagName,
 			DockerImage:    strings.Join([]string{"liferay/portal", release.TagName}, ":"),
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
@@ -172,7 +171,6 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		return &Metadata{
 			Product:        "portal-7.3-ga8",
 			BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.tar.gz",
-			TomcatVersion:  "9.0.43",
 			TargetPlatform: "7.3.7",
 			DockerImage:    "liferay/portal:7.3.7-ga8",
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
@@ -183,7 +181,6 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		return &Metadata{
 			Product:        "portal-7.2-ga2",
 			BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.tar.gz",
-			TomcatVersion:  "9.0.17",
 			TargetPlatform: "7.2.1-1",
 			DockerImage:    "liferay/portal:7.2.1-ga2",
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
@@ -194,7 +191,6 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		return &Metadata{
 			Product:        "portal-7.1-ga4",
 			BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.tar.gz",
-			TomcatVersion:  "9.0.17",
 			TargetPlatform: "7.1.3-1",
 			DockerImage:    "liferay/portal:7.1.3-ga4",
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
@@ -205,7 +201,6 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		return &Metadata{
 			Product:        "portal-7.0-ga7",
 			BundleUrl:      "https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip",
-			TomcatVersion:  "8.0.32",
 			TargetPlatform: "7.0.6-2",
 			DockerImage:    "liferay/portal:7.0.6-ga7",
 			GroupId:        strcase.ToDelimited(PackageName, '.'),

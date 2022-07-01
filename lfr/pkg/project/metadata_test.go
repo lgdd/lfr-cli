@@ -10,7 +10,6 @@ import (
 func Test_NewMetadata_With73_ShouldReturnLatestValid(t *testing.T) {
 	liferayProductsInfo := getProductsInfo(t)
 	expectedTargetPlatform := liferayProductsInfo.Portal73Ga8.TargetPlatformVersion
-	expectedTomcatVersion := liferayProductsInfo.Portal73Ga8.AppServerTomcatVersion
 	metadata, err := NewMetadata("liferay-workspace", "7.3")
 	if err != nil {
 		t.Fatal(err)
@@ -19,16 +18,11 @@ func Test_NewMetadata_With73_ShouldReturnLatestValid(t *testing.T) {
 		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
 			metadata.TargetPlatform, expectedTargetPlatform)
 	}
-	if metadata.TomcatVersion != expectedTomcatVersion {
-		t.Fatalf("Found Tomcat Version: '%s'\nExpected Tomcat Version: '%s'",
-			metadata.TargetPlatform, expectedTargetPlatform)
-	}
 }
 
 func Test_NewMetadata_With72_ShouldReturnLatestValid(t *testing.T) {
 	liferayProductsInfo := getProductsInfo(t)
 	expectedTargetPlatform := liferayProductsInfo.Portal72Ga2.TargetPlatformVersion
-	expectedTomcatVersion := liferayProductsInfo.Portal72Ga2.AppServerTomcatVersion
 	metadata, err := NewMetadata("liferay-workspace", "7.2")
 	if err != nil {
 		t.Fatal(err)
@@ -37,16 +31,11 @@ func Test_NewMetadata_With72_ShouldReturnLatestValid(t *testing.T) {
 		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
 			metadata.TargetPlatform, expectedTargetPlatform)
 	}
-	if metadata.TomcatVersion != expectedTomcatVersion {
-		t.Fatalf("Found Tomcat Version: '%s'\nExpected Tomcat Version: '%s'",
-			metadata.TargetPlatform, expectedTargetPlatform)
-	}
 }
 
 func Test_NewMetadata_With71_ShouldReturnLatestValid(t *testing.T) {
 	liferayProductsInfo := getProductsInfo(t)
 	expectedTargetPlatform := liferayProductsInfo.Portal71Ga4.TargetPlatformVersion
-	expectedTomcatVersion := liferayProductsInfo.Portal71Ga4.AppServerTomcatVersion
 	metadata, err := NewMetadata("liferay-workspace", "7.1")
 	if err != nil {
 		t.Fatal(err)
@@ -55,26 +44,17 @@ func Test_NewMetadata_With71_ShouldReturnLatestValid(t *testing.T) {
 		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
 			metadata.TargetPlatform, expectedTargetPlatform)
 	}
-	if metadata.TomcatVersion != expectedTomcatVersion {
-		t.Fatalf("Found Tomcat Version: '%s'\nExpected Tomcat Version: '%s'",
-			metadata.TargetPlatform, expectedTargetPlatform)
-	}
 }
 
 func Test_NewMetadata_With70_ShouldReturnLatestValid(t *testing.T) {
 	liferayProductsInfo := getProductsInfo(t)
 	expectedTargetPlatform := liferayProductsInfo.Portal70Ga7.TargetPlatformVersion
-	expectedTomcatVersion := liferayProductsInfo.Portal70Ga7.AppServerTomcatVersion
 	metadata, err := NewMetadata("liferay-workspace", "7.0")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if metadata.TargetPlatform != expectedTargetPlatform {
 		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
-			metadata.TargetPlatform, expectedTargetPlatform)
-	}
-	if metadata.TomcatVersion != expectedTomcatVersion {
-		t.Fatalf("Found Tomcat Version: '%s'\nExpected Tomcat Version: '%s'",
 			metadata.TargetPlatform, expectedTargetPlatform)
 	}
 }
