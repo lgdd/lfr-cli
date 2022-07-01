@@ -58,28 +58,18 @@ func TestGenerate_Gradle_ShouldHaveExpectedFiles(t *testing.T) {
 		t.Fatalf("gradle.properties doesn't contain %v", metadata.Product)
 	}
 
-	hasExpectedValue = strings.Contains(string(gradleProps), metadata.DockerImage)
-
-	if !hasExpectedValue {
-		t.Fatalf("gradle.properties doesn't contain %v", metadata.DockerImage)
-	}
-
 	hasExpectedValue = strings.Contains(string(gradleProps), metadata.BundleUrl)
 
 	if !hasExpectedValue {
-		t.Fatalf("gradle.properties doesn't contain %v", metadata.BundleUrl)
+		t.Fatalf("gradle.properties doesn't contain %v", metadata.Product)
 	}
 
-	hasExpectedValue = strings.Contains(string(gradleProps), metadata.TomcatVersion)
+	hasExpectedValue = strings.Contains(string(gradleProps), metadata.DockerImage)
 
 	if !hasExpectedValue {
-		t.Fatalf("gradle.properties doesn't contain %v", metadata.TomcatVersion)
+		t.Fatalf("gradle.properties doesn't contain %v", metadata.Product)
 	}
 
-	hasExpectedValue = strings.Contains(string(gradleProps), metadata.TargetPlatform)
-	if !hasExpectedValue {
-		t.Fatalf("gradle.properties doesn't contain %v", metadata.TargetPlatform)
-	}
 }
 
 func TestGenerate_Maven_ShouldHaveExpectedFiles(t *testing.T) {
