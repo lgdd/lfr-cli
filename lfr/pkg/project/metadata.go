@@ -161,7 +161,7 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		return &Metadata{
 			Product:        strings.Join([]string{"portal", release.TagName}, "-"),
 			BundleUrl:      downloadURL,
-			TargetPlatform: release.TagName,
+			TargetPlatform: strings.Split(release.TagName, "-")[0],
 			DockerImage:    strings.Join([]string{"liferay/portal", release.TagName}, ":"),
 			GroupId:        strcase.ToDelimited(PackageName, '.'),
 			ArtifactId:     strcase.ToKebab(strings.ToLower(base)),

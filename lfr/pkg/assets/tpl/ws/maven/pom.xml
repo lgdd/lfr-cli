@@ -44,6 +44,18 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>liferay-public</id>
+            <url>${liferay.repository.url}</url>
+            </pluginRepository>
+        </pluginRepositories>
+        <repositories>
+            <repository>
+            <id>liferay-public</id>
+            <url>${liferay.repository.url}</url>
+        </repository>
+    </repositories>
     <build>
         <plugins>
             <plugin>
