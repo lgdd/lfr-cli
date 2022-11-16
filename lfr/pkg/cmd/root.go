@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/spf13/cobra"
 
+	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/build"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/completion"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/create"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/deploy"
@@ -27,6 +28,7 @@ func init() {
 	root.AddCommand(completion.Cmd)
 	root.AddCommand(create.Cmd)
 	root.AddCommand(exec.Cmd)
+	root.AddCommand(build.Cmd)
 	root.AddCommand(deploy.Cmd)
 	root.AddCommand(initb.Cmd)
 	root.AddCommand(start.Cmd)
