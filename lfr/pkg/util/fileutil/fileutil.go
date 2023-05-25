@@ -175,7 +175,6 @@ func IsGradleWorkspace(path string) bool {
 		filepath.Join(path, "configs"),
 		filepath.Join(path, "gradle.properties"),
 		filepath.Join(path, "settings.gradle"),
-		filepath.Join(path, "build.gradle"),
 		filepath.Join(path, "gradlew"),
 	}
 
