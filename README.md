@@ -1,5 +1,5 @@
 [![version](https://img.shields.io/github/v/tag/lgdd/liferay-cli)](https://github.com/lgdd/liferay-cli/releases)
-[![status](https://img.shields.io/github/workflow/status/lgdd/liferay-cli/Test)](https://github.com/lgdd/liferay-cli/actions/workflows/test.yml)
+[![status](https://img.shields.io/github/actions/workflow/status/lgdd/liferay-cli/test.yml)](https://github.com/lgdd/liferay-cli/actions/workflows/test.yml)
 [![report](https://goreportcard.com/badge/github.com/lgdd/liferay-cli)](https://goreportcard.com/report/github.com/lgdd/liferay-cli)
 [![license](https://img.shields.io/github/license/lgdd/liferay-cli)](https://github.com/lgdd/liferay-cli/blob/main/LICENSE)
 
