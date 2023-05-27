@@ -48,6 +48,20 @@ func generateClientExtension(cmd *cobra.Command, args []string) {
 	templates := getTemplateNames(clientExtensionSamplesPath)
 	clientExtensionsWorkspaceDir := filepath.Join(liferayWorkspace, "client-extensions")
 
+	promptTemplate := promptui.Select{
+		Label: "Choose a template",
+		Items: templates,
+	}
+
+	_, template, err := promptTemplate.Run()
+
+	if err != nil {
+		fmt.Printf("Prompt failed %v\n", err)
+		os.Exit(1)
+	}
+
+	template = filepath.Join(clientExtensionSamplesPath, ClientExtensionSamplePrefix+template)
+
 	var name string
 	if len(args) >= 1 && len(args[0]) > 0 {
 		name = args[0]
@@ -71,21 +85,6 @@ func generateClientExtension(cmd *cobra.Command, args []string) {
 	}
 
 	name = strcase.ToKebab(strings.ToLower(name))
-
-	promptTemplate := promptui.Select{
-		Label: "Choose a template",
-		Items: templates,
-	}
-
-	_, template, err := promptTemplate.Run()
-
-	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
-	}
-
-	template = filepath.Join(clientExtensionSamplesPath, ClientExtensionSamplePrefix+template)
-
 	clientExtensionDir := filepath.Join(clientExtensionsWorkspaceDir, name)
 
 	fileutil.CreateDirs(clientExtensionDir)
