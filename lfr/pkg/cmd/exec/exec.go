@@ -15,10 +15,11 @@ import (
 var (
 	// Cmd is the command 'exec' which executes a task using Gradle or Maven wrapper
 	Cmd = &cobra.Command{
-		Use:   "exec TASK... -- [TASK_FLAG]...",
-		Short: "Execute Gradle or Maven task(s)",
-		Args:  cobra.MinimumNArgs(1),
-		Run:   run,
+		Use:     "exec TASK... -- [TASK_FLAG]...",
+		Aliases: []string{"x"},
+		Short:   "Execute Gradle or Maven task(s)",
+		Args:    cobra.MinimumNArgs(1),
+		Run:     run,
 	}
 )
 

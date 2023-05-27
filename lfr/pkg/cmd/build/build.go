@@ -14,10 +14,11 @@ import (
 var (
 	// Cmd is the command 'build' which builds a Liferay bundle
 	Cmd = &cobra.Command{
-		Use:   "build",
-		Short: "Shortcut to build your Liferay bundle",
-		Args:  cobra.NoArgs,
-		Run:   run,
+		Use:     "build",
+		Aliases: []string{"b"},
+		Short:   "Shortcut to build your Liferay bundle",
+		Args:    cobra.NoArgs,
+		Run:     run,
 	}
 )
 

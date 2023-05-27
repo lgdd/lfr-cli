@@ -12,10 +12,11 @@ import (
 var (
 	// Cmd is the command 'logs' to display Liferay bundle's logs
 	Cmd = &cobra.Command{
-		Use:   "logs",
-		Short: "Display logs from the running Liferay bundle",
-		Args:  cobra.NoArgs,
-		Run:   run,
+		Use:     "logs",
+		Aliases: []string{"l"},
+		Short:   "Display logs from the running Liferay bundle",
+		Args:    cobra.NoArgs,
+		Run:     run,
 	}
 	Follow bool
 )

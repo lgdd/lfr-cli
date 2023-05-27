@@ -14,10 +14,11 @@ import (
 var (
 	// Cmd is the command 'deploy' which runs modules deployment to the Liferay bundle
 	Cmd = &cobra.Command{
-		Use:   "deploy",
-		Short: "Shortcut to deploy your modules using Gradle or Maven",
-		Args:  cobra.NoArgs,
-		Run:   run,
+		Use:     "deploy",
+		Aliases: []string{"d"},
+		Short:   "Shortcut to deploy your modules using Gradle or Maven",
+		Args:    cobra.NoArgs,
+		Run:     run,
 	}
 )
 

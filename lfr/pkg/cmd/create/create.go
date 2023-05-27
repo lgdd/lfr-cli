@@ -16,8 +16,9 @@ import (
 var (
 	// Cmd is the command 'create' which create the structure of a given module type
 	Cmd = &cobra.Command{
-		Use:   "create TYPE NAME",
-		Short: "Create a Liferay project",
+		Use:     "create TYPE NAME",
+		Aliases: []string{"c"},
+		Short:   "Create a Liferay project",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
 				promptCreateChoices(cmd, args)
