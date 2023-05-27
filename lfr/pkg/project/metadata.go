@@ -119,10 +119,10 @@ func NewMetadata(base, version string) (*Metadata, error) {
 		resp, err := http.Get("https://api.github.com/repos/liferay/liferay-portal/releases/latest")
 
 		release := &GitHubRelease{
-			TagName: "7.4.3.30-ga30",
+			TagName: "7.4.3.78-ga78",
 			Assets: []GitHubAsset{
 				{
-					BrowserDownloadURL: "https://github.com/liferay/liferay-portal/releases/download/7.4.3.30-ga30/liferay-ce-portal-tomcat-7.4.3.30-ga30-20220622172832884.tar.gz",
+					BrowserDownloadURL: "https://github.com/liferay/liferay-portal/releases/download/7.4.3.78-ga78/liferay-ce-portal-tomcat-7.4.3.78-ga78-20230524080442157.tar.gz",
 				},
 			},
 		}
