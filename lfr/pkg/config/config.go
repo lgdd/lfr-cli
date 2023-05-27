@@ -21,7 +21,7 @@ func Init() {
 
 	if _, err := os.Stat(configFullPath); err != nil {
 		fileutil.CreateDirs(configPath)
-		// fileutil.CreateFiles([]string{configFullPath})
+		fileutil.CreateFiles([]string{configFullPath})
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
