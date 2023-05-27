@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/blang/semver v3.5.1+incompatible
+	github.com/dustin/go-humanize v1.0.1
 	github.com/ettle/strcase v0.1.1
 	github.com/fatih/color v1.13.0
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
