@@ -158,8 +158,11 @@ func NewMetadata(base, version string) (*Metadata, error) {
 
 		bar.Clear()
 
+		gaUpdateSplit := strings.Split(release.TagName, "-")
+		gaUpdate := gaUpdateSplit[len(gaUpdateSplit)-1]
+
 		return &Metadata{
-			Product:        strings.Join([]string{"portal", release.TagName}, "-"),
+			Product:        strings.Join([]string{"portal", version, gaUpdate}, "-"),
 			BundleUrl:      downloadURL,
 			TargetPlatform: strings.Split(release.TagName, "-")[0],
 			DockerImage:    strings.Join([]string{"liferay/portal", release.TagName}, ":"),
