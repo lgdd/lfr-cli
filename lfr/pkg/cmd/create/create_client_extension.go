@@ -14,6 +14,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	cp "github.com/otiai10/copy"
+	"github.com/schollz/progressbar/v3"
 	"github.com/spf13/cobra"
 )
 
@@ -129,6 +130,12 @@ func fetchClientExtensionSamples(destination string) {
 
 	// Clone & checkout if ~/.lfr/liferay-portal does not exist
 	if _, err := os.Stat(filepath.Join(destination, "liferay-portal")); err != nil {
+		bar := progressbar.NewOptions(-1,
+			progressbar.OptionSetDescription("Fetching samples"),
+			progressbar.OptionSpinnerType(11))
+
+		bar.Add(1)
+
 		gitClone := exec.Command("git", "clone", "--depth", "1", "--filter=blob:none", "--no-checkout", "https://github.com/liferay/liferay-portal")
 		gitClone.Dir = destination
 
@@ -156,13 +163,22 @@ func fetchClientExtensionSamples(destination string) {
 		if err := gitCheckout.Run(); err != nil {
 			panic(err)
 		}
+		bar.Clear()
 	} else {
 		// Repo already exists, try to update
+		bar := progressbar.NewOptions(-1,
+			progressbar.OptionSetDescription("Updating samples"),
+			progressbar.OptionSpinnerType(11))
+
+		bar.Add(1)
+
 		gitPull := exec.Command("git", "pull")
 		gitPull.Dir = liferayPortalPath
 
 		if err := gitPull.Run(); err != nil {
 			panic(err)
 		}
+
+		bar.Clear()
 	}
 }
