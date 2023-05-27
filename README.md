@@ -29,12 +29,15 @@ This tool is still in `alpha`, so checkout the [release page](https://github.com
 Examples:
 
 Get a completion script for your shell:
+
 ```shell
 lfr completion bash
 ```
+
 > bash, zsh, fish and powershell are supported.
 
 Create a Liferay workspace:
+
 ```shell
 lfr create workspace my-liferay-workspace
 # or
@@ -42,6 +45,7 @@ lfr create ws my-liferay-workspace
 ```
 
 Run a Gradle or Maven task:
+
 ```shell
 # Gradle
 lfr exec build
@@ -51,6 +55,7 @@ lfr exec clean install
 ```
 
 Start Liferay and follow the logs:
+
 ```shell
 lfr start
 lfr logs -f
@@ -63,23 +68,23 @@ Using [Hyperfine](https://github.com/sharkdp/hyperfine).
 ### Create Workspace
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
-|:---|---:|---:|---:|---:|
-| `blade init -v 7.4.1-1 liferay-workspace` | 1.512 ± 0.036 | 1.466 | 1.577 | 115.60 ± 8.57 |
-| `lfr create ws liferay-workspace` | 0.013 ± 0.001 | 0.011 | 0.016 | 1.00 |
+| :--- | ---: | ---: | ---: | ---: |
+| `blade init -v 7.4 liferay-workspace` |   <span style="color:red">1.837 ± 0.300</span> |   <span style="color:red">1.665</span> |   <span style="color:red">2.668</span> | 19.94 ± 5.69 |
+| `lfr create ws liferay-workspace`     | <span style="color:green">0.092 ± 0.022</span> | <span style="color:green">0.076</span> | <span style="color:green">0.178</span> |         1.00 |
 
 ### Create MVC Portlet
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `blade create -t mvc-portlet my-mvc-portlet` | 1.628 ± 0.055 | 1.576 | 1.750 | 105.73 ± 18.09 |
-| `lfr create mvc my-mvc-portlet` | 0.015 ± 0.003 | 0.012 | 0.027 | 1.00 |
+| `blade create -t mvc-portlet my-mvc-portlet` | <span style="color:red">1.608 ± 0.021</span> | <span style="color:red">1.570</span> | <span style="color:red">1.647</span> | 59.70 ± 112.37 |
+| `lfr create mvc my-mvc-portlet` | <span style="color:green">0.027 ± 0.051</span> | <span style="color:green">0.015</span> | <span style="color:green">0.345</span> | 1.00 |
 
 ### Create Service Builder
 
 | Command | Mean [s] | Min [s] | Max [s] | Relative |
 |:---|---:|---:|---:|---:|
-| `blade create -t service-builder my-service-builder` | 1.736 ± 0.322 | 1.605 | 2.651 | 130.08 ± 38.89 |
-| `lfr create sb my-service-builder` | 0.013 ± 0.003 | 0.011 | 0.035 | 1.00 |
+| `blade create -t service-builder my-service-builder` | <span style="color:red">1.628 ± 0.057</span> | <span style="color:red">1.573</span> | <span style="color:red">1.772</span> | 82.00 ± 134.01 |
+| `lfr create sb my-service-builder` | <span style="color:green">0.020 ± 0.032</span> | <span style="color:green">0.014</span> | <span style="color:green">0.332</span> | 1.00 |
 
 ## License
 
