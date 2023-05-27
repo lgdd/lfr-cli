@@ -15,6 +15,7 @@ var (
 func Info(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgCyan)
+	color.Set(color.Bold)
 	fmt.Print(msg)
 	color.Unset()
 }
@@ -23,6 +24,7 @@ func Info(msg string) {
 func Warning(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgYellow)
+	color.Set(color.Bold)
 	fmt.Print(msg)
 	color.Unset()
 }
@@ -31,6 +33,7 @@ func Warning(msg string) {
 func Danger(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgRed)
+	color.Set(color.Bold)
 	fmt.Print(msg)
 	color.Unset()
 }
@@ -39,6 +42,15 @@ func Danger(msg string) {
 func Success(msg string) {
 	color.NoColor = NoColor
 	color.Set(color.FgGreen)
+	color.Set(color.Bold)
+	fmt.Print(msg)
+	color.Unset()
+}
+
+// Display message in bold without color
+func Bold(msg string) {
+	color.NoColor = NoColor
+	color.Set(color.Bold)
 	fmt.Print(msg)
 	color.Unset()
 }
