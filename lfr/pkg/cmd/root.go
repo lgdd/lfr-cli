@@ -16,6 +16,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/stop"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/update"
 	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/version"
+	"github.com/lgdd/liferay-cli/lfr/pkg/config"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 )
 
@@ -25,6 +26,8 @@ var root = &cobra.Command{
 }
 
 func init() {
+	cobra.OnInitialize(config.Init)
+
 	root.AddCommand(completion.Cmd)
 	root.AddCommand(create.Cmd)
 	root.AddCommand(exec.Cmd)
