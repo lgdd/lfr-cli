@@ -41,7 +41,7 @@ brews:
   - 
     tap:
       owner: lgdd
-      name: homebrew-liferay-cli
+      name: homebrew-tap
     folder: Formula
     homepage: https://github.com/lgdd/liferay-cli
     description: Liferay CLI (lfr) is an unofficial tool written in Go that helps you create & manage your Liferay projects.
