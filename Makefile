@@ -9,6 +9,7 @@ lint:
 	go mod tidy
 	go mod verify
 	golangci-lint run
+	gocyclo -over 15 .
 
 test:
 	go mod tidy
