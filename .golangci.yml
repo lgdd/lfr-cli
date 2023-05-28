@@ -1,0 +1,20 @@
+linters:
+  disable-all: true
+  enable:
+    - gocyclo
+    - gofmt
+    - govet
+    - ineffassign
+    - misspell
+    - typecheck
+linters-settings:
+  gocyclo:
+    min-complexity: 15
+  misspell:
+    locale: US
+issues:
+  exclude-rules:
+    - linters:
+        - typecheck
+      # False positive
+      text: "declared but not used"
