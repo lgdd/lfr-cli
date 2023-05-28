@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
-	"github.com/reiver/go-oi"
-	"github.com/reiver/go-telnet"
+	oi "github.com/reiver/go-oi"
+	telnet "github.com/reiver/go-telnet"
 )
 
 // Telnet caller for Gogo Shell

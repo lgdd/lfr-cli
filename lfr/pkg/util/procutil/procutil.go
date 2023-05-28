@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mitchellh/go-ps"
+	ps "github.com/mitchellh/go-ps"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 )

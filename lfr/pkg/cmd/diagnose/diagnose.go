@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/dustin/go-humanize"
+	humanize "github.com/dustin/go-humanize"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/spf13/cobra"

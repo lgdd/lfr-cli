@@ -16,7 +16,7 @@ import (
 	"time"
 
 	"github.com/nxadm/tail"
-	"github.com/schollz/progressbar/v3"
+	progressbar "github.com/schollz/progressbar/v3"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/assets"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"

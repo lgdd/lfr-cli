@@ -16,7 +16,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
-	"github.com/schollz/progressbar/v3"
+	progressbar "github.com/schollz/progressbar/v3"
 )
 
 // Metadata represents the basic informations associated with a Liferay project

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/reiver/go-telnet"
+	telnet "github.com/reiver/go-telnet"
 	"github.com/spf13/cobra"
 )
 

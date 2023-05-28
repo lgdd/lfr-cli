@@ -14,7 +14,7 @@ import (
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	cp "github.com/otiai10/copy"
-	"github.com/schollz/progressbar/v3"
+	progressbar "github.com/schollz/progressbar/v3"
 	"github.com/spf13/cobra"
 )
 
