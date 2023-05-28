@@ -80,7 +80,7 @@ func verifyBlade() bool {
 	if err != nil {
 		printutil.Danger("[✗] ")
 		fmt.Printf("Blade is not installed.\n")
-		printlnBulletPoint("You might like this tool, but Blade is still the offical one with useful features.")
+		printlnBulletPoint("You might like this tool, but Blade is still the official one with useful features.")
 		printlnBulletPoint("Blade is supported by Liferay and used by Liferay IDE behind the scenes.")
 		printlnBulletPoint("Checkout the documentation: https://learn.liferay.com/w/dxp/building-applications/tooling/blade-cli")
 		return false
