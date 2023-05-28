@@ -26,7 +26,13 @@ Also, I get sometimes frustrated by [Blade](https://github.com/liferay/liferay-b
 
 Checkout the [release page](https://github.com/lgdd/liferay-cli/releases) to download the binary for your distribution.
 
-Examples:
+For macOS, you can install it using [Homebrew](https://brew.sh):
+```shell
+brew tap lgdd/homebrew-tap
+brew install liferay-cli
+```
+
+### Examples:
 
 Get a completion script for your shell:
 
