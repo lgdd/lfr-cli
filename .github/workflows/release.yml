@@ -37,3 +37,4 @@ jobs:
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LFR_CLI_GH_TOKEN: ${{ secrets.LFR_CLI_GH_TOKEN }}
