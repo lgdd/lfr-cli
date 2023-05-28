@@ -24,7 +24,7 @@ Also, I get sometimes frustrated by [Blade](https://github.com/liferay/liferay-b
 
 ## Getting Started
 
-This tool is still in `alpha`, so checkout the [release page](https://github.com/lgdd/liferay-cli/releases) to download the binary for your distribution.
+Checkout the [release page](https://github.com/lgdd/liferay-cli/releases) to download the binary for your distribution.
 
 Examples:
 
@@ -36,22 +36,58 @@ lfr completion bash
 
 > bash, zsh, fish and powershell are supported.
 
+Run a diagnosis:
+```shell
+lfr diagnose
+# or shorter
+lfr diag
+```
+
+> The output of this command will list your installations of Java, Blade and Docker. It will also display how much space are being used by cached bundles and docker images.
+
 Create a Liferay workspace:
 
 ```shell
-lfr create workspace my-liferay-workspace
-# or
-lfr create ws my-liferay-workspace
+lfr create workspace liferay-workspace
+# or shorter
+lfr create ws liferay-workspace
+# or even shoter
+lfr c ws liferay-workspace
 ```
+
+Create a client extension:
+```shell
+lfr create client-extension
+# or shorter
+lfr create cx
+# or event shorter
+lfr c cx
+```
+> Since client extensions are available as samples in liferay-portal repo, it will checkout the subdirectory containing them under `$HOME/.lfr/liferay-portal`.
 
 Run a Gradle or Maven task:
 
 ```shell
-# Gradle
+lfr exec [tasks...]
+
+# Gradle example
 lfr exec build
 
-# Maven
+# Maven example
 lfr exec clean install
+```
+
+Shortcuts for common tasks:
+```shell
+# Build
+lfr build
+#or shorter
+lfr b
+
+# Deploy
+lfr deploy
+# or shorter
+lfr d
 ```
 
 Start Liferay and follow the logs:
@@ -67,24 +103,24 @@ Using [Hyperfine](https://github.com/sharkdp/hyperfine).
 
 ### Create Workspace
 
-| Command | Mean [s] | Min [s] | Max [s] | Relative |
-| :--- | ---: | ---: | ---: | ---: |
-| `blade init -v 7.4 liferay-workspace` |   <span style="color:red">1.837 ± 0.300</span> |   <span style="color:red">1.665</span> |   <span style="color:red">2.668</span> | 19.94 ± 5.69 |
-| `lfr create ws liferay-workspace`     | <span style="color:green">0.092 ± 0.022</span> | <span style="color:green">0.076</span> | <span style="color:green">0.178</span> |         1.00 |
+| Command                               |      Mean [s] | Min [s] | Max [s] |     Relative |
+| :------------------------------------ | ------------: | ------: | ------: | -----------: |
+| `blade init -v 7.4 liferay-workspace` | 1.837 ± 0.300 |   1.665 |   2.668 | 19.94 ± 5.69 |
+| `lfr create ws liferay-workspace`     | 0.092 ± 0.022 |   0.076 |   0.178 |         1.00 |
 
 ### Create MVC Portlet
 
-| Command | Mean [s] | Min [s] | Max [s] | Relative |
-|:---|---:|---:|---:|---:|
-| `blade create -t mvc-portlet my-mvc-portlet` | <span style="color:red">1.608 ± 0.021</span> | <span style="color:red">1.570</span> | <span style="color:red">1.647</span> | 59.70 ± 112.37 |
-| `lfr create mvc my-mvc-portlet` | <span style="color:green">0.027 ± 0.051</span> | <span style="color:green">0.015</span> | <span style="color:green">0.345</span> | 1.00 |
+| Command                                      |      Mean [s] | Min [s] | Max [s] |       Relative |
+| :------------------------------------------- | ------------: | ------: | ------: | -------------: |
+| `blade create -t mvc-portlet my-mvc-portlet` | 1.608 ± 0.021 |   1.570 |   1.647 | 59.70 ± 112.37 |
+| `lfr create mvc my-mvc-portlet`              | 0.027 ± 0.051 |   0.015 |   0.345 |           1.00 |
 
 ### Create Service Builder
 
-| Command | Mean [s] | Min [s] | Max [s] | Relative |
-|:---|---:|---:|---:|---:|
-| `blade create -t service-builder my-service-builder` | <span style="color:red">1.628 ± 0.057</span> | <span style="color:red">1.573</span> | <span style="color:red">1.772</span> | 82.00 ± 134.01 |
-| `lfr create sb my-service-builder` | <span style="color:green">0.020 ± 0.032</span> | <span style="color:green">0.014</span> | <span style="color:green">0.332</span> | 1.00 |
+| Command                                              |      Mean [s] | Min [s] | Max [s] |       Relative |
+| :--------------------------------------------------- | ------------: | ------: | ------: | -------------: |
+| `blade create -t service-builder my-service-builder` | 1.628 ± 0.057 |   1.573 |   1.772 | 82.00 ± 134.01 |
+| `lfr create sb my-service-builder`                   | 0.020 ± 0.032 |   0.014 |   0.332 |           1.00 |
 
 ## License
 
