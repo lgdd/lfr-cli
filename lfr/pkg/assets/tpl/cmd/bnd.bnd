@@ -1,0 +1,3 @@
+Bundle-Name: {{.CamelCaseName}}
+Bundle-SymbolicName: {{.Package}}
+Bundle-Version: 1.0.0

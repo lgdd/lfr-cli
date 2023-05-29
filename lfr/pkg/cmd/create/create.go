@@ -33,6 +33,7 @@ func init() {
 	Cmd.AddCommand(createMvcPortlet)
 	Cmd.AddCommand(createSpringPortlet)
 	Cmd.AddCommand(createApiModule)
+	Cmd.AddCommand(createCmdModule)
 	Cmd.AddCommand(createServiceBuilder)
 	Cmd.AddCommand(createRestBuilder)
 	Cmd.AddCommand(createDocker)
@@ -42,7 +43,7 @@ func init() {
 func promptCreateChoices(cmd *cobra.Command, args []string) {
 	promptTemplate := promptui.Select{
 		Label: "Choose a template",
-		Items: []string{"client-extension", "api", "docker", "mvc-portlet", "rest-builder", "service-builder", "spring-mvc-portlet", "workspace"},
+		Items: []string{"client-extension", "api", "command", "docker", "mvc-portlet", "rest-builder", "service-builder", "spring-mvc-portlet", "workspace"},
 	}
 
 	_, template, err := promptTemplate.Run()
