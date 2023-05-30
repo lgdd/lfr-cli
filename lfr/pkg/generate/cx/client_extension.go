@@ -29,7 +29,9 @@ func Generate(cmd *cobra.Command, args []string) {
 		panic(err)
 	}
 
-	fetchClientExtensionSamples(config.GetConfigPath())
+	if err := FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
+		HandleClientExtensionsOffline(config.GetConfigPath())
+	}
 
 	clientExtensionSamplesPath := filepath.Join(config.GetConfigPath(), "liferay-portal", "workspaces", "liferay-sample-workspace", "client-extensions")
 	templates := getTemplateNames(clientExtensionSamplesPath)
@@ -111,7 +113,7 @@ func getTemplateNames(clientExtensionSamplesPath string) []string {
 	return samples
 }
 
-func fetchClientExtensionSamples(destination string) {
+func FetchClientExtensionSamples(destination string) error {
 	liferayPortalPath := filepath.Join(destination, "liferay-portal")
 
 	// Clone & checkout if ~/.lfr/liferay-portal does not exist
@@ -126,28 +128,32 @@ func fetchClientExtensionSamples(destination string) {
 		gitClone.Dir = destination
 
 		if err := gitClone.Run(); err != nil {
-			panic(err)
+			bar.Clear()
+			return err
 		}
 
 		gitSparseCheckoutInit := exec.Command("git", "sparse-checkout", "init", "--no-cone")
 		gitSparseCheckoutInit.Dir = liferayPortalPath
 
 		if err := gitSparseCheckoutInit.Run(); err != nil {
-			panic(err)
+			bar.Clear()
+			return err
 		}
 
 		gitSparseCheckoutSet := exec.Command("git", "sparse-checkout", "set", "workspaces/liferay-sample-workspace/client-extensions")
 		gitSparseCheckoutSet.Dir = liferayPortalPath
 
 		if err := gitSparseCheckoutSet.Run(); err != nil {
-			panic(err)
+			bar.Clear()
+			return err
 		}
 
 		gitCheckout := exec.Command("git", "checkout")
 		gitCheckout.Dir = liferayPortalPath
 
 		if err := gitCheckout.Run(); err != nil {
-			panic(err)
+			bar.Clear()
+			return err
 		}
 		bar.Clear()
 	} else {
@@ -162,9 +168,39 @@ func fetchClientExtensionSamples(destination string) {
 		gitPull.Dir = liferayPortalPath
 
 		if err := gitPull.Run(); err != nil {
-			panic(err)
+			bar.Clear()
+			return err
 		}
 
 		bar.Clear()
+	}
+	return nil
+}
+
+func HandleClientExtensionsOffline(configPath string) {
+	if _, err := os.Stat(filepath.Join(configPath, "liferay-portal")); err != nil {
+		printutil.Warning("Couldn't fetch client extensions samples from GitHub.\n")
+		fmt.Println("Copying embedded versions from the CLI instead.")
+		err = fileutil.CreateDirsFromAssets("tpl/cx", configPath)
+		if err != nil {
+			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+			os.Exit(1)
+		}
+
+		err = fileutil.CreateFilesFromAssets("tpl/cx", configPath)
+		if err != nil {
+			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+			os.Exit(1)
+		}
+
+		oldGitDirectory := filepath.Join(configPath, "liferay-portal", "git")
+		newGitDirectory := filepath.Join(configPath, "liferay-portal", ".git")
+		if err := os.Rename(oldGitDirectory, newGitDirectory); err != nil {
+			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+			os.Exit(1)
+		}
+	} else {
+		printutil.Warning("Couldn't update client extensions samples from GitHub.\n")
+		fmt.Println("Using latest versions fetched.")
 	}
 }
