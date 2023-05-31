@@ -51,6 +51,8 @@ Also, I get sometimes frustrated by [Blade](https://github.com/liferay/liferay-b
 - Details after any command execution
 - Shell completion
 
+I'm not the only one motivated to help Liferay developpers with new dev tools. If you're looking for something to help you with Client Extensions development, definitely checkout this tool: https://github.com/bnheise/ce-cli
+
 ## Installation
 
 For macOS or Linux, you can install it using [Homebrew](https://brew.sh):
