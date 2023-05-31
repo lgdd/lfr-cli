@@ -34,7 +34,8 @@ func diagnose(cmd *cobra.Command, args []string) {
 	fmt.Print("\n")
 	verifyBundles()
 	if dockerInstalled {
-		verifyDockerImages()
+		verifyLiferayDockerImages()
+		verifyElasticsearchDockerImages()
 	}
 	fmt.Println("\nMore information about compatibilities: https://www.liferay.com/compatibility-matrix")
 }
@@ -135,7 +136,7 @@ func verifyBundles() {
 	}
 }
 
-func verifyDockerImages() {
+func verifyLiferayDockerImages() {
 	dxpImagesTotalSize := getDockerImagesSize("liferay/dxp")
 	portalImagesTotalSize := getDockerImagesSize("liferay/portal")
 	dockerImagesTotalSize := dxpImagesTotalSize + portalImagesTotalSize
@@ -145,6 +146,21 @@ func verifyDockerImages() {
 		fmt.Printf("Official Liferay Docker images are using ~%s.\n", humanize.Bytes(dockerImagesTotalSize))
 		printlnBulletPoint("Run 'docker images liferay/dxp' to list DXP Images (EE)")
 		printlnBulletPoint("Run 'docker images liferay/portal' to list Portal Images (CE)")
+	}
+}
+
+func verifyElasticsearchDockerImages() {
+	dockerHubTagName := "elasticsearch"
+	elasticHubTagName := "docker.elastic.co/elasticsearch/elasticsearch"
+	dockerHubImagesTotalSize := getDockerImagesSize(dockerHubTagName)
+	elasticHubImagesTotalSize := getDockerImagesSize(elasticHubTagName)
+	dockerImagesTotalSize := dockerHubImagesTotalSize + elasticHubImagesTotalSize
+
+	if dockerImagesTotalSize > 0 {
+		printutil.Info("[i] ")
+		fmt.Printf("Official Elasticsearch Docker images are using ~%s.\n", humanize.Bytes(dockerImagesTotalSize))
+		printlnBulletPoint(fmt.Sprintf("Run 'docker images %s' to list images from Docker Hub", dockerHubTagName))
+		printlnBulletPoint(fmt.Sprintf("Run 'docker images %s' to list images from Elastic Hub", elasticHubTagName))
 	}
 }
 
