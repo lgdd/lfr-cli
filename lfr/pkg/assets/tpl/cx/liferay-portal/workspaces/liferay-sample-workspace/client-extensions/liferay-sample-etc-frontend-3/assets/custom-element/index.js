@@ -12,7 +12,8 @@
  * details.
  */
 
-import {getBye, getHello} from 'my-utils';
+import getBye from '../my-utils/getBye.js';
+import getHello from '../my-utils/getHello.js';
 
 class CustomElement extends HTMLElement {
 	constructor() {
@@ -21,7 +22,7 @@ class CustomElement extends HTMLElement {
 		const root = document.createElement('pre');
 
 		root.innerHTML = `
-Grettings in:
+Greetings in:
 
  · English:    ${getHello('en')}
  · French:     ${getHello('fr')}

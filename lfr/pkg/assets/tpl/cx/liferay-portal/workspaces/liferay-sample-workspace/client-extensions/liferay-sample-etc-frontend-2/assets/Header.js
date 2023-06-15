@@ -12,7 +12,7 @@
  * details.
  */
 
-import {upperCase} from './shared-utils';
+import {upperCase} from './shared-utils.js';
 
 class HeaderWebComponent extends HTMLElement {
 	constructor() {
