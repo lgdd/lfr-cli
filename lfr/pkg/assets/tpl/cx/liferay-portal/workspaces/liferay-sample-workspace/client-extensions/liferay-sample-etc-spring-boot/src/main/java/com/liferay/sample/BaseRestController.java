@@ -14,6 +14,8 @@
 
 package com.liferay.sample;
 
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 
 import org.json.JSONObject;
@@ -36,20 +38,29 @@ public abstract class BaseRestController {
 		}
 	}
 
-	protected void log(Jwt jwt, Log log, String json) {
+	protected void log(Jwt jwt, Log log, Map<String, String> parameters) {
 		if (log.isInfoEnabled()) {
 			log.info("JWT Claims: " + jwt.getClaims());
 			log.info("JWT ID: " + jwt.getId());
 			log.info("JWT Subject: " + jwt.getSubject());
+			log.info("Parameters: " + parameters);
+		}
+	}
 
+	protected void log(Jwt jwt, Log log, String json) {
+		if (log.isInfoEnabled()) {
 			try {
 				JSONObject jsonObject = new JSONObject(json);
 
-				log.info("\n\n" + jsonObject.toString(4) + "\n");
+				log.info("JSON: " + jsonObject.toString(4));
 			}
 			catch (Exception exception) {
 				log.error("JSON: " + json, exception);
 			}
+
+			log.info("JWT Claims: " + jwt.getClaims());
+			log.info("JWT ID: " + jwt.getId());
+			log.info("JWT Subject: " + jwt.getSubject());
 		}
 	}
 

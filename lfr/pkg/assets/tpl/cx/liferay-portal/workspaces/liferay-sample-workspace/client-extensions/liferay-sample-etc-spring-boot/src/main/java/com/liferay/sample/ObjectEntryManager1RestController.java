@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -54,9 +55,10 @@ public class ObjectEntryManager1RestController extends BaseRestController {
 	public ResponseEntity<String> delete(
 		@AuthenticationPrincipal Jwt jwt,
 		@PathVariable String objectDefinitionExternalReferenceCode,
-		@PathVariable String externalReferenceCode) {
+		@PathVariable String externalReferenceCode,
+		@RequestParam Map<String, String> parameters) {
 
-		log(jwt, _log);
+		log(jwt, _log, parameters);
 
 		Map<String, JSONObject> objectEntryJSONObjects =
 			_getObjectEntryJSONObjects(objectDefinitionExternalReferenceCode);
@@ -75,9 +77,10 @@ public class ObjectEntryManager1RestController extends BaseRestController {
 	@GetMapping("/{objectDefinitionExternalReferenceCode}")
 	public ResponseEntity<String> get(
 		@AuthenticationPrincipal Jwt jwt,
-		@PathVariable String objectDefinitionExternalReferenceCode) {
+		@PathVariable String objectDefinitionExternalReferenceCode,
+		@RequestParam Map<String, String> parameters) {
 
-		log(jwt, _log);
+		log(jwt, _log, parameters);
 
 		Map<String, JSONObject> objectEntryJSONObjects =
 			_getObjectEntryJSONObjects(objectDefinitionExternalReferenceCode);
@@ -98,9 +101,10 @@ public class ObjectEntryManager1RestController extends BaseRestController {
 	public ResponseEntity<String> get(
 		@AuthenticationPrincipal Jwt jwt,
 		@PathVariable String objectDefinitionExternalReferenceCode,
-		@PathVariable String externalReferenceCode) {
+		@PathVariable String externalReferenceCode,
+		@RequestParam Map<String, String> parameters) {
 
-		log(jwt, _log);
+		log(jwt, _log, parameters);
 
 		Map<String, JSONObject> objectEntryJSONObjects =
 			_getObjectEntryJSONObjects(objectDefinitionExternalReferenceCode);
@@ -128,6 +132,15 @@ public class ObjectEntryManager1RestController extends BaseRestController {
 			_getObjectEntryJSONObjects(objectDefinitionExternalReferenceCode);
 
 		JSONObject objectEntryJSONObject = _getObjectEntryJSONObject(json);
+
+		if (objectEntryJSONObject.isNull("creator")) {
+			Faker faker = new Faker();
+
+			Name name = faker.name();
+
+			objectEntryJSONObject.put(
+				"creator", Collections.singletonMap("name", name.fullName()));
+		}
 
 		String externalReferenceCode =
 			!objectEntryJSONObject.isNull("externalReferenceCode") ?
@@ -171,13 +184,6 @@ public class ObjectEntryManager1RestController extends BaseRestController {
 		}
 
 		JSONObject objectEntryJSONObject = _getObjectEntryJSONObject(json);
-
-		Faker faker = new Faker();
-
-		Name name = faker.name();
-
-		objectEntryJSONObject.put(
-			"creator", Collections.singletonMap("name", name.fullName()));
 
 		objectEntryJSONObjects.put(
 			externalReferenceCode, objectEntryJSONObject);
