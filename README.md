@@ -388,12 +388,10 @@ Global Flags:
 Stop the Liferay Tomcat bundle initialized in your workspace:
 
 ```shell
-lfr start
+lfr stop
 ```
-
-```shell
 Flags:
-  -h, --help   help for start
+  -h, --help   help for stop
 
 Global Flags:
       --no-color   disable colors for output messages
