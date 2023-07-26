@@ -17,14 +17,12 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - name: Remove Client Extensions Samples
+      - name: Update Client Extensions Samples
         working-directory: ./lfr/pkg/assets/tpl/cx
         run: |
           rm -r liferay-portal
-          git clone --depth 1 --filter=blob:none --no-checkout https://github.com/liferay/liferay-portal                                                                         705ms
-      - name: Add Latest Client Extensions Samples
-        working-directory: ./lfr/pkg/assets/tpl/cx/liferay-portal
-        run: |
+          git clone --depth 1 --filter=blob:none --no-checkout https://github.com/liferay/liferay-portal
+          cd liferay-portal
           git sparse-checkout init --no-cone
           git sparse-checkout set workspaces/liferay-sample-workspace/client-extensions
           git checkout master
