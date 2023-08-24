@@ -5,13 +5,13 @@
 
 import React from 'react';
 
-import {Liferay} from '../services/liferay/liferay';
+import {Liferay} from '../services/liferay/liferay.js';
 
 let oAuth2Client;
 
 try {
 	oAuth2Client = Liferay.OAuth2Client.FromUserAgentApplication(
-		'liferay-sample-node-oauth-application-user-agent'
+		'liferay-sample-etc-node-oauth-application-user-agent'
 	);
 }
 catch (error) {

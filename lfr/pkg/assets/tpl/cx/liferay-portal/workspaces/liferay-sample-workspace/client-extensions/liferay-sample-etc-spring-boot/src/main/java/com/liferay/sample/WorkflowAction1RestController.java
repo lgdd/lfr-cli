@@ -48,6 +48,8 @@ public class WorkflowAction1RestController extends BaseRestController {
 		).defaultHeader(
 			HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE
 		).defaultHeader(
+			HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue()
+		).defaultHeader(
 			HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE
 		).build();
 
@@ -58,8 +60,6 @@ public class WorkflowAction1RestController extends BaseRestController {
 			jsonObject.getString("transitionURL")
 		).bodyValue(
 			"{\"transitionName\": \"approve\"}"
-		).header(
-			HttpHeaders.AUTHORIZATION, "Bearer " + jwt.getTokenValue()
 		).exchangeToMono(
 			clientResponse -> {
 				HttpStatus httpStatus = clientResponse.statusCode();
