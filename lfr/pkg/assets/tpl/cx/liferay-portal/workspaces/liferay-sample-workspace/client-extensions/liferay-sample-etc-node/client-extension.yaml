@@ -9,12 +9,12 @@ liferay-sample-etc-node-oauth-application-user-agent:
     scopes:
         - Liferay.Headless.Admin.Workflow.everything
     type: oAuthApplicationUserAgent
-liferay-sample-node-object-action-1:
+liferay-sample-etc-node-object-action-1:
     name: Liferay Sample Node Object Action 1
     oAuth2ApplicationExternalReferenceCode: liferay-sample-etc-node-oauth-application-user-agent
     resourcePath: /sample/object/action/1
     type: objectAction
-liferay-sample-node-object-action-2:
+liferay-sample-etc-node-object-action-2:
     name: Liferay Sample Node Object Action 2
     oAuth2ApplicationExternalReferenceCode: liferay-sample-etc-node-oauth-application-user-agent
     resourcePath: /sample/object/action/2
