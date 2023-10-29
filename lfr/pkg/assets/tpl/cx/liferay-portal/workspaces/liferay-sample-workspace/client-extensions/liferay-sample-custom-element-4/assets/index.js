@@ -16,23 +16,19 @@ const api = async (url, options = {}) => {
 	});
 };
 
+function Greeting() {
+	return React.createElement(
+		'h1',
+		{className: 'greeting'},
+		'Hello ',
+		React.createElement('i', null, name),
+		'. Welcome!'
+	);
+}
+
 class CustomElement extends HTMLElement {
-	constructor() {
-		super();
-
-		const root = document.createElement('div');
-
-		const Greeting = React.createElement(
-			'h1',
-			{className: 'greeting'},
-			'Hello ',
-			React.createElement('i', null, name),
-			'. Welcome!'
-		);
-
-		ReactDOM.render(Greeting, root);
-
-		this.appendChild(root);
+	connectedCallback() {
+		ReactDOM.render(React.createElement(Greeting), this);
 
 		if (Liferay.ThemeDisplay.isSignedIn()) {
 			api('o/headless-admin-user/v1.0/my-user-account')
@@ -51,6 +47,10 @@ class CustomElement extends HTMLElement {
 					console.log(error);
 				});
 		}
+	}
+
+	disconnectedCallback() {
+		ReactDOM.unmountComponentAtNode(this);
 	}
 }
 
