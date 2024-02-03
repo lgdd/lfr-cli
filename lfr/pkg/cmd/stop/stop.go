@@ -3,6 +3,7 @@ package stop
 import (
 	"os"
 	"os/exec"
+	"runtime"
 
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
 	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
@@ -21,6 +22,10 @@ var (
 )
 
 func run(cmd *cobra.Command, args []string) {
+	if runtime.GOOS == "windows" {
+		printutil.Info("not available for Windows since the Tomcat process run in another command window")
+		os.Exit(0)
+	}
 	shutdownScript, err := fileutil.GetTomcatScriptPath("shutdown")
 
 	if err != nil {
