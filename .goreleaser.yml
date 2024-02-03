@@ -39,7 +39,7 @@ nfpms:
       - apk
 brews:
   - 
-    tap:
+    repository:
       owner: lgdd
       name: homebrew-tap
       token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
