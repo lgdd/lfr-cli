@@ -21,7 +21,7 @@ jobs:
         working-directory: ./lfr/pkg/assets/tpl/cx
         run: |
           rm -r liferay-client-extensions-samples
-          git clone --depth 0 https://github.com/lgdd/liferay-client-extensions-samples
+          git clone --depth 1 https://github.com/lgdd/liferay-client-extensions-samples
           cd liferay-client-extensions-samples
           mv .git git
       - name: Commit Client Extensions Changes

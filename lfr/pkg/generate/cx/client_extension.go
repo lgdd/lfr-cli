@@ -128,7 +128,7 @@ func FetchClientExtensionSamples(destination string) error {
 		gitProject.WriteString("https://github.com/lgdd/")
 		gitProject.WriteString(ClientExtensionSampleProjectName)
 
-		gitClone := exec.Command("git", "clone", "--depth", "0", gitProject.String())
+		gitClone := exec.Command("git", "clone", "--depth", "1", gitProject.String())
 		gitClone.Dir = destination
 
 		if err := gitClone.Run(); err != nil {
