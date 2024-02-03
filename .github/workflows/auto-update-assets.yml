@@ -8,7 +8,7 @@ on:
     - cron: '0 0 * * *'
 
 jobs:
-  builder:
+  auto_update_assets:
     runs-on: ubuntu-latest
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,6 +28,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add -- ./lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples ':!./lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/git'
+          git restore ./lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/git
+          git add ./lfr/pkg/assets/tpl/cx/
           git commit -am "chore: auto update client extensions samples" || echo "We're good for now. See you next time!"
           git push
