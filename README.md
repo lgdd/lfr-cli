@@ -62,8 +62,7 @@ For macOS or Linux, you can install it using [Homebrew](https://brew.sh):
 brew tap lgdd/homebrew-tap
 brew install liferay-cli
 ```
-
-Checkout the [release page](https://github.com/lgdd/liferay-cli/releases) to download the binary for your distribution.
+For Windows, go to the [release page](https://github.com/lgdd/liferay-cli/releases) and download the zip file corresponding to your architecture. Then extract `lfr.exe` from the archive and move to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
 
 ### Completions
 
