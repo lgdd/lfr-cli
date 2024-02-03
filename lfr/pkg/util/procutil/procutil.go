@@ -3,7 +3,7 @@ package procutil
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -60,7 +60,7 @@ func GetCatalinaPid() (int, error) {
 
 	defer pidFile.Close()
 
-	pidBytes, err := ioutil.ReadAll(pidFile)
+	pidBytes, err := io.ReadAll(pidFile)
 
 	if err != nil {
 		return 0, err
