@@ -13,7 +13,7 @@ func Test_HandleClientExtensionsOffline_ShouldIncludeGitFolderForFutureUpdates(t
 		t.Fatal(err)
 	}
 	HandleClientExtensionsOffline(configTestPath)
-	if _, err := os.Stat(filepath.Join(configTestPath, ClientExtensionSampleProjectName, "git")); err != nil {
+	if _, err := os.Stat(filepath.Join(configTestPath, ClientExtensionSampleProjectName, ".git")); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.RemoveAll(configTestPath); err != nil {
