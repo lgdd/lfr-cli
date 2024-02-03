@@ -93,6 +93,7 @@ dist/
 
 # Specific files for the embedded assets
 lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/.github
+lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/.gitignore
 lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/HOW-TO.md
 lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/LICENSE
 lfr/pkg/assets/tpl/cx/liferay-client-extensions-samples/README.md
