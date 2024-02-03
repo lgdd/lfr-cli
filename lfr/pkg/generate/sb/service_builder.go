@@ -3,8 +3,8 @@ package sb
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -121,7 +121,7 @@ func Generate(liferayWorkspace, name string) {
 		}
 		defer pomParent.Close()
 
-		byteValue, _ := ioutil.ReadAll(pomParent)
+		byteValue, _ := io.ReadAll(pomParent)
 
 		var pom project.Pom
 		err = xml.Unmarshal(byteValue, &pom)
@@ -138,7 +138,7 @@ func Generate(liferayWorkspace, name string) {
 
 		finalPomBytes, _ := xml.MarshalIndent(pom, "", "  ")
 
-		err = ioutil.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
+		err = os.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -195,7 +195,7 @@ func getLiferayMajorVersion(workspacePath string) (string, error) {
 			return "", err
 		}
 		defer pomWorkspace.Close()
-		byteValue, _ := ioutil.ReadAll(pomWorkspace)
+		byteValue, _ := io.ReadAll(pomWorkspace)
 
 		var pom project.WorkspacePom
 		err = xml.Unmarshal(byteValue, &pom)

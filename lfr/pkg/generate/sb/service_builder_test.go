@@ -2,7 +2,7 @@ package sb
 
 import (
 	"encoding/xml"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strings"
@@ -78,7 +78,7 @@ func Test_GenerateServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.
 		t.Fatal(err)
 	}
 	defer modulesPomXML.Close()
-	byteValue, _ := ioutil.ReadAll(modulesPomXML)
+	byteValue, _ := io.ReadAll(modulesPomXML)
 	var pom project.Pom
 	err = xml.Unmarshal(byteValue, &pom)
 	if err != nil {
@@ -109,7 +109,7 @@ func Test_GenerateServiceBuilder_With73_ShouldContainCorrespondingDoctype(t *tes
 		t.Fatal(err)
 	}
 	defer serviceXML.Close()
-	serviceXMLBytes, _ := ioutil.ReadAll(serviceXML)
+	serviceXMLBytes, _ := io.ReadAll(serviceXML)
 	serviceXMLContent := string(serviceXMLBytes)
 	if !strings.Contains(serviceXMLContent, expectedDoctype) {
 		t.Fatal("valid doctype for 7.3 wasn't found in service.xml")
@@ -130,7 +130,7 @@ func Test_GenerateServiceBuilder_With72_ShouldContainCorrespondingDoctype(t *tes
 		t.Fatal(err)
 	}
 	defer serviceXML.Close()
-	serviceXMLBytes, _ := ioutil.ReadAll(serviceXML)
+	serviceXMLBytes, _ := io.ReadAll(serviceXML)
 	serviceXMLContent := string(serviceXMLBytes)
 	if !strings.Contains(serviceXMLContent, expectedDoctype) {
 		t.Fatal("valid doctype for 7.2 wasn't found in service.xml")
@@ -151,7 +151,7 @@ func Test_GenerateServiceBuilder_With71_ShouldContainCorrespondingDoctype(t *tes
 		t.Fatal(err)
 	}
 	defer serviceXML.Close()
-	serviceXMLBytes, _ := ioutil.ReadAll(serviceXML)
+	serviceXMLBytes, _ := io.ReadAll(serviceXML)
 	serviceXMLContent := string(serviceXMLBytes)
 	if !strings.Contains(serviceXMLContent, expectedDoctype) {
 		t.Fatal("valid doctype for 7.1 wasn't found in service.xml")
@@ -172,7 +172,7 @@ func Test_GenerateServiceBuilder_With70_ShouldContainCorrespondingDoctype(t *tes
 		t.Fatal(err)
 	}
 	defer serviceXML.Close()
-	serviceXMLBytes, _ := ioutil.ReadAll(serviceXML)
+	serviceXMLBytes, _ := io.ReadAll(serviceXML)
 	serviceXMLContent := string(serviceXMLBytes)
 	if !strings.Contains(serviceXMLContent, expectedDoctype) {
 		t.Fatal("valid doctype for 7.1 wasn't found in service.xml")

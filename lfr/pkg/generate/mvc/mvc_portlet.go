@@ -3,8 +3,8 @@ package mvc
 import (
 	"encoding/xml"
 	"fmt"
+	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -105,7 +105,7 @@ func Generate(name string) {
 		}
 		defer pomParent.Close()
 
-		byteValue, _ := ioutil.ReadAll(pomParent)
+		byteValue, _ := io.ReadAll(pomParent)
 
 		var pom project.Pom
 		err = xml.Unmarshal(byteValue, &pom)
@@ -122,7 +122,7 @@ func Generate(name string) {
 
 		finalPomBytes, _ := xml.MarshalIndent(pom, "", "  ")
 
-		err = ioutil.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
+		err = os.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))

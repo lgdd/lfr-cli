@@ -7,7 +7,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -63,7 +62,7 @@ func GetGroupId() (string, error) {
 			return "", err
 		}
 
-		byteValue, _ := ioutil.ReadAll(pomParent)
+		byteValue, _ := io.ReadAll(pomParent)
 
 		var pom Pom
 		err = xml.Unmarshal(byteValue, &pom)
@@ -133,7 +132,7 @@ func NewMetadata(base, version string) (*Metadata, error) {
 			printutil.Warning("Can not fetch info from GitHub\n")
 			printutil.Warning("Start offline mode process\n\n")
 		} else {
-			body, _ := ioutil.ReadAll(resp.Body)
+			body, _ := io.ReadAll(resp.Body)
 			io.Copy(io.MultiWriter(bar), resp.Body)
 
 			defer resp.Body.Close()

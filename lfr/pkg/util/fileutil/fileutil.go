@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -138,7 +137,7 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 
 // Update template files with given data
 func UpdateWithData(file string, data interface{}) error {
-	content, err := ioutil.ReadFile(file)
+	content, err := os.ReadFile(file)
 	if err != nil {
 		return err
 	}
@@ -154,7 +153,7 @@ func UpdateWithData(file string, data interface{}) error {
 		return err
 	}
 
-	err = ioutil.WriteFile(file, result.Bytes(), 0664)
+	err = os.WriteFile(file, result.Bytes(), 0664)
 	if err != nil {
 		return err
 	}

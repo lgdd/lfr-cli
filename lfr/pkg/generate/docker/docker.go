@@ -4,7 +4,7 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -100,7 +100,7 @@ func getLiferayDockerImage(workspacePath string) (string, error) {
 			return "", err
 		}
 		defer pomWorkspace.Close()
-		byteValue, _ := ioutil.ReadAll(pomWorkspace)
+		byteValue, _ := io.ReadAll(pomWorkspace)
 
 		var pom project.WorkspacePom
 		err = xml.Unmarshal(byteValue, &pom)
