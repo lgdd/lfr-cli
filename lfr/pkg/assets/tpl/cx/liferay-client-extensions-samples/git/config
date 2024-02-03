@@ -1,17 +1,11 @@
 [core]
 	repositoryformatversion = 0
-	filemode = false
+	filemode = true
 	bare = false
 	logallrefupdates = true
-	symlinks = false
-	ignorecase = true
-[submodule]
-	active = .
 [remote "origin"]
-	url = https://github.com/lgdd/liferay-client-extensions-samples.git
-	fetch = +refs/heads/*:refs/remotes/origin/*
+	url = https://github.com/lgdd/liferay-client-extensions-samples
+	fetch = +refs/heads/main:refs/remotes/origin/main
 [branch "main"]
 	remote = origin
 	merge = refs/heads/main
-[lfs]
-	repositoryformatversion = 0
