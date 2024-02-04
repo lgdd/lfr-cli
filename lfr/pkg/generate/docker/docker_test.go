@@ -1,17 +1,18 @@
 package docker
 
 import (
-	"github.com/lgdd/liferay-cli/lfr/pkg/generate/workspace"
-	"github.com/lgdd/liferay-cli/lfr/pkg/project"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"github.com/lgdd/liferay-cli/lfr/pkg/generate/workspace"
+	"github.com/lgdd/liferay-cli/lfr/pkg/project"
 )
 
 func Test_GenerateDocker_ShouldCreateDockerfileAndCompose(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -29,7 +30,7 @@ func Test_GenerateDocker_ShouldCreateDockerfileAndCompose(t *testing.T) {
 
 func Test_GenerateDocker_WithMultiStageAndGradle_ShouldContainExpectedStages(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -52,7 +53,7 @@ func Test_GenerateDocker_WithMultiStageAndGradle_ShouldContainExpectedStages(t *
 
 func Test_GenerateDocker_WithMultiStageAndMaven_ShouldContainExpectedStages(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Maven, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Maven, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -75,7 +76,7 @@ func Test_GenerateDocker_WithMultiStageAndMaven_ShouldContainExpectedStages(t *t
 
 func Test_GenerateDocker_WithWrongJavaVersion_ShouldFail(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}

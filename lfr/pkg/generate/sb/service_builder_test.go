@@ -14,7 +14,7 @@ import (
 
 func Test_GenerateServiceBuilder_WithGradle_ShouldCreateExpectedFiles(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -41,7 +41,7 @@ func Test_GenerateServiceBuilder_WithGradle_ShouldCreateExpectedFiles(t *testing
 
 func Test_GenerateServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Maven, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Maven, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -97,7 +97,7 @@ func Test_GenerateServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.
 
 func Test_GenerateServiceBuilder_With73_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -118,7 +118,7 @@ func Test_GenerateServiceBuilder_With73_ShouldContainCorrespondingDoctype(t *tes
 
 func Test_GenerateServiceBuilder_With72_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.2")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.2", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -139,7 +139,7 @@ func Test_GenerateServiceBuilder_With72_ShouldContainCorrespondingDoctype(t *tes
 
 func Test_GenerateServiceBuilder_With71_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.1")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.1", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -160,7 +160,7 @@ func Test_GenerateServiceBuilder_With71_ShouldContainCorrespondingDoctype(t *tes
 
 func Test_GenerateServiceBuilder_With70_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.0")
+	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.0", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
