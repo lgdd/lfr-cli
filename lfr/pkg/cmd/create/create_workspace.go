@@ -23,6 +23,8 @@ var (
 	Version string
 	// Build is Maven or Gradle
 	Build string
+	// Edition is DXP (Enterprise) or Portal (Community)
+	Edition string
 	// Init holds the option to initialize the Liferay bundle
 	Init bool
 )
@@ -30,6 +32,7 @@ var (
 func init() {
 	createWorkspace.Flags().StringVarP(&Version, "version", "v", "7.4", "Liferay major version (7.x)")
 	createWorkspace.Flags().StringVarP(&Build, "build", "b", "gradle", "build tool (gradle or maven)")
+	createWorkspace.Flags().StringVarP(&Edition, "edition", "e", "portal", "Liferay edition (dxp or portal)")
 	createWorkspace.Flags().BoolVarP(&Init, "init", "i", false, "executes Liferay bundle initialization (i.e. download & unzip in the workspace)")
 }
 
@@ -39,7 +42,7 @@ func generateWorkspace(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	name := args[0]
-	err := workspace.Generate(name, Build, Version)
+	err := workspace.Generate(name, Build, Version, Edition)
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)

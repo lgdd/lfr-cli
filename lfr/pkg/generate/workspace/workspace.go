@@ -18,8 +18,8 @@ const (
 )
 
 // Generate the structure of a Liferay workspace
-func Generate(base, build, version string) error {
-	metadata, err := project.NewMetadata(base, version)
+func Generate(base, build, version, edition string) error {
+	metadata, err := project.NewMetadata(base, version, edition)
 	if err != nil {
 		return err
 	}
