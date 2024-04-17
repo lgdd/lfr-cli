@@ -2,6 +2,8 @@ project_name: "liferay-cli"
 before:
   hooks:
     - go mod tidy
+release:
+  mode: keep-existing
 builds:
   - id: "liferay-cli"
     binary: lfr
@@ -38,8 +40,7 @@ nfpms:
       - rpm
       - apk
 brews:
-  - 
-    repository:
+  - repository:
       owner: lgdd
       name: homebrew-tap
       token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
