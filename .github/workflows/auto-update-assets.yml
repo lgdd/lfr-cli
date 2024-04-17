@@ -1,4 +1,4 @@
-name: auto-update-assets
+name: Auto Update Assets
 
 on:
   push:
