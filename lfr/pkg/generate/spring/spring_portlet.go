@@ -150,7 +150,7 @@ func Generate(name, templateEngine string) {
 		os.Exit(1)
 	}
 
-	portletIDKey := strcase.ToScreamingDelimited(name, '_', 0, true)
+	portletIDKey := strcase.ToScreamingDelimited(name, '_', "", true)
 	portletIDKey = strings.ToUpper(portletIDKey)
 	portletIDValue := strings.ToLower(portletIDKey) + "_" + camelCaseName
 

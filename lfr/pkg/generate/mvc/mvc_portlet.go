@@ -133,7 +133,7 @@ func Generate(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	portletIDKey := strcase.ToScreamingDelimited(name, '_', 0, true)
+	portletIDKey := strcase.ToScreamingDelimited(name, '_', "", true)
 	portletIDKey = strings.ToUpper(portletIDKey)
 	portletIDValue := strings.ToLower(portletIDKey) + "_" + camelCaseName
 
