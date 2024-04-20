@@ -5,8 +5,8 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/procutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
 

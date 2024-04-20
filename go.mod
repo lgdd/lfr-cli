@@ -1,4 +1,4 @@
-module github.com/lgdd/liferay-cli
+module github.com/lgdd/lfr-cli
 
 go 1.22
 

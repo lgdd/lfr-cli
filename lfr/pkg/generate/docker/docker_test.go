@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/generate/workspace"
-	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/lfr-cli/lfr/pkg/generate/workspace"
+	"github.com/lgdd/lfr-cli/lfr/pkg/project"
 )
 
 func Test_GenerateDocker_ShouldCreateDockerfileAndCompose(t *testing.T) {

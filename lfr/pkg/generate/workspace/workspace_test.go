@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/project"
+	"github.com/lgdd/lfr-cli/lfr/pkg/project"
 )
 
 func TestGenerate_Gradle_ShouldHaveExpectedFiles(t *testing.T) {

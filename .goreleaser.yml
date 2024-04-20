@@ -1,18 +1,18 @@
-project_name: "liferay-cli"
+project_name: "lfr-cli"
 before:
   hooks:
     - go mod tidy
 release:
   mode: keep-existing
 builds:
-  - id: "liferay-cli"
+  - id: "lfr-cli"
     binary: lfr
     main: ./lfr
     ldflags:
       - -w -s
-      - -X github.com/lgdd/liferay-cli/lfr/pkg/cmd/version.Number={{.Version}}
-      - -X github.com/lgdd/liferay-cli/lfr/pkg/cmd/version.Commit={{.Commit}}
-      - -X github.com/lgdd/liferay-cli/lfr/pkg/cmd/version.Date={{.Date}}
+      - -X github.com/lgdd/lfr-cli/lfr/pkg/cmd/version.Number={{.Version}}
+      - -X github.com/lgdd/lfr-cli/lfr/pkg/cmd/version.Commit={{.Commit}}
+      - -X github.com/lgdd/lfr-cli/lfr/pkg/cmd/version.Date={{.Date}}
     env:
       - CGO_ENABLED=0
     goos:
@@ -31,8 +31,8 @@ archives:
       - goos: windows
         format: zip
 nfpms:
-  - description: Liferay CLI (lfr) is an unofficial tool written in Go that helps you create & manage your Liferay projects.
-    homepage: https://github.com/lgdd/liferay-cli
+  - description: LFR is an unofficial tool written in Go that helps you create & manage your Liferay projects.
+    homepage: https://github.com/lgdd/lfr-cli
     license: MIT
     maintainer: Louis-Guillaume Durand <louis-guillaume.durand@liferay.com>
     formats:
@@ -45,8 +45,8 @@ brews:
       name: homebrew-tap
       token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
     directory: Formula
-    homepage: https://github.com/lgdd/liferay-cli
-    description: Liferay CLI (lfr) is an unofficial tool written in Go that helps you create & manage your Liferay projects.
+    homepage: https://github.com/lgdd/lfr-cli
+    description: LFR is an unofficial tool written in Go that helps you create & manage your Liferay projects.
     install: |
       bin.install "lfr"
 checksum:

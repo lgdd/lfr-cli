@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
 	"github.com/spf13/viper"
 )
 

@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/blang/semver"
-	"github.com/lgdd/liferay-cli/lfr/pkg/cmd/version"
+	"github.com/lgdd/lfr-cli/lfr/pkg/cmd/version"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/spf13/cobra"
 )

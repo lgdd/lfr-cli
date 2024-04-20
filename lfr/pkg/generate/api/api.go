@@ -10,9 +10,9 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/liferay-cli/lfr/pkg/project"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/project"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 )
 
 // ApiData contains the data to be injected into the template files

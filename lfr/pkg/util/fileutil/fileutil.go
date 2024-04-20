@@ -17,8 +17,8 @@ import (
 	"github.com/nxadm/tail"
 	progressbar "github.com/schollz/progressbar/v3"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/assets"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/assets"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 )
 
 // Create all the directories of a given path

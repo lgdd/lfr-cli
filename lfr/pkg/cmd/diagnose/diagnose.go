@@ -13,8 +13,8 @@ import (
 	"strings"
 
 	humanize "github.com/dustin/go-humanize"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 	"github.com/spf13/cobra"
 )
 

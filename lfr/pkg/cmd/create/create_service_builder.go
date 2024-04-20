@@ -8,9 +8,9 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/generate/sb"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/generate/sb"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 )
 
 var (

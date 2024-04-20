@@ -13,8 +13,8 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 	progressbar "github.com/schollz/progressbar/v3"
 )
 

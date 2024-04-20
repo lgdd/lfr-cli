@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/cmd"
+	"github.com/lgdd/lfr-cli/lfr/pkg/cmd"
 )
 
 func main() {

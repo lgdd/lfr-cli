@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/liferay-cli/lfr/pkg/project"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/project"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 )

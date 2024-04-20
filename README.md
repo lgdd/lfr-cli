@@ -1,16 +1,16 @@
 [![new](https://img.shields.io/badge/NEW-Supports%20Client%20Extension-blueviolet)](https://learn.liferay.com/web/guest/w/dxp/building-applications/client-extensions#types-of-client-extensions)
 
-[![version](https://img.shields.io/github/v/tag/lgdd/liferay-cli)](https://github.com/lgdd/liferay-cli/releases)
-[![status](https://img.shields.io/github/actions/workflow/status/lgdd/liferay-cli/test.yml)](https://github.com/lgdd/liferay-cli/actions/workflows/test.yml)
-[![report](https://goreportcard.com/badge/github.com/lgdd/liferay-cli)](https://goreportcard.com/report/github.com/lgdd/liferay-cli)
-[![license](https://img.shields.io/github/license/lgdd/liferay-cli)](https://github.com/lgdd/liferay-cli/blob/main/LICENSE)
-![GitHub last commit](https://img.shields.io/github/last-commit/lgdd/liferay-cli?color=teal&label=latest%20commit)
+[![version](https://img.shields.io/github/v/tag/lgdd/lfr-cli)](https://github.com/lgdd/lfr-cli/releases)
+[![status](https://img.shields.io/github/actions/workflow/status/lgdd/lfr-cli/test.yml)](https://github.com/lgdd/lfr-cli/actions/workflows/test.yml)
+[![report](https://goreportcard.com/badge/github.com/lgdd/lfr-cli)](https://goreportcard.com/report/github.com/lgdd/lfr-cli)
+[![license](https://img.shields.io/github/license/lgdd/lfr-cli)](https://github.com/lgdd/lfr-cli/blob/main/LICENSE)
+![GitHub last commit](https://img.shields.io/github/last-commit/lgdd/lfr-cli?color=teal&label=latest%20commit)
 
 # Liferay CLI
 
 `lfr` is an unofficial CLI tool written in Go that helps you create & manage Liferay projects.
 
-![preview](https://github.com/lgdd/doc-assets/blob/main/liferay-cli/liferay-cli-preview.gif?raw=true)
+![preview](https://github.com/lgdd/doc-assets/blob/main/lfr-cli/liferay-cli-preview.gif?raw=true)
 
 **Table of contents**:
 
@@ -60,9 +60,9 @@ For macOS or Linux, you can install it using [Homebrew](https://brew.sh):
 
 ```shell
 brew tap lgdd/homebrew-tap
-brew install liferay-cli
+brew install lfr-cli
 ```
-For Windows, go to the [release page](https://github.com/lgdd/liferay-cli/releases) and download the zip file corresponding to your architecture. Then extract `lfr.exe` from the archive and move to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
+For Windows, go to the [release page](https://github.com/lgdd/lfr-cli/releases) and download the zip file corresponding to your architecture. Then extract `lfr.exe` from the archive and move to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
 
 ### Completions
 
@@ -136,7 +136,7 @@ Aliases:
 The output of this command will list your installations of Java, Blade and Docker. It will also display how much space are being used by cached bundles and docker images.
 
 Example:
-![diag-example](https://github.com/lgdd/doc-assets/blob/main/liferay-cli/lfr-diag-example.png?raw=true)
+![diag-example](https://github.com/lgdd/doc-assets/blob/main/lfr-cli/lfr-diag-example.png?raw=true)
 
 ### create
 
@@ -456,7 +456,7 @@ Global Flags:
 
 The keyword `exit` can be safely used with this shell as it will disconnect instead of stopping the OSGi container. `Ctrl+C` also disconnect from the shell.
 
-**Known issue**: [The "shell" command is very slow to connect](https://github.com/lgdd/liferay-cli/issues/3)
+**Known issue**: [The "shell" command is very slow to connect](https://github.com/lgdd/lfr-cli/issues/3)
 
 ## Benchmarks
 

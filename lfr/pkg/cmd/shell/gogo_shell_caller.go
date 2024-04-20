@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 	oi "github.com/reiver/go-oi"
 	telnet "github.com/reiver/go-telnet"
 )

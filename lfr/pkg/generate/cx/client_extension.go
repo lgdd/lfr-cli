@@ -9,9 +9,9 @@ import (
 	"strings"
 
 	"github.com/ettle/strcase"
-	"github.com/lgdd/liferay-cli/lfr/pkg/config"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/config"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	cp "github.com/otiai10/copy"
 	progressbar "github.com/schollz/progressbar/v3"

@@ -11,7 +11,7 @@ import (
 
 	ps "github.com/mitchellh/go-ps"
 
-	"github.com/lgdd/liferay-cli/lfr/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
 )
 
 // Set the catalina pid as an environment variable

@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/liferay-cli/lfr/pkg/generate/gogocmd"
+	"github.com/lgdd/lfr-cli/lfr/pkg/generate/gogocmd"
 	"github.com/spf13/cobra"
 )
 
