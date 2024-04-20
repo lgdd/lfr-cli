@@ -6,7 +6,7 @@
 [![license](https://img.shields.io/github/license/lgdd/lfr-cli)](https://github.com/lgdd/lfr-cli/blob/main/LICENSE)
 ![GitHub last commit](https://img.shields.io/github/last-commit/lgdd/lfr-cli?color=teal&label=latest%20commit)
 
-# lfr
+# LFR
 
 `lfr` is an unofficial CLI tool written in Go that helps you create & manage Liferay projects.
 
