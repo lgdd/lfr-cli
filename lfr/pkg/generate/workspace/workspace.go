@@ -3,6 +3,8 @@ package workspace
 import (
 	"errors"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 
@@ -91,6 +93,11 @@ func createGradleFiles(base string, metadata *project.Metadata) error {
 		return err
 	}
 
+	err = updateGradleSettings(base)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -100,6 +107,37 @@ func updateGradleProps(base string, metadata *project.Metadata) error {
 		return err
 	}
 	err = fileutil.UpdateWithData(filepath.Join(base, "build.gradle"), metadata)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func updateGradleSettings(base string) error {
+	workspaceGradlePluginVersion := "10.0.6"
+
+	resp, err := http.Get("https://raw.githubusercontent.com/lgdd/liferay-product-info/main/com.liferay.gradle.plugins.workspace")
+
+	if err != nil {
+		warningMessage := fmt.Sprintf("couldn't get latest version for com.liferay.gradle.plugins.workspace (default to %s)\n", workspaceGradlePluginVersion)
+		printutil.Warning(warningMessage)
+		err := fileutil.UpdateWithData(filepath.Join(base, "settings.gradle"), struct {
+			WorkspaceGradlePluginVersion string
+		}{WorkspaceGradlePluginVersion: workspaceGradlePluginVersion})
+		if err != nil {
+			return err
+		}
+		return nil
+	}
+
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	workspaceGradlePluginVersion = string(body)
+	err = fileutil.UpdateWithData(filepath.Join(base, "settings.gradle"), struct {
+		WorkspaceGradlePluginVersion string
+	}{WorkspaceGradlePluginVersion: workspaceGradlePluginVersion})
 	if err != nil {
 		return err
 	}
