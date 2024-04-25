@@ -139,8 +139,8 @@ func NewMetadata(base, version, edition string) (*Metadata, error) {
 
 	if err != nil {
 		bar.Clear()
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		printutil.Warning(fmt.Sprintf("%s\n", err.Error()))
+		return getOfflineMetadata(base, version, edition)
 	}
 
 	var productInfoList []ProductInfo
