@@ -94,6 +94,10 @@ func Generate(cmd *cobra.Command, args []string) {
 			}
 			return nil
 		})
+
+	if fileutil.IsMavenWorkspace(liferayWorkspace) {
+		printutil.Warning("\nClient Extensions are not supported with Maven")
+	}
 }
 
 func getTemplateNames(clientExtensionSamplesPath string) []string {
