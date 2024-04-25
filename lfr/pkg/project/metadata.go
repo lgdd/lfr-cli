@@ -20,6 +20,7 @@ import (
 
 // Metadata represents the basic informations associated with a Liferay project
 type Metadata struct {
+	Edition        string
 	Product        string
 	BundleUrl      string
 	TomcatVersion  string
@@ -160,6 +161,7 @@ func NewMetadata(base, version, edition string) (*Metadata, error) {
 	latestProductInfo := productInfoList[len(productInfoList)-1]
 	bar.Clear()
 	return &Metadata{
+		Edition:        edition,
 		Product:        latestProductInfo.Name,
 		BundleUrl:      latestProductInfo.BundleURL,
 		TargetPlatform: latestProductInfo.TargetPlatformVersion,
@@ -175,6 +177,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 		switch version {
 		case "7.4":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "7.4.13.u102",
 				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.4.13-u102/liferay-dxp-tomcat-7.4.13.u102-20231109153600206.tar.gz",
 				TargetPlatform: "7.4.13.u102",
@@ -185,6 +188,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.3":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "dxp-7.3-u35",
 				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.3.10-u35/liferay-dxp-tomcat-7.3.10.u35-20231114110531823.tar.gz",
 				TargetPlatform: "7.3.10.u35",
@@ -195,6 +199,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.2":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "dxp-7.2-sp8",
 				BundleUrl:      "https://api.liferay.com/downloads/portal/7.2.10.8/liferay-dxp-tomcat-7.2.10.8-sp8-slim-20220912234451782.tar.gz",
 				TargetPlatform: "7.2.10.8",
@@ -205,6 +210,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.1":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "dxp-7.1-sp8",
 				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.1.10.8/liferay-dxp-tomcat-7.1.10.8-sp8-slim-20220926154152962.tar.gz",
 				TargetPlatform: "7.1.10.8",
@@ -215,6 +221,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.0":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "dxp-7.0-sp17",
 				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.0.10.17/liferay-dxp-digital-enterprise-tomcat-7.0.10.17-sp17-slim-20211014075354439.tar.gz",
 				TargetPlatform: "7.0.10.17",
@@ -228,6 +235,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 		switch version {
 		case "7.4":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "portal-7.4-ga102",
 				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.4.3.102-ga102/liferay-ce-portal-tomcat-7.4.3.102-ga102-20231109165213885.tar.gz",
 				TargetPlatform: "7.4.3.102",
@@ -238,6 +246,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.3":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "portal-7.3-ga8",
 				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.tar.gz",
 				TargetPlatform: "7.3.7",
@@ -248,6 +257,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.2":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "portal-7.2-ga2",
 				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.tar.gz",
 				TargetPlatform: "7.2.1-1",
@@ -258,6 +268,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.1":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "portal-7.1-ga4",
 				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.tar.gz",
 				TargetPlatform: "7.1.3-1",
@@ -268,6 +279,7 @@ func getOfflineMetadata(base, version, edition string) (*Metadata, error) {
 			}, nil
 		case "7.0":
 			return &Metadata{
+				Edition:        edition,
 				Product:        "portal-7.0-ga7",
 				BundleUrl:      "https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip",
 				TargetPlatform: "7.0.6-2",
