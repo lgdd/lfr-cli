@@ -3,10 +3,10 @@ package exec
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"runtime"
 
 	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/procutil"
 
 	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
 	"github.com/spf13/cobra"
@@ -36,11 +36,7 @@ func RunWrapperCmd(args []string) {
 		os.Exit(1)
 	}
 
-	wrapperCmd := exec.Command(wrapper, args...)
-	wrapperCmd.Stdout = os.Stdout
-	wrapperCmd.Stderr = os.Stderr
-
-	err = wrapperCmd.Run()
+	err = procutil.ExecStd(wrapper, args...)
 
 	if err != nil {
 		printutil.Danger(err.Error())

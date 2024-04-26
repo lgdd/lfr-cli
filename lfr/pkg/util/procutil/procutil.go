@@ -1,10 +1,12 @@
 package procutil
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -112,4 +114,25 @@ func IsCatalinaRunning() (bool, int, error) {
 	}
 
 	return true, pid, nil
+}
+
+func Exec(command string, args ...string) (bytes.Buffer, bytes.Buffer, error) {
+	var cmdOut, cmdErr bytes.Buffer
+	cmd := exec.Command(command, args...)
+	cmd.Stdout = &cmdOut
+	cmd.Stderr = &cmdErr
+
+	err := cmd.Run()
+
+	return cmdOut, cmdErr, err
+}
+
+func ExecStd(command string, args ...string) error {
+	cmd := exec.Command(command, args...)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
+	err := cmd.Run()
+
+	return err
 }

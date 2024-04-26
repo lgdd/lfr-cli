@@ -1,13 +1,11 @@
 package diagnose
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"math"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -15,6 +13,7 @@ import (
 	humanize "github.com/dustin/go-humanize"
 	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
 
@@ -41,12 +40,7 @@ func diagnose(cmd *cobra.Command, args []string) {
 }
 
 func verifyJava() bool {
-	var javaVersionCmdOut, javaVersionCmdErr bytes.Buffer
-	javaVersionCmd := exec.Command("java", "-version")
-	javaVersionCmd.Stdout = &javaVersionCmdOut
-	javaVersionCmd.Stderr = &javaVersionCmdErr
-
-	err := javaVersionCmd.Run()
+	_, javaVersionCmdErr, err := procutil.Exec("java", "-version")
 
 	if err != nil {
 		printutil.Danger("[✗] ")
@@ -71,12 +65,7 @@ func verifyJava() bool {
 }
 
 func verifyBlade() bool {
-	var bladeVersionCmdOut, bladeVersionCmdErr bytes.Buffer
-	bladeVersionCmd := exec.Command("blade", "version")
-	bladeVersionCmd.Stdout = &bladeVersionCmdOut
-	bladeVersionCmd.Stderr = &bladeVersionCmdErr
-
-	err := bladeVersionCmd.Run()
+	bladeVersionCmdOut, _, err := procutil.Exec("blade", "version")
 
 	if err != nil {
 		printutil.Danger("[✗] ")
@@ -94,12 +83,7 @@ func verifyBlade() bool {
 }
 
 func verifyDocker() bool {
-	var dockerVersionCmdOut, dockerVersionCmdErr bytes.Buffer
-	dockerVersionCmd := exec.Command("docker", "version", "--format", "json")
-	dockerVersionCmd.Stdout = &dockerVersionCmdOut
-	dockerVersionCmd.Stderr = &dockerVersionCmdErr
-
-	err := dockerVersionCmd.Run()
+	dockerVersionCmdOut, _, err := procutil.Exec("docker", "version", "--format", "json")
 
 	if err != nil {
 		printutil.Warning("[!] ")
@@ -166,12 +150,8 @@ func verifyElasticsearchDockerImages() {
 
 func getDockerImagesSize(tag string) uint64 {
 	var dockerImagesTotalSize uint64
-	var dockerImagesCmdOut, dockerImagesCmdErr bytes.Buffer
-	dockerImagesCmd := exec.Command("docker", "images", tag, "--format", "{{.Size}}")
-	dockerImagesCmd.Stdout = &dockerImagesCmdOut
-	dockerImagesCmd.Stderr = &dockerImagesCmdErr
 
-	err := dockerImagesCmd.Run()
+	dockerImagesCmdOut, _, err := procutil.Exec("docker", "images", tag, "--format", "{{.Size}}")
 
 	if err == nil {
 		dockerImagesResult := dockerImagesCmdOut.String()
