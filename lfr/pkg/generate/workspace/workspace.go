@@ -11,6 +11,7 @@ import (
 	"github.com/lgdd/lfr-cli/lfr/pkg/project"
 	"github.com/lgdd/lfr-cli/lfr/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/lfr/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/lfr/pkg/util/procutil"
 )
 
 // Build options (i.e. Maven or Gradle)
@@ -47,6 +48,8 @@ func Generate(base, build, version, edition string) error {
 	} else {
 		return errors.New("only Gradle and Maven are supported")
 	}
+
+	createGithubWorkflows(base)
 
 	_ = filepath.Walk(base,
 		func(path string, info os.FileInfo, err error) error {
@@ -208,4 +211,28 @@ func createCommonEmptyDirs(base string) {
 	fileutil.CreateDirs(configDockerDir)
 	fileutil.CreateFiles([]string{filepath.Join(configCommonDir, ".gitkeep")})
 	fileutil.CreateFiles([]string{filepath.Join(configDockerDir, ".gitkeep")})
+}
+
+func createGithubWorkflows(base string) error {
+	javaVersion := "11"
+	githubWorkflowsDir := filepath.Join(base, ".github", "workflows")
+	fileutil.CreateDirs(filepath.Join(base, ".github", "workflows"))
+
+	err := fileutil.CreateFilesFromAssets("tpl/gh", githubWorkflowsDir)
+
+	if err != nil {
+		return err
+	}
+
+	major, _, err := procutil.GetCurrentJavaVersion()
+
+	if err == nil && (major == "8" || major == "11") {
+		javaVersion = major
+	}
+
+	err = fileutil.UpdateWithData(filepath.Join(githubWorkflowsDir, "liferay-upgrade.yml"), struct {
+		JavaVersion string
+	}{JavaVersion: javaVersion})
+
+	return err
 }

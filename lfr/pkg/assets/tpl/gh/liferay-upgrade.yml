@@ -1,0 +1,25 @@
+# https://github.com/marketplace/actions/liferay-upgrade
+name: Liferay Upgrade
+
+on:
+  schedule:
+    - cron: '0 0 * * MON,THU'
+
+# Settings > Actions > General > Read and write permissions
+# Settings > Actions > General > Allow GitHub Actions to create and approve pull requests
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  liferay-upgrade:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: lgdd/liferay-upgrade-action@v2
+        with:
+          java-distribution: 'zulu'
+          java-version: '{{ .JavaVersion }}'
+
+# Checkout more GitHub Actions for Liferay:
+# https://github.com/marketplace?type=actions&query=liferay
