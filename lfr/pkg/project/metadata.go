@@ -19,15 +19,16 @@ import (
 
 // Metadata represents the basic informations associated with a Liferay project
 type Metadata struct {
-	Edition        string
-	Product        string
-	BundleUrl      string
-	TomcatVersion  string
-	TargetPlatform string
-	DockerImage    string
-	GroupId        string
-	ArtifactId     string
-	Name           string
+	Edition         string
+	Product         string
+	BundleUrl       string
+	GithubBundleUrl string
+	TomcatVersion   string
+	TargetPlatform  string
+	DockerImage     string
+	GroupId         string
+	ArtifactId      string
+	Name            string
 }
 
 type Release struct {
@@ -158,14 +159,15 @@ func NewMetadata(base, version, edition string) (*Metadata, error) {
 	latestRelease.BuildGithubBundleURL()
 
 	return &Metadata{
-		Edition:        edition,
-		Product:        latestRelease.ReleaseKey,
-		BundleUrl:      latestRelease.ReleaseProperties.BundleURL,
-		TargetPlatform: latestRelease.ReleaseProperties.TargetPlatformVersion,
-		DockerImage:    latestRelease.ReleaseProperties.LiferayDockerImage,
-		GroupId:        strcase.ToDelimited(PackageName, '.'),
-		ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-		Name:           strcase.ToCamel(strings.ToLower(base)),
+		Edition:         edition,
+		Product:         latestRelease.ReleaseKey,
+		BundleUrl:       latestRelease.ReleaseProperties.BundleURL,
+		GithubBundleUrl: latestRelease.ReleaseProperties.GithubBundleURL,
+		TargetPlatform:  latestRelease.ReleaseProperties.TargetPlatformVersion,
+		DockerImage:     latestRelease.ReleaseProperties.LiferayDockerImage,
+		GroupId:         strcase.ToDelimited(PackageName, '.'),
+		ArtifactId:      strcase.ToKebab(strings.ToLower(base)),
+		Name:            strcase.ToCamel(strings.ToLower(base)),
 	}, nil
 }
 
