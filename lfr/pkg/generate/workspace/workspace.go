@@ -50,6 +50,7 @@ func Generate(base, build, version, edition string) error {
 	}
 
 	createGithubWorkflows(base)
+	procutil.Exec("git", "init", base)
 
 	_ = filepath.Walk(base,
 		func(path string, info os.FileInfo, err error) error {
