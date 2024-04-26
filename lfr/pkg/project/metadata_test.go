@@ -5,7 +5,7 @@ import (
 )
 
 func Test_NewMetadata_WithDXP73_ShouldReturnLatestValid(t *testing.T) {
-	expectedTargetPlatform := "7.3.10.u35"
+	expectedTargetPlatform := "7.3.10-u36"
 	metadata, err := NewMetadata("liferay-workspace", "7.3", "dxp")
 	if err != nil {
 		t.Fatal(err)
@@ -29,7 +29,7 @@ func Test_NewMetadata_WithDXP72_ShouldReturnLatestValid(t *testing.T) {
 }
 
 func Test_NewMetadata_WithDXP71_ShouldReturnLatestValid(t *testing.T) {
-	expectedTargetPlatform := "7.1.10.8"
+	expectedTargetPlatform := "7.1.10.fp28"
 	metadata, err := NewMetadata("liferay-workspace", "7.1", "dxp")
 	if err != nil {
 		t.Fatal(err)
