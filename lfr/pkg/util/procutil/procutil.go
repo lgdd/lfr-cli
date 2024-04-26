@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -114,6 +115,32 @@ func IsCatalinaRunning() (bool, int, error) {
 	}
 
 	return true, pid, nil
+}
+
+func GetCurrentJavaVersion() (string, string, error) {
+	_, javaVersionCmdErr, err := Exec("java", "-version")
+
+	if err != nil {
+		return "", "", err
+	}
+
+	versionRegex := regexp.MustCompile(`\d+.\d+.\d+`)
+	javaVersionResult := javaVersionCmdErr.String()
+
+	fullVersion := versionRegex.FindString(javaVersionResult)
+	majorVersion := getMajorJavaVersion(fullVersion)
+
+	return majorVersion, fullVersion, nil
+}
+
+func getMajorJavaVersion(fullVersion string) string {
+	versionNumbers := strings.Split(fullVersion, ".")
+
+	if versionNumbers[0] == "1" {
+		return versionNumbers[1]
+	}
+
+	return versionNumbers[0]
 }
 
 func Exec(command string, args ...string) (bytes.Buffer, bytes.Buffer, error) {

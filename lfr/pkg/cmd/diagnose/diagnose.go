@@ -40,7 +40,7 @@ func diagnose(cmd *cobra.Command, args []string) {
 }
 
 func verifyJava() bool {
-	_, javaVersionCmdErr, err := procutil.Exec("java", "-version")
+	major, version, err := procutil.GetCurrentJavaVersion()
 
 	if err != nil {
 		printutil.Danger("[✗] ")
@@ -48,17 +48,14 @@ func verifyJava() bool {
 		return false
 	}
 
-	javaVersionResult := javaVersionCmdErr.String()
-
-	if strings.Contains(javaVersionResult, "build 1.8") ||
-		strings.Contains(javaVersionResult, "build 11.") {
+	if major == "8" || major == "11" {
 		printutil.Success("[✓] ")
-		fmt.Printf("Java intalled (%s)\n", strings.Split(javaVersionResult, "\n")[0])
+		fmt.Printf("Java intalled (%s)\n", strings.Split(version, "\n")[0])
 		printlnBulletPoint("Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.")
 		printlnBulletPoint("JDK compatibility is for runtime and project compile time. DXP source compile is compatible with JDK 8 only.")
 	} else {
 		printutil.Warning("[!] ")
-		fmt.Printf("Java (%s)\n", strings.Split(javaVersionResult, "\n")[0])
+		fmt.Printf("Java (%s)\n", strings.Split(version, "\n")[0])
 		printlnBulletPointWarning("Liferay supports Java 8 and 11 only.")
 	}
 	return true
