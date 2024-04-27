@@ -60,11 +60,11 @@ func Generate(liferayWorkspace string, multistage bool, java int) error {
 		return err
 	}
 
-	fileutil.CreateDirs("build/docker/deploy")
-	fileutil.CreateDirs("build/docker/configs/local")
-	fileutil.CreateDirs("build/docker/configs/dev")
-	fileutil.CreateDirs("build/docker/configs/uat")
-	fileutil.CreateDirs("build/docker/configs/prod")
+	fileutil.CreateDirs(filepath.Join(liferayWorkspace, "build/docker/deploy"))
+	fileutil.CreateDirs(filepath.Join(liferayWorkspace, "build/docker/configs/local"))
+	fileutil.CreateDirs(filepath.Join(liferayWorkspace, "build/docker/configs/dev"))
+	fileutil.CreateDirs(filepath.Join(liferayWorkspace, "build/docker/configs/uat"))
+	fileutil.CreateDirs(filepath.Join(liferayWorkspace, "build/docker/configs/prod"))
 
 	_ = filepath.Walk("build/docker",
 		func(path string, info os.FileInfo, err error) error {
