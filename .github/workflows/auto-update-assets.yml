@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Update Client Extensions Samples
-        working-directory: ./lfr/pkg/assets/tpl/client_extension/liferay-client-extensions-samples
+        working-directory: ./internal/assets/tpl/client_extension/liferay-client-extensions-samples
         run: |
           mv git .git
           git reset --hard HEAD
@@ -29,7 +29,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git restore ./lfr/pkg/assets/tpl/client_extension/liferay-client-extensions-samples/git
-          git add ./lfr/pkg/assets/tpl/client_extension/
+          git restore ./internal/assets/tpl/client_extension/liferay-client-extensions-samples/git
+          git add ./internal/assets/tpl/client_extension/
           git commit -am "chore: auto update client extensions samples" || echo "We're good for now. See you next time!"
           git push
