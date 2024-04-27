@@ -149,7 +149,7 @@ func CreateModuleRESTBuilder(liferayWorkspace, name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	version, err := fileutil.GetLiferayMajorVersion(liferayWorkspace)
+	version, err := fileutil.GetLiferayWorkspaceProductVersion(liferayWorkspace)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))

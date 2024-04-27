@@ -21,21 +21,21 @@
 		<dependencies>
 			<dependency>
 				<groupId>com.liferay.portal</groupId>
-				<artifactId>release.portal.bom</artifactId>
+				<artifactId>release.{{ .WorkspaceProductEdition }}.bom</artifactId>
 				<version>${liferay.bom.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.liferay.portal</groupId>
-				<artifactId>release.portal.bom.compile.only</artifactId>
+				<artifactId>release.{{ .WorkspaceProductEdition }}.bom.compile.only</artifactId>
 				<version>${liferay.bom.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
 			<dependency>
 				<groupId>com.liferay.portal</groupId>
-				<artifactId>release.portal.bom.third.party</artifactId>
+				<artifactId>release.{{ .WorkspaceProductEdition }}.bom.third.party</artifactId>
 				<version>${liferay.bom.version}</version>
 				<type>pom</type>
 				<scope>import</scope>

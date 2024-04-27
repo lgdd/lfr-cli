@@ -17,12 +17,13 @@ import (
 
 // CmdData contains the data to be injected into the template files
 type CmdData struct {
-	Package                string
-	Name                   string
-	CamelCaseName          string
-	WorkspaceName          string
-	WorkspaceCamelCaseName string
-	WorkspacePackage       string
+	Package                 string
+	Name                    string
+	CamelCaseName           string
+	WorkspaceName           string
+	WorkspaceCamelCaseName  string
+	WorkspacePackage        string
+	WorkspaceProductEdition string
 }
 
 // Creates the structure for an API module
@@ -133,13 +134,21 @@ func CreateModuleGogoCommand(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
+	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
 	data := &CmdData{
-		Package:                portletPackage,
-		Name:                   name,
-		CamelCaseName:          camelCaseName,
-		WorkspaceName:          workspaceName,
-		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
-		WorkspacePackage:       workspacePackage,
+		Package:                 portletPackage,
+		Name:                    name,
+		CamelCaseName:           camelCaseName,
+		WorkspaceName:           workspaceName,
+		WorkspaceCamelCaseName:  strcase.ToCamel(workspaceName),
+		WorkspacePackage:        workspacePackage,
+		WorkspaceProductEdition: workspaceProductEdition,
 	}
 
 	err = updateModuleGogoCommandWithData(destPortletPath, data)

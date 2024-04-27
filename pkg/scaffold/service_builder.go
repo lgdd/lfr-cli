@@ -18,14 +18,15 @@ import (
 
 // ServiceBuilderData contains the data to be injected into the template files
 type ServiceBuilderData struct {
-	Package                string
-	Name                   string
-	CamelCaseName          string
-	WorkspaceName          string
-	WorkspaceCamelCaseName string
-	WorkspacePackage       string
-	MajorVersion           string
-	DtdMajorVersion        string
+	Package                 string
+	Name                    string
+	CamelCaseName           string
+	WorkspaceName           string
+	WorkspaceCamelCaseName  string
+	WorkspacePackage        string
+	MajorVersion            string
+	DtdMajorVersion         string
+	WorkspaceProductEdition string
 }
 
 // Creates the structure for a Service Builder module
@@ -147,7 +148,18 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	version, err := fileutil.GetLiferayMajorVersion(liferayWorkspace)
+	productVersion, err := fileutil.GetLiferayWorkspaceProductVersion(liferayWorkspace)
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	var majorVersionBuilder strings.Builder
+	majorVersionBuilder.WriteString(productVersion)
+	majorVersionBuilder.WriteString(".0")
+
+	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -155,14 +167,15 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 	}
 
 	data := &ServiceBuilderData{
-		Package:                modulePackage,
-		Name:                   name,
-		CamelCaseName:          camelCaseName,
-		WorkspaceName:          workspaceName,
-		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
-		WorkspacePackage:       workspacePackage,
-		MajorVersion:           version,
-		DtdMajorVersion:        strings.ReplaceAll(version, ".", "_"),
+		Package:                 modulePackage,
+		Name:                    name,
+		CamelCaseName:           camelCaseName,
+		WorkspaceName:           workspaceName,
+		WorkspaceCamelCaseName:  strcase.ToCamel(workspaceName),
+		WorkspacePackage:        workspacePackage,
+		MajorVersion:            majorVersionBuilder.String(),
+		DtdMajorVersion:         strings.ReplaceAll(majorVersionBuilder.String(), ".", "_"),
+		WorkspaceProductEdition: workspaceProductEdition,
 	}
 
 	err = updateModuleServiceBuilderWithData(destModulePath, data)

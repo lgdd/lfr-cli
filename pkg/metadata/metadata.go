@@ -163,7 +163,7 @@ func NewWorkspaceData(base, version, edition string) (*WorkspaceData, error) {
 		Product:         latestRelease.ReleaseKey,
 		BundleUrl:       latestRelease.ReleaseProperties.BundleURL,
 		GithubBundleUrl: latestRelease.ReleaseProperties.GithubBundleURL,
-		TargetPlatform:  latestRelease.ReleaseProperties.TargetPlatformVersion,
+		TargetPlatform:  latestRelease.TargetPlatformVersion,
 		DockerImage:     latestRelease.ReleaseProperties.LiferayDockerImage,
 		GroupId:         strcase.ToDelimited(PackageName, '.'),
 		ArtifactId:      strcase.ToKebab(strings.ToLower(base)),

@@ -17,14 +17,15 @@ import (
 
 // PortletData contains the data to be injected into the template files
 type PortletData struct {
-	Package                string
-	Name                   string
-	CamelCaseName          string
-	WorkspaceName          string
-	WorkspaceCamelCaseName string
-	WorkspacePackage       string
-	PortletIDKey           string
-	PortletIDValue         string
+	Package                 string
+	Name                    string
+	CamelCaseName           string
+	WorkspaceName           string
+	WorkspaceCamelCaseName  string
+	WorkspacePackage        string
+	PortletIDKey            string
+	PortletIDValue          string
+	WorkspaceProductEdition string
 }
 
 // Creates the structure for a portlet module
@@ -137,15 +138,23 @@ func CreateModuleMVC(name string) {
 	portletIDKey = strings.ToUpper(portletIDKey)
 	portletIDValue := strings.ToLower(portletIDKey) + "_" + camelCaseName
 
+	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
 	portletData := &PortletData{
-		Package:                portletPackage,
-		Name:                   name,
-		CamelCaseName:          camelCaseName,
-		PortletIDKey:           portletIDKey,
-		PortletIDValue:         portletIDValue,
-		WorkspaceName:          workspaceName,
-		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
-		WorkspacePackage:       workspacePackage,
+		Package:                 portletPackage,
+		Name:                    name,
+		CamelCaseName:           camelCaseName,
+		PortletIDKey:            portletIDKey,
+		PortletIDValue:          portletIDValue,
+		WorkspaceName:           workspaceName,
+		WorkspaceCamelCaseName:  strcase.ToCamel(workspaceName),
+		WorkspacePackage:        workspacePackage,
+		WorkspaceProductEdition: workspaceProductEdition,
 	}
 
 	err = updateModuleMVCWithData(destPortletPath, portletData)

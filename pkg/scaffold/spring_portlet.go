@@ -18,17 +18,18 @@ import (
 
 // SpringPortletData contains the data to be injected into the template files
 type SpringPortletData struct {
-	Package                string
-	Name                   string
-	CamelCaseName          string
-	WorkspaceName          string
-	WorkspaceCamelCaseName string
-	WorkspacePackage       string
-	PortletIDKey           string
-	PortletIDValue         string
-	MajorVersion           string
-	DtdMajorVersion        string
-	TemplateEngine         string
+	Package                 string
+	Name                    string
+	CamelCaseName           string
+	WorkspaceName           string
+	WorkspaceCamelCaseName  string
+	WorkspacePackage        string
+	PortletIDKey            string
+	PortletIDValue          string
+	MajorVersion            string
+	DtdMajorVersion         string
+	TemplateEngine          string
+	WorkspaceProductEdition string
 }
 
 // Creates the structure for a Spring portlet module (i.e. PortletMVC4Spring)
@@ -142,7 +143,14 @@ func CreateModuleSpring(name, templateEngine string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	version, err := fileutil.GetLiferayMajorVersion(liferayWorkspace)
+	version, err := fileutil.GetLiferayWorkspaceProductVersion(liferayWorkspace)
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
+	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -154,17 +162,18 @@ func CreateModuleSpring(name, templateEngine string) {
 	portletIDValue := strings.ToLower(portletIDKey) + "_" + camelCaseName
 
 	portletData := &SpringPortletData{
-		Package:                portletPackage,
-		Name:                   name,
-		CamelCaseName:          camelCaseName,
-		PortletIDKey:           portletIDKey,
-		PortletIDValue:         portletIDValue,
-		WorkspaceName:          workspaceName,
-		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
-		WorkspacePackage:       workspacePackage,
-		MajorVersion:           version,
-		DtdMajorVersion:        strings.ReplaceAll(version, ".", "_"),
-		TemplateEngine:         templateEngine,
+		Package:                 portletPackage,
+		Name:                    name,
+		CamelCaseName:           camelCaseName,
+		PortletIDKey:            portletIDKey,
+		PortletIDValue:          portletIDValue,
+		WorkspaceName:           workspaceName,
+		WorkspaceCamelCaseName:  strcase.ToCamel(workspaceName),
+		WorkspacePackage:        workspacePackage,
+		MajorVersion:            version,
+		DtdMajorVersion:         strings.ReplaceAll(version, ".", "_"),
+		TemplateEngine:          templateEngine,
+		WorkspaceProductEdition: workspaceProductEdition,
 	}
 
 	updateFiles(portletData, destPortletPath, packagePath)

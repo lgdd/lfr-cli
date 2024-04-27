@@ -9,6 +9,7 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strings"
 	"sync"
@@ -459,35 +460,83 @@ func DirSize(path string) (int64, error) {
 	return size, err
 }
 
-func GetLiferayMajorVersion(workspacePath string) (string, error) {
+func GetLiferayWorkspaceProduct(workspacePath string) (string, error) {
 	if IsMavenWorkspace(workspacePath) {
 		pomWorkspacePath := filepath.Join(workspacePath, "pom.xml")
 		pomWorkspace, err := os.Open(pomWorkspacePath)
+
 		if err != nil {
 			return "", err
 		}
+
 		defer pomWorkspace.Close()
 		byteValue, _ := io.ReadAll(pomWorkspace)
 
 		var pom WorkspacePom
 		err = xml.Unmarshal(byteValue, &pom)
+
 		if err != nil {
 			return "", err
 		}
-		targetVersion := pom.Properties.LiferayBomVersion
-		semver := strings.Split(targetVersion, ".")
-		version := strings.Join(append(semver[:len(semver)-1], "0"), ".")
-		return version, nil
+
+		var productBuilder strings.Builder
+		editionRegex := regexp.MustCompile(`(portal|dxp)`)
+		edition := editionRegex.FindString(pom.Properties.LiferayWorkspaceBundleURL)
+
+		productBuilder.WriteString(edition)
+		productBuilder.WriteString("-")
+		productBuilder.WriteString(pom.Properties.LiferayBomVersion)
+
+		return productBuilder.String(), nil
 	}
 
 	if IsGradleWorkspace(workspacePath) {
 		gradlePropsPath := filepath.Join(workspacePath, "gradle.properties")
 		gradleProps := properties.MustLoadFile(gradlePropsPath, properties.UTF8)
-		product := gradleProps.GetString("liferay.workspace.product", "portal-7.3-ga7")
-		version := strings.Split(product, "-")[1]
-		version += ".0"
-		return version, nil
+		return gradleProps.GetString("liferay.workspace.product", ""), nil
 	}
 
 	return "", nil
+}
+
+func GetLiferayWorkspaceProductVersion(workspacePath string) (string, error) {
+	product, err := GetLiferayWorkspaceProduct(workspacePath)
+
+	if err != nil {
+		return "", err
+	}
+
+	majorVersionRegex := regexp.MustCompile(`7\.\d`)
+	quarterlyVersionRegex := regexp.MustCompile(`-\d+\.q\d`)
+
+	majorVersion := majorVersionRegex.FindString(product)
+	quarterlyVersion := quarterlyVersionRegex.FindString(product)
+
+	if len(majorVersion) == 0 && len(quarterlyVersion) == 0 {
+		return "", fmt.Errorf("liferay workspace product version not found")
+	}
+
+	if len(quarterlyVersion) > 0 {
+		return "7.4", nil
+	}
+
+	return majorVersion, nil
+}
+
+func GetLiferayWorkspaceProductEdition(workspacePath string) (string, error) {
+	product, err := GetLiferayWorkspaceProduct(workspacePath)
+
+	if err != nil {
+		return "", err
+	}
+
+	if strings.Contains(product, "dxp") || strings.Contains(product, ".q") {
+		return "dxp", nil
+	}
+
+	if strings.Contains(product, "portal") {
+		return "portal", nil
+	}
+
+	return "", fmt.Errorf("liferay workspace product edition not found")
 }

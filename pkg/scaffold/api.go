@@ -17,12 +17,13 @@ import (
 
 // ModuleAPIData contains the data to be injected into the template files
 type ModuleAPIData struct {
-	Package                string
-	Name                   string
-	CamelCaseName          string
-	WorkspaceName          string
-	WorkspaceCamelCaseName string
-	WorkspacePackage       string
+	Package                 string
+	Name                    string
+	CamelCaseName           string
+	WorkspaceName           string
+	WorkspaceCamelCaseName  string
+	WorkspacePackage        string
+	WorkspaceProductEdition string
 }
 
 // Creates the structure for an API module
@@ -137,13 +138,21 @@ func CreateModuleAPI(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
+	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
+
+	if err != nil {
+		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
+		os.Exit(1)
+	}
+
 	data := &ModuleAPIData{
-		Package:                portletPackage,
-		Name:                   name,
-		CamelCaseName:          camelCaseName,
-		WorkspaceName:          workspaceName,
-		WorkspaceCamelCaseName: strcase.ToCamel(workspaceName),
-		WorkspacePackage:       workspacePackage,
+		Package:                 portletPackage,
+		Name:                    name,
+		CamelCaseName:           camelCaseName,
+		WorkspaceName:           workspaceName,
+		WorkspaceCamelCaseName:  strcase.ToCamel(workspaceName),
+		WorkspacePackage:        workspacePackage,
+		WorkspaceProductEdition: workspaceProductEdition,
 	}
 
 	err = updateModuleAPIWithData(destPortletPath, data)

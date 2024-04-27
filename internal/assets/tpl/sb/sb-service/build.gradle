@@ -1,7 +1,7 @@
 dependencies {
 	compile project(":modules:{{.Name}}:{{.Name}}-api")
 
-	compileOnly group: "com.liferay.portal", name: "release.portal.api"
+	compileOnly group: "com.liferay.portal", name: "release.{{ .WorkspaceProductEdition }}.api"
 }
 
 buildService {

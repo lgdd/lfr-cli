@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>com.liferay.portal</groupId>
-			<artifactId>release.portal.api</artifactId>
+			<artifactId>release.{{ .WorkspaceProductEdition }}.api</artifactId>
 			<scope>provided</scope>
 		</dependency>
         {{- if eq .MajorVersion "7.0.0" "7.1.0" "7.2.0" }}
