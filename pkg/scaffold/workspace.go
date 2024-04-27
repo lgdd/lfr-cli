@@ -68,13 +68,13 @@ func CreateWorkspace(base, build, version, edition string) error {
 }
 
 func createGradleFiles(base string, workspaceData *metadata.WorkspaceData) error {
-	err := fileutil.CreateDirsFromAssets("tpl/ws/gradle", base)
+	err := fileutil.CreateDirsFromAssets("tpl/workspace/gradle", base)
 
 	if err != nil {
 		return err
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/ws/gradle", base)
+	err = fileutil.CreateFilesFromAssets("tpl/workspace/gradle", base)
 
 	if err != nil {
 		return err
@@ -149,13 +149,13 @@ func updateGradleSettings(base string) error {
 }
 
 func createMavenFiles(base string, workspaceData *metadata.WorkspaceData) error {
-	err := fileutil.CreateDirsFromAssets("tpl/ws/maven", base)
+	err := fileutil.CreateDirsFromAssets("tpl/workspace/maven", base)
 
 	if err != nil {
 		return err
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/ws/maven", base)
+	err = fileutil.CreateFilesFromAssets("tpl/workspace/maven", base)
 
 	if err != nil {
 		return err
@@ -219,7 +219,7 @@ func createGithubWorkflows(base string) error {
 	githubWorkflowsDir := filepath.Join(base, ".github", "workflows")
 	fileutil.CreateDirs(filepath.Join(base, ".github", "workflows"))
 
-	err := fileutil.CreateFilesFromAssets("tpl/gh", githubWorkflowsDir)
+	err := fileutil.CreateFilesFromAssets("tpl/github", githubWorkflowsDir)
 
 	if err != nil {
 		return err

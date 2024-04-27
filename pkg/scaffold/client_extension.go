@@ -165,13 +165,13 @@ func HandleClientExtensionsOffline(configPath string) {
 	if _, err := os.Stat(filepath.Join(configPath, ClientExtensionSampleProjectName)); err != nil {
 		printutil.Warning("Couldn't fetch client extensions samples from GitHub.\n")
 		fmt.Println("Copying embedded versions from the CLI instead.")
-		err = fileutil.CreateDirsFromAssets("tpl/cx", configPath)
+		err = fileutil.CreateDirsFromAssets("tpl/client_extension", configPath)
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)
 		}
 
-		err = fileutil.CreateFilesFromAssets("tpl/cx", configPath)
+		err = fileutil.CreateFilesFromAssets("tpl/client_extension", configPath)
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)

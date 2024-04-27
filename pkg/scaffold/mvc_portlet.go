@@ -54,14 +54,14 @@ func CreateModuleMVC(name string) {
 	workspaceSplit := strings.Split(liferayWorkspace, sep)
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
 
-	err = fileutil.CreateDirsFromAssets("tpl/mvc-portlet", destPortletPath)
+	err = fileutil.CreateDirsFromAssets("tpl/mvc_portlet", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/mvc-portlet", destPortletPath)
+	err = fileutil.CreateFilesFromAssets("tpl/mvc_portlet", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))

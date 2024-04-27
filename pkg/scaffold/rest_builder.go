@@ -49,14 +49,14 @@ func CreateModuleRESTBuilder(liferayWorkspace, name string) {
 	workspaceSplit := strings.Split(liferayWorkspace, sep)
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
 
-	err := fileutil.CreateDirsFromAssets("tpl/rb", destModulePath)
+	err := fileutil.CreateDirsFromAssets("tpl/rest_builder", destModulePath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/rb", destModulePath)
+	err = fileutil.CreateFilesFromAssets("tpl/rest_builder", destModulePath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -196,13 +196,13 @@ func CreateModuleRESTBuilder(liferayWorkspace, name string) {
 }
 
 func renameModuleRESTBuilderFiles(destModulePath string, destModuleAPIPath string, destModuleImplPath string) error {
-	err := os.Rename(filepath.Join(destModulePath, "rb-api"), destModuleAPIPath)
+	err := os.Rename(filepath.Join(destModulePath, "api"), destModuleAPIPath)
 
 	if err != nil {
 		return err
 	}
 
-	err = os.Rename(filepath.Join(destModulePath, "rb-impl"), destModuleImplPath)
+	err = os.Rename(filepath.Join(destModulePath, "impl"), destModuleImplPath)
 
 	if err != nil {
 		return err

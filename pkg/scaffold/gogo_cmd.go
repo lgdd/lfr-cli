@@ -52,14 +52,14 @@ func CreateModuleGogoCommand(name string) {
 	workspaceSplit := strings.Split(liferayWorkspace, sep)
 	workspaceName := workspaceSplit[len(workspaceSplit)-1]
 
-	err = fileutil.CreateDirsFromAssets("tpl/cmd", destPortletPath)
+	err = fileutil.CreateDirsFromAssets("tpl/gogo_cmd", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/cmd", destPortletPath)
+	err = fileutil.CreateFilesFromAssets("tpl/gogo_cmd", destPortletPath)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
