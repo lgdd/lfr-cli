@@ -23,7 +23,7 @@ import (
 
 var root = &cobra.Command{
 	Use:   "lfr",
-	Short: "Liferay CLI (lfr) is an unofficial tool written in Go that helps you manage your Liferay projects.",
+	Short: "LFR is an unofficial tool written in Go that helps you manage your Liferay projects.",
 }
 
 func init() {
