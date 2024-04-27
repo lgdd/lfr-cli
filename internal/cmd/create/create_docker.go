@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/lgdd/lfr-cli/pkg/generate/docker"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/spf13/cobra"
@@ -33,7 +33,7 @@ func generateDocker(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	if Java == 8 || Java == 11 {
-		err := docker.Generate(liferayWorkspace, MultiStage, Java)
+		err := scaffold.CreateDockerFiles(liferayWorkspace, MultiStage, Java)
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 			os.Exit(1)

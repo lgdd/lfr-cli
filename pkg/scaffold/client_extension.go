@@ -1,4 +1,4 @@
-package cx
+package scaffold
 
 import (
 	"errors"
@@ -23,7 +23,7 @@ const (
 	ClientExtensionSampleProjectName = "liferay-client-extensions-samples"
 )
 
-func Generate(cmd *cobra.Command, args []string) {
+func CreateClientExtension(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {

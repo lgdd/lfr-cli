@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
@@ -35,9 +35,9 @@ func init() {
 	Cmd.AddCommand(createApiModule)
 	Cmd.AddCommand(createCmdModule)
 	Cmd.AddCommand(createServiceBuilder)
-	Cmd.AddCommand(createRestBuilder)
+	Cmd.AddCommand(createRESTBuilder)
 	Cmd.AddCommand(createDocker)
-	Cmd.PersistentFlags().StringVarP(&project.PackageName, "package", "p", "org.acme", "base package name")
+	Cmd.PersistentFlags().StringVarP(&metadata.PackageName, "package", "p", "org.acme", "base package name")
 }
 
 func promptCreateChoices(cmd *cobra.Command, args []string) {
@@ -110,7 +110,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	workspacePackage, _ := project.GetGroupId()
+	workspacePackage, _ := metadata.GetGroupId()
 	defaultPackageName := strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
 
 	if template == "workspace" {

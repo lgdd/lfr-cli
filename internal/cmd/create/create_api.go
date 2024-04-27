@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/lfr-cli/pkg/generate/api"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/spf13/cobra"
 )
 
@@ -15,5 +15,5 @@ var (
 
 func generateApiModule(cmd *cobra.Command, args []string) {
 	name := args[0]
-	api.Generate(name)
+	scaffold.CreateModuleAPI(name)
 }

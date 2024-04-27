@@ -1,4 +1,4 @@
-package api
+package scaffold
 
 import (
 	"encoding/xml"
@@ -10,13 +10,13 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 )
 
-// ApiData contains the data to be injected into the template files
-type ApiData struct {
+// ModuleAPIData contains the data to be injected into the template files
+type ModuleAPIData struct {
 	Package                string
 	Name                   string
 	CamelCaseName          string
@@ -25,8 +25,8 @@ type ApiData struct {
 	WorkspacePackage       string
 }
 
-// Generates the structure for an API module
-func Generate(name string) {
+// Creates the structure for an API module
+func CreateModuleAPI(name string) {
 	sep := string(os.PathSeparator)
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
@@ -35,8 +35,8 @@ func Generate(name string) {
 		os.Exit(1)
 	}
 
-	portletPackage := project.PackageName
-	workspacePackage, _ := project.GetGroupId()
+	portletPackage := metadata.PackageName
+	workspacePackage, _ := metadata.GetGroupId()
 
 	if portletPackage == "org.acme" && workspacePackage != "org.acme" {
 		portletPackage = strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
@@ -80,7 +80,7 @@ func Generate(name string) {
 	fileutil.CreateDirs(filepath.Join(destPortletPath, "src", "main", "resources", "META-INF", "resources"))
 	fileutil.CreateFiles([]string{filepath.Join(destPortletPath, "src", "main", "resources", ".gitkeep")})
 
-	updateJavaFiles(camelCaseName, destPortletPath, packagePath)
+	updateModuleAPIJavaFiles(camelCaseName, destPortletPath, packagePath)
 
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		pomPath := filepath.Join(destPortletPath, "pom.xml")
@@ -111,7 +111,7 @@ func Generate(name string) {
 
 		byteValue, _ := io.ReadAll(pomParent)
 
-		var pom project.Pom
+		var pom fileutil.Pom
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
@@ -126,7 +126,7 @@ func Generate(name string) {
 
 		finalPomBytes, _ := xml.MarshalIndent(pom, "", "  ")
 
-		err = os.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
+		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -137,7 +137,7 @@ func Generate(name string) {
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
-	data := &ApiData{
+	data := &ModuleAPIData{
 		Package:                portletPackage,
 		Name:                   name,
 		CamelCaseName:          camelCaseName,
@@ -146,7 +146,7 @@ func Generate(name string) {
 		WorkspacePackage:       workspacePackage,
 	}
 
-	err = updateMvcPortletWithData(destPortletPath, data)
+	err = updateModuleAPIWithData(destPortletPath, data)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -167,7 +167,7 @@ func Generate(name string) {
 
 }
 
-func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
+func updateModuleAPIJavaFiles(camelCaseName, modulePath, packagePath string) {
 	defaultSrcPath := filepath.Join(modulePath, "src", "main", "java")
 	err := os.Rename(filepath.Join(defaultSrcPath, "Api.java"), filepath.Join(packagePath, camelCaseName+".java"))
 
@@ -177,7 +177,7 @@ func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
 	}
 }
 
-func updateMvcPortletWithData(destPortletPath string, data *ApiData) error {
+func updateModuleAPIWithData(destPortletPath string, data *ModuleAPIData) error {
 	return filepath.Walk(destPortletPath, func(path string, info fs.FileInfo, err error) error {
 
 		if err != nil {

@@ -1,4 +1,4 @@
-package workspace
+package scaffold
 
 import (
 	"os"
@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
 )
 
-func TestGenerate_Gradle_ShouldHaveExpectedFiles(t *testing.T) {
+func TestCreateWorkspace_Gradle_ShouldHaveExpectedFiles(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := Generate(workspaceDir, "gradle", "7.3", "portal")
+	err := CreateWorkspace(workspaceDir, "gradle", "7.3", "portal")
 
 	if err != nil {
 		t.Fatal(err)
@@ -46,7 +46,7 @@ func TestGenerate_Gradle_ShouldHaveExpectedFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	metadata, err := project.NewMetadata(workspaceDir, "7.3", "portal")
+	metadata, err := metadata.NewWorkspaceData(workspaceDir, "7.3", "portal")
 
 	if err != nil {
 		t.Fatal(err)
@@ -72,9 +72,9 @@ func TestGenerate_Gradle_ShouldHaveExpectedFiles(t *testing.T) {
 
 }
 
-func TestGenerate_Maven_ShouldHaveExpectedFiles(t *testing.T) {
+func TestCreateWorkspace_Maven_ShouldHaveExpectedFiles(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := Generate(workspaceDir, "maven", "7.3", "portal")
+	err := CreateWorkspace(workspaceDir, "maven", "7.3", "portal")
 
 	defer t.Cleanup(func() {
 		err = os.RemoveAll(workspaceDir)
@@ -114,7 +114,7 @@ func TestGenerate_Maven_ShouldHaveExpectedFiles(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	metadata, err := project.NewMetadata(workspaceDir, "7.3", "portal")
+	metadata, err := metadata.NewWorkspaceData(workspaceDir, "7.3", "portal")
 
 	if err != nil {
 		t.Fatal(err)
@@ -223,9 +223,9 @@ func TestGenerate_Maven_ShouldHaveExpectedFiles(t *testing.T) {
 	}
 }
 
-func TestGenerateWorkspace_WithWrongVersion_ShouldFail(t *testing.T) {
+func TestCreateWorkspaceWorkspace_WithWrongVersion_ShouldFail(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := Generate(workspaceDir, "gradle", "6.2", "portal")
+	err := CreateWorkspace(workspaceDir, "gradle", "6.2", "portal")
 
 	if err == nil {
 		t.Fatal("workspace with wrong version should fail")
@@ -238,9 +238,9 @@ func TestGenerateWorkspace_WithWrongVersion_ShouldFail(t *testing.T) {
 	}
 }
 
-func TestGenerateWorkspace_WithWrongBuildTool_ShouldFail(t *testing.T) {
+func TestCreateWorkspaceWorkspace_WithWrongBuildTool_ShouldFail(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := Generate(workspaceDir, "ant", "7.3", "portal")
+	err := CreateWorkspace(workspaceDir, "ant", "7.3", "portal")
 
 	if err == nil {
 		t.Fatal("workspace with wrong build tool should fail")
@@ -253,10 +253,10 @@ func TestGenerateWorkspace_WithWrongBuildTool_ShouldFail(t *testing.T) {
 	}
 }
 
-func TestGenerateWorkspace_WithMaven_ShouldHaveDefaultPackageName(t *testing.T) {
+func TestCreateWorkspaceWorkspace_WithMaven_ShouldHaveDefaultPackageName(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
-	project.PackageName = "org.acme"
-	err := Generate(workspaceDir, "maven", "7.3", "portal")
+	metadata.PackageName = "org.acme"
+	err := CreateWorkspace(workspaceDir, "maven", "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -269,10 +269,10 @@ func TestGenerateWorkspace_WithMaven_ShouldHaveDefaultPackageName(t *testing.T) 
 	}
 }
 
-func TestGenerateWorkspace_WithGradle_ShouldHaveDefaultPackageName(t *testing.T) {
+func TestCreateWorkspaceWorkspace_WithGradle_ShouldHaveDefaultPackageName(t *testing.T) {
 	workspaceDir := filepath.Join(t.TempDir(), "liferay-workspace")
-	project.PackageName = "org.acme"
-	err := Generate(workspaceDir, "gradle", "7.3", "portal")
+	metadata.PackageName = "org.acme"
+	err := CreateWorkspace(workspaceDir, "gradle", "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}

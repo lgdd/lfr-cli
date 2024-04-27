@@ -1,4 +1,4 @@
-package sb
+package scaffold
 
 import (
 	"encoding/xml"
@@ -8,18 +8,18 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/lgdd/lfr-cli/pkg/generate/workspace"
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
+	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 )
 
-func Test_GenerateServiceBuilder_WithGradle_ShouldCreateExpectedFiles(t *testing.T) {
+func Test_CreateModuleServiceBuilder_WithGradle_ShouldCreateExpectedFiles(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
+	err := CreateWorkspace(liferayWorkspace, metadata.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
 	name := "example-app"
-	Generate(liferayWorkspace, name)
+	CreateModuleServiceBuilder(liferayWorkspace, name)
 	expectedModulePath := filepath.Join(liferayWorkspace, "modules", name)
 	if _, err := os.Stat(expectedModulePath); err != nil {
 		t.Fatal(err)
@@ -39,14 +39,14 @@ func Test_GenerateServiceBuilder_WithGradle_ShouldCreateExpectedFiles(t *testing
 
 }
 
-func Test_GenerateServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.T) {
+func Test_CreateModuleServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Maven, "7.3", "portal")
+	err := CreateWorkspace(liferayWorkspace, metadata.Maven, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
 	name := "example-app"
-	Generate(liferayWorkspace, name)
+	CreateModuleServiceBuilder(liferayWorkspace, name)
 	expectedModulePath := filepath.Join(liferayWorkspace, "modules", name)
 	if _, err := os.Stat(expectedModulePath); err != nil {
 		t.Fatal(err)
@@ -79,7 +79,7 @@ func Test_GenerateServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.
 	}
 	defer modulesPomXML.Close()
 	byteValue, _ := io.ReadAll(modulesPomXML)
-	var pom project.Pom
+	var pom fileutil.Pom
 	err = xml.Unmarshal(byteValue, &pom)
 	if err != nil {
 		t.Fatal(err)
@@ -95,14 +95,14 @@ func Test_GenerateServiceBuilder_WithMaven_ShouldCreateExpectedFiles(t *testing.
 	}
 }
 
-func Test_GenerateServiceBuilder_With73_ShouldContainCorrespondingDoctype(t *testing.T) {
+func Test_CreateModuleServiceBuilder_With73_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.3", "portal")
+	err := CreateWorkspace(liferayWorkspace, metadata.Gradle, "7.3", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
 	name := "example-app"
-	Generate(liferayWorkspace, name)
+	CreateModuleServiceBuilder(liferayWorkspace, name)
 	expectedDoctype := "<!DOCTYPE service-builder PUBLIC \"-//Liferay//DTD Service Builder 7.3.0//EN\" \"http://www.liferay.com/dtd/liferay-service-builder_7_3_0.dtd\">"
 	serviceXML, err := os.Open(filepath.Join(liferayWorkspace, "modules", name, name+"-service", "service.xml"))
 	if err != nil {
@@ -116,14 +116,14 @@ func Test_GenerateServiceBuilder_With73_ShouldContainCorrespondingDoctype(t *tes
 	}
 }
 
-func Test_GenerateServiceBuilder_With72_ShouldContainCorrespondingDoctype(t *testing.T) {
+func Test_CreateModuleServiceBuilder_With72_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.2", "portal")
+	err := CreateWorkspace(liferayWorkspace, metadata.Gradle, "7.2", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
 	name := "example-app"
-	Generate(liferayWorkspace, name)
+	CreateModuleServiceBuilder(liferayWorkspace, name)
 	expectedDoctype := "<!DOCTYPE service-builder PUBLIC \"-//Liferay//DTD Service Builder 7.2.0//EN\" \"http://www.liferay.com/dtd/liferay-service-builder_7_2_0.dtd\">"
 	serviceXML, err := os.Open(filepath.Join(liferayWorkspace, "modules", name, name+"-service", "service.xml"))
 	if err != nil {
@@ -137,14 +137,14 @@ func Test_GenerateServiceBuilder_With72_ShouldContainCorrespondingDoctype(t *tes
 	}
 }
 
-func Test_GenerateServiceBuilder_With71_ShouldContainCorrespondingDoctype(t *testing.T) {
+func Test_CreateModuleServiceBuilder_With71_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.1", "portal")
+	err := CreateWorkspace(liferayWorkspace, metadata.Gradle, "7.1", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
 	name := "example-app"
-	Generate(liferayWorkspace, name)
+	CreateModuleServiceBuilder(liferayWorkspace, name)
 	expectedDoctype := "<!DOCTYPE service-builder PUBLIC \"-//Liferay//DTD Service Builder 7.1.0//EN\" \"http://www.liferay.com/dtd/liferay-service-builder_7_1_0.dtd\">"
 	serviceXML, err := os.Open(filepath.Join(liferayWorkspace, "modules", name, name+"-service", "service.xml"))
 	if err != nil {
@@ -158,14 +158,14 @@ func Test_GenerateServiceBuilder_With71_ShouldContainCorrespondingDoctype(t *tes
 	}
 }
 
-func Test_GenerateServiceBuilder_With70_ShouldContainCorrespondingDoctype(t *testing.T) {
+func Test_CreateModuleServiceBuilder_With70_ShouldContainCorrespondingDoctype(t *testing.T) {
 	liferayWorkspace := filepath.Join(t.TempDir(), "liferay-workspace")
-	err := workspace.Generate(liferayWorkspace, project.Gradle, "7.0", "portal")
+	err := CreateWorkspace(liferayWorkspace, metadata.Gradle, "7.0", "portal")
 	if err != nil {
 		t.Fatal(err)
 	}
 	name := "example-app"
-	Generate(liferayWorkspace, name)
+	CreateModuleServiceBuilder(liferayWorkspace, name)
 	expectedDoctype := "<!DOCTYPE service-builder PUBLIC \"-//Liferay//DTD Service Builder 7.0.0//EN\" \"http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd\">"
 	serviceXML, err := os.Open(filepath.Join(liferayWorkspace, "modules", name, name+"-service", "service.xml"))
 	if err != nil {

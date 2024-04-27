@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/lfr-cli/pkg/generate/gogocmd"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/spf13/cobra"
 )
 
@@ -16,5 +16,5 @@ var (
 
 func generateCmdModule(cmd *cobra.Command, args []string) {
 	name := args[0]
-	gogocmd.Generate(name)
+	scaffold.CreateModuleGogoCommand(name)
 }

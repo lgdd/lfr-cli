@@ -2,6 +2,7 @@ package fileutil
 
 import (
 	"bytes"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"io"
@@ -14,12 +15,68 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/magiconair/properties"
 	"github.com/nxadm/tail"
 	progressbar "github.com/schollz/progressbar/v3"
 
 	"github.com/lgdd/lfr-cli/internal/assets"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 )
+
+// XMLHeader is the first line to be written in an XML file
+const (
+	XMLHeader = `<?xml version="1.0"?>` + "\n"
+)
+
+// Pom represents the common structure of a Maven pom file
+type Pom struct {
+	XMLName        xml.Name `xml:"project"`
+	Xmlns          string   `xml:"xmlns,attr"`
+	Xsi            string   `xml:"xmlns:xsi,attr"`
+	SchemaLocation string   `xml:"xmlns:schemaLocation,attr"`
+	ModelVersion   string   `xml:"modelVersion"`
+	Parent         struct {
+		GroupId      string `xml:"groupId"`
+		ArtifactId   string `xml:"artifactId"`
+		Version      string `xml:"version"`
+		RelativePath string `xml:"relativePath"`
+	} `xml:"parent"`
+	GroupId    string `xml:"groupId"`
+	ArtifactId string `xml:"artifactId"`
+	Name       string `xml:"name"`
+	Packaging  string `xml:"packaging"`
+	Modules    struct {
+		Module []string `xml:"module"`
+	} `xml:"modules"`
+}
+
+// WorkspacePom represents the common structure of a parent Maven pom file in a Liferay Workspace
+type WorkspacePom struct {
+	XMLName        xml.Name `xml:"project"`
+	Xmlns          string   `xml:"xmlns,attr"`
+	Xsi            string   `xml:"xmlns:xsi,attr"`
+	SchemaLocation string   `xml:"xmlns:schemaLocation,attr"`
+	ModelVersion   string   `xml:"modelVersion"`
+	Parent         struct {
+		GroupId      string `xml:"groupId"`
+		ArtifactId   string `xml:"artifactId"`
+		Version      string `xml:"version"`
+		RelativePath string `xml:"relativePath"`
+	} `xml:"parent"`
+	ArtifactId string `xml:"artifactId"`
+	Name       string `xml:"name"`
+	Packaging  string `xml:"packaging"`
+	Modules    struct {
+		Module []string `xml:"module"`
+	} `xml:"modules"`
+	Properties struct {
+		LiferayBomVersion          string `xml:"liferay.bom.version"`
+		LiferayDockerImage         string `xml:"liferay.docker.image"`
+		LiferayWorkspaceBundleURL  string `xml:"liferay.workspace.bundle.url"`
+		LiferayRepositoryURL       string `xml:"liferay.repository.url"`
+		ProjectBuildSourceEncoding string `xml:"project.build.sourceEncoding"`
+	} `xml:"properties"`
+}
 
 // Create all the directories of a given path
 func CreateDirs(path string) {
@@ -400,4 +457,37 @@ func DirSize(path string) (int64, error) {
 		return err
 	})
 	return size, err
+}
+
+func GetLiferayMajorVersion(workspacePath string) (string, error) {
+	if IsMavenWorkspace(workspacePath) {
+		pomWorkspacePath := filepath.Join(workspacePath, "pom.xml")
+		pomWorkspace, err := os.Open(pomWorkspacePath)
+		if err != nil {
+			return "", err
+		}
+		defer pomWorkspace.Close()
+		byteValue, _ := io.ReadAll(pomWorkspace)
+
+		var pom WorkspacePom
+		err = xml.Unmarshal(byteValue, &pom)
+		if err != nil {
+			return "", err
+		}
+		targetVersion := pom.Properties.LiferayBomVersion
+		semver := strings.Split(targetVersion, ".")
+		version := strings.Join(append(semver[:len(semver)-1], "0"), ".")
+		return version, nil
+	}
+
+	if IsGradleWorkspace(workspacePath) {
+		gradlePropsPath := filepath.Join(workspacePath, "gradle.properties")
+		gradleProps := properties.MustLoadFile(gradlePropsPath, properties.UTF8)
+		product := gradleProps.GetString("liferay.workspace.product", "portal-7.3-ga7")
+		version := strings.Split(product, "-")[1]
+		version += ".0"
+		return version, nil
+	}
+
+	return "", nil
 }

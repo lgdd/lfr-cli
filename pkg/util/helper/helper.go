@@ -1,4 +1,4 @@
-package project
+package helper
 
 var supportedJavaVersions = [2]int{8, 11}
 

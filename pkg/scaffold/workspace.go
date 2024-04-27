@@ -1,4 +1,4 @@
-package workspace
+package scaffold
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
@@ -20,9 +20,9 @@ const (
 	Maven  = "maven"
 )
 
-// Generate the structure of a Liferay workspace
-func Generate(base, build, version, edition string) error {
-	metadata, err := project.NewMetadata(base, version, edition)
+// Create the structure of a Liferay workspace
+func CreateWorkspace(base, build, version, edition string) error {
+	workspaceData, err := metadata.NewWorkspaceData(base, version, edition)
 	if err != nil {
 		return err
 	}
@@ -32,7 +32,7 @@ func Generate(base, build, version, edition string) error {
 		if err != nil {
 			return err
 		}
-		if err := createMavenFiles(base, metadata); err != nil {
+		if err := createMavenFiles(base, workspaceData); err != nil {
 			return err
 		}
 		createCommonEmptyDirs(base)
@@ -41,7 +41,7 @@ func Generate(base, build, version, edition string) error {
 		if err != nil {
 			return err
 		}
-		if err := createGradleFiles(base, metadata); err != nil {
+		if err := createGradleFiles(base, workspaceData); err != nil {
 			return err
 		}
 		createCommonEmptyDirs(base)
@@ -67,7 +67,7 @@ func Generate(base, build, version, edition string) error {
 	return nil
 }
 
-func createGradleFiles(base string, metadata *project.Metadata) error {
+func createGradleFiles(base string, workspaceData *metadata.WorkspaceData) error {
 	err := fileutil.CreateDirsFromAssets("tpl/ws/gradle", base)
 
 	if err != nil {
@@ -92,7 +92,7 @@ func createGradleFiles(base string, metadata *project.Metadata) error {
 		return err
 	}
 
-	err = updateGradleProps(base, metadata)
+	err = updateGradleProps(base, workspaceData)
 	if err != nil {
 		return err
 	}
@@ -105,12 +105,12 @@ func createGradleFiles(base string, metadata *project.Metadata) error {
 	return nil
 }
 
-func updateGradleProps(base string, metadata *project.Metadata) error {
-	err := fileutil.UpdateWithData(filepath.Join(base, "gradle.properties"), metadata)
+func updateGradleProps(base string, workspaceData *metadata.WorkspaceData) error {
+	err := fileutil.UpdateWithData(filepath.Join(base, "gradle.properties"), workspaceData)
 	if err != nil {
 		return err
 	}
-	err = fileutil.UpdateWithData(filepath.Join(base, "build.gradle"), metadata)
+	err = fileutil.UpdateWithData(filepath.Join(base, "build.gradle"), workspaceData)
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func updateGradleSettings(base string) error {
 	return nil
 }
 
-func createMavenFiles(base string, metadata *project.Metadata) error {
+func createMavenFiles(base string, workspaceData *metadata.WorkspaceData) error {
 	err := fileutil.CreateDirsFromAssets("tpl/ws/maven", base)
 
 	if err != nil {
@@ -179,7 +179,7 @@ func createMavenFiles(base string, metadata *project.Metadata) error {
 		return err
 	}
 
-	err = updatePoms(base, metadata)
+	err = updatePoms(base, workspaceData)
 	if err != nil {
 		return err
 	}
@@ -187,7 +187,7 @@ func createMavenFiles(base string, metadata *project.Metadata) error {
 	return nil
 }
 
-func updatePoms(base string, metadata *project.Metadata) error {
+func updatePoms(base string, workspaceData *metadata.WorkspaceData) error {
 	poms := []string{
 		filepath.Join(base, "pom.xml"),
 		filepath.Join(base, "modules", "pom.xml"),
@@ -196,7 +196,7 @@ func updatePoms(base string, metadata *project.Metadata) error {
 	}
 
 	for _, pomPath := range poms {
-		err := fileutil.UpdateWithData(pomPath, metadata)
+		err := fileutil.UpdateWithData(pomPath, workspaceData)
 		if err != nil {
 			return err
 		}

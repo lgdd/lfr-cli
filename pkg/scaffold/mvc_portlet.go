@@ -1,4 +1,4 @@
-package mvc
+package scaffold
 
 import (
 	"encoding/xml"
@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 )
@@ -27,8 +27,8 @@ type PortletData struct {
 	PortletIDValue         string
 }
 
-// Generates the structure for a portlet module
-func Generate(name string) {
+// Creates the structure for a portlet module
+func CreateModuleMVC(name string) {
 	sep := string(os.PathSeparator)
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
@@ -37,8 +37,8 @@ func Generate(name string) {
 		os.Exit(1)
 	}
 
-	portletPackage := project.PackageName
-	workspacePackage, _ := project.GetGroupId()
+	portletPackage := metadata.PackageName
+	workspacePackage, _ := metadata.GetGroupId()
 
 	if portletPackage == "org.acme" && workspacePackage != "org.acme" {
 		portletPackage = strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
@@ -76,7 +76,7 @@ func Generate(name string) {
 
 	fileutil.CreateDirs(packagePath)
 
-	updateJavaFiles(camelCaseName, destPortletPath, packagePath)
+	updateModuleMVCJavaFiles(camelCaseName, destPortletPath, packagePath)
 
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		pomPath := filepath.Join(destPortletPath, "pom.xml")
@@ -107,7 +107,7 @@ func Generate(name string) {
 
 		byteValue, _ := io.ReadAll(pomParent)
 
-		var pom project.Pom
+		var pom fileutil.Pom
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
@@ -122,7 +122,7 @@ func Generate(name string) {
 
 		finalPomBytes, _ := xml.MarshalIndent(pom, "", "  ")
 
-		err = os.WriteFile(pomParentPath, []byte(project.XMLHeader+string(finalPomBytes)), 0644)
+		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
 			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -148,7 +148,7 @@ func Generate(name string) {
 		WorkspacePackage:       workspacePackage,
 	}
 
-	err = updateMvcPortletWithData(destPortletPath, portletData)
+	err = updateModuleMVCWithData(destPortletPath, portletData)
 
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -168,7 +168,7 @@ func Generate(name string) {
 		})
 }
 
-func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
+func updateModuleMVCJavaFiles(camelCaseName, modulePath, packagePath string) {
 	defaultSrcPath := filepath.Join(modulePath, "src", "main", "java")
 	err := os.Rename(filepath.Join(defaultSrcPath, "Portlet.java"), filepath.Join(packagePath, camelCaseName+".java"))
 
@@ -188,7 +188,7 @@ func updateJavaFiles(camelCaseName, modulePath, packagePath string) {
 
 }
 
-func updateMvcPortletWithData(destPortletPath string, portletData *PortletData) error {
+func updateModuleMVCWithData(destPortletPath string, portletData *PortletData) error {
 	return filepath.Walk(destPortletPath, func(path string, info fs.FileInfo, err error) error {
 
 		if err != nil {

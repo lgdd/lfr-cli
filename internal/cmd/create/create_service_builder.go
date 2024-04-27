@@ -8,7 +8,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/spf13/cobra"
 
-	"github.com/lgdd/lfr-cli/pkg/generate/sb"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 )
@@ -30,5 +30,5 @@ func generateServiceBuilder(cmd *cobra.Command, args []string) {
 	}
 	name := args[0]
 	name = strcase.ToKebab(strings.ToLower(name))
-	sb.Generate(liferayWorkspace, name)
+	scaffold.CreateModuleServiceBuilder(liferayWorkspace, name)
 }

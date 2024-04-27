@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/lfr-cli/pkg/generate/spring"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/spf13/cobra"
 )
 
@@ -22,5 +22,5 @@ func init() {
 
 func generateSpringPortlet(cmd *cobra.Command, args []string) {
 	name := args[0]
-	spring.Generate(name, TemplateEngine)
+	scaffold.CreateModuleSpring(name, TemplateEngine)
 }

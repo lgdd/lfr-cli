@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/lfr-cli/pkg/generate/mvc"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/spf13/cobra"
 )
 
@@ -16,5 +16,5 @@ var (
 
 func generateMvcPortlet(cmd *cobra.Command, args []string) {
 	name := args[0]
-	mvc.Generate(name)
+	scaffold.CreateModuleMVC(name)
 }

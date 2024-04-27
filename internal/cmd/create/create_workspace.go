@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
-	"github.com/lgdd/lfr-cli/pkg/generate/workspace"
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/spf13/cobra"
@@ -42,7 +42,7 @@ func generateWorkspace(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 	name := args[0]
-	err := workspace.Generate(name, Build, Version, Edition)
+	err := scaffold.CreateWorkspace(name, Build, Version, Edition)
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
 		os.Exit(1)
@@ -65,10 +65,10 @@ func runInit(name, build string) {
 	fmt.Print("\nInitializing Liferay Bundle using:\n\n")
 
 	switch build {
-	case project.Gradle:
+	case metadata.Gradle:
 		printutil.Info("lfr exec initBundle\n\n")
 		exec.RunWrapperCmd([]string{"initBundle"})
-	case project.Maven:
+	case metadata.Maven:
 		printutil.Info("lfr exec bundle-support:init\n\n")
 		exec.RunWrapperCmd([]string{"bundle-support:init"})
 	}

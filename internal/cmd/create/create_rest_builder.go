@@ -8,29 +8,29 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
-	"github.com/lgdd/lfr-cli/pkg/generate/rb"
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
+	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/spf13/cobra"
 )
 
 var (
-	createRestBuilder = &cobra.Command{
+	createRESTBuilder = &cobra.Command{
 		Use:     "rest-builder NAME",
 		Aliases: []string{"rb"},
 		Args:    cobra.ExactArgs(1),
-		Run:     generateRestBuilder,
+		Run:     generateRESTBuilder,
 	}
 	// CodeGen holds the option to run the code generation of the rest builder
 	CodeGen bool
 )
 
 func init() {
-	createRestBuilder.Flags().BoolVarP(&CodeGen, "generate", "g", false, "executes code generation")
+	createRESTBuilder.Flags().BoolVarP(&CodeGen, "generate", "g", false, "executes code generation")
 }
 
-func generateRestBuilder(cmd *cobra.Command, args []string) {
+func generateRESTBuilder(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
 		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
@@ -38,12 +38,12 @@ func generateRestBuilder(cmd *cobra.Command, args []string) {
 	}
 	name := args[0]
 	name = strcase.ToKebab(strings.ToLower(name))
-	rb.Generate(liferayWorkspace, name)
+	scaffold.CreateModuleRESTBuilder(liferayWorkspace, name)
 
-	build := project.Maven
+	build := metadata.Maven
 
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
-		build = project.Gradle
+		build = metadata.Gradle
 	}
 
 	if CodeGen {
@@ -63,10 +63,10 @@ func runCodeGen(workspace, name, build string) {
 	fmt.Print("\nExecutes code generation using:\n\n")
 
 	switch build {
-	case project.Gradle:
+	case metadata.Gradle:
 		printutil.Info("lfr exec buildREST\n\n")
 		exec.RunWrapperCmd([]string{"buildREST"})
-	case project.Maven:
+	case metadata.Maven:
 		printutil.Info("lfr exec rest-builder:build\n\n")
 		exec.RunWrapperCmd([]string{"rest-builder:build"})
 	}
@@ -76,9 +76,9 @@ func printCodeGenSuggestion(workspace, name, build string) {
 	moduleImplPath := filepath.Join(workspace, "modules", name, name+"-impl")
 	fmt.Println("\nTo execute code generation:")
 	switch build {
-	case project.Gradle:
+	case metadata.Gradle:
 		printutil.Info(fmt.Sprintf("cd %s && lfr exec buildREST\n", moduleImplPath))
-	case project.Maven:
+	case metadata.Maven:
 		printutil.Info(fmt.Sprintf("cd %s && lfr exec rest-builder:build\n", moduleImplPath))
 	}
 	fmt.Print("\n")

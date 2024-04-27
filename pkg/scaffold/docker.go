@@ -1,4 +1,4 @@
-package docker
+package scaffold
 
 import (
 	"encoding/xml"
@@ -9,8 +9,9 @@ import (
 	"path/filepath"
 	"strconv"
 
-	"github.com/lgdd/lfr-cli/pkg/project"
+	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/pkg/util/helper"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/magiconair/properties"
 )
@@ -21,17 +22,17 @@ type DockerData struct {
 	JavaVersion string
 }
 
-// Generate opinionated Docker and Docker Compose files
+// Create opinionated Docker and Docker Compose files
 // for a give Java version with an option for Docker multi-stage build
-func Generate(liferayWorkspace string, multistage bool, java int) error {
-	projectType := project.Gradle
+func CreateDockerFiles(liferayWorkspace string, multistage bool, java int) error {
+	projectType := metadata.Gradle
 
-	if !project.IsSupportedJavaVersion(java) {
+	if !helper.IsSupportedJavaVersion(java) {
 		return errors.New("java " + strconv.Itoa(java) + " is not supported\n")
 	}
 
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
-		projectType = project.Maven
+		projectType = metadata.Maven
 	}
 
 	tplDockerfile := "tpl/docker/Dockerfile"
@@ -102,7 +103,7 @@ func getLiferayDockerImage(workspacePath string) (string, error) {
 		defer pomWorkspace.Close()
 		byteValue, _ := io.ReadAll(pomWorkspace)
 
-		var pom project.WorkspacePom
+		var pom fileutil.WorkspacePom
 		err = xml.Unmarshal(byteValue, &pom)
 		if err != nil {
 			return "", err
