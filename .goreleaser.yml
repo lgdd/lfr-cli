@@ -7,12 +7,12 @@ release:
 builds:
   - id: "lfr-cli"
     binary: lfr
-    main: ./lfr
+    main: ./cmd/lfr
     ldflags:
       - -w -s
-      - -X github.com/lgdd/lfr-cli/lfr/pkg/cmd/version.Number={{.Version}}
-      - -X github.com/lgdd/lfr-cli/lfr/pkg/cmd/version.Commit={{.Commit}}
-      - -X github.com/lgdd/lfr-cli/lfr/pkg/cmd/version.Date={{.Date}}
+      - -X github.com/lgdd/lfr-cli/internal/cmd/version.Number={{.Version}}
+      - -X github.com/lgdd/lfr-cli/internal/cmd/version.Commit={{.Commit}}
+      - -X github.com/lgdd/lfr-cli/internal/cmd/version.Date={{.Date}}
     env:
       - CGO_ENABLED=0
     goos:
