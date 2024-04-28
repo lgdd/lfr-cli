@@ -26,15 +26,15 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		logger.Print("\nRunning ")
-		logger.PrintInfo("lfr exec deploy\n")
+		logger.PrintlnInfo("lfr exec deploy\n")
 		exec.RunWrapperCmd([]string{"deploy"})
 	}
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		logger.Print("\nRunning ")
-		logger.PrintInfo("lfr exec package\n")
+		logger.PrintlnInfo("lfr exec package\n")
 		exec.RunWrapperCmd([]string{"package"})
 		logger.Print("\nRunning ")
-		logger.PrintInfo("lfr exec bundle-support:deploy\n\n")
+		logger.PrintlnInfo("lfr exec bundle-support:deploy\n")
 		exec.RunWrapperCmd([]string{"bundle-support:deploy"})
 	}
 }
