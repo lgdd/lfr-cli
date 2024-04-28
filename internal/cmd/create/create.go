@@ -43,7 +43,7 @@ func init() {
 }
 
 func runPrompt(cmd *cobra.Command) {
-	var template, name string
+	var template, sample, name string
 	packageName := viper.GetString(config.ModulePackage)
 
 	form := huh.NewForm(
@@ -77,6 +77,11 @@ func runPrompt(cmd *cobra.Command) {
 
 	if template == "workspace" {
 		prompt.ForWorkspace(cmd, &name)
+		return
+	}
+
+	if template == "client-extension" {
+		prompt.ForClientExtension(cmd, &sample, &name)
 		return
 	}
 

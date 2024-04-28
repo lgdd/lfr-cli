@@ -9,7 +9,6 @@ import (
 	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
-	"github.com/schollz/progressbar/v3"
 )
 
 var supportedJavaVersions = [2]int{8, 11}
@@ -29,11 +28,6 @@ func FetchClientExtensionSamples(destination string) error {
 
 	// Clone & checkout if ~/.lfr/liferay-portal does not exist
 	if _, err := os.Stat(filepath.Join(destination, config.ClientExtensionSampleProjectName)); err != nil {
-		bar := progressbar.NewOptions(-1,
-			progressbar.OptionSetDescription("Fetching samples"),
-			progressbar.OptionSpinnerType(11))
-
-		bar.Add(1)
 		var gitProject strings.Builder
 		gitProject.WriteString("https://github.com/lgdd/")
 		gitProject.WriteString(config.ClientExtensionSampleProjectName)
@@ -42,29 +36,22 @@ func FetchClientExtensionSamples(destination string) error {
 		gitClone.Dir = destination
 
 		if err := gitClone.Run(); err != nil {
-			bar.Clear()
 			return err
 		}
-		bar.Clear()
 	} else {
 		// Repo already exists, try to update
-		bar := progressbar.NewOptions(-1,
-			progressbar.OptionSetDescription("Updating samples"),
-			progressbar.OptionSpinnerType(11))
-
-		bar.Add(1)
-
-		gitPull := exec.Command("git", "pull")
-		gitPull.Dir = clientExtensionsSamplesPath
-
-		if err := gitPull.Run(); err != nil {
-			bar.Clear()
-			return err
-		}
-
-		bar.Clear()
+		go updateClientExtensionSamples(clientExtensionsSamplesPath)
 	}
 	return nil
+}
+
+func updateClientExtensionSamples(path string) {
+	gitPull := exec.Command("git", "pull")
+	gitPull.Dir = path
+
+	if err := gitPull.Run(); err != nil {
+		defer logger.Error(err.Error())
+	}
 }
 
 func HandleClientExtensionsOffline(configPath string) {
@@ -90,4 +77,27 @@ func HandleClientExtensionsOffline(configPath string) {
 		logger.PrintWarn("Couldn't update client extensions samples from GitHub.\n")
 		logger.Print("Using latest versions fetched.")
 	}
+}
+
+func GetClientExtensionSampleNames() []string {
+	if err := FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
+		HandleClientExtensionsOffline(config.GetConfigPath())
+	}
+
+	clientExtensionSamplesPath := filepath.Join(config.GetConfigPath(), config.ClientExtensionSampleProjectName)
+	sampleDirs, err := os.ReadDir(clientExtensionSamplesPath)
+
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+
+	var samples []string
+
+	for _, sampleDir := range sampleDirs {
+		if sampleDir.IsDir() && strings.Contains(sampleDir.Name(), config.ClientExtensionSamplePrefix) {
+			samples = append(samples, strings.Split(sampleDir.Name(), config.ClientExtensionSamplePrefix)[1])
+		}
+	}
+
+	return samples
 }

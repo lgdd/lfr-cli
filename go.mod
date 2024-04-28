@@ -11,7 +11,6 @@ require (
 	github.com/ettle/strcase v0.2.0
 	github.com/iancoleman/strcase v0.3.0
 	github.com/magiconair/properties v1.8.7
-	github.com/manifoldco/promptui v0.9.0
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/nxadm/tail v1.4.11
 	github.com/otiai10/copy v1.14.0
@@ -29,7 +28,6 @@ require (
 	github.com/catppuccin/go v0.2.0 // indirect
 	github.com/charmbracelet/bubbles v0.17.2-0.20240108170749-ec883029c8e6 // indirect
 	github.com/charmbracelet/bubbletea v0.25.0 // indirect
-	github.com/chzyer/readline v1.5.1 // indirect
 	github.com/containerd/console v1.0.4-0.20230313162750-1ae8d489ac81 // indirect
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/go-logfmt/logfmt v0.6.0 // indirect

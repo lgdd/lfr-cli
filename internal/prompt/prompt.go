@@ -3,8 +3,6 @@ package prompt
 import (
 	"errors"
 	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/charmbracelet/huh"
 	"github.com/lgdd/lfr-cli/internal/config"
@@ -100,43 +98,43 @@ func ForSpring(cmd *cobra.Command, packageName, name *string) {
 }
 
 func ForWorkspace(cmd *cobra.Command, name *string) {
-	form := huh.NewForm(
-		huh.NewGroup(
-			NewInputName(name),
-		),
-	)
-
-	if config.NoColor {
-		form.WithTheme(huh.ThemeBase())
-	}
-
-	err := form.Run()
-
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
+	ForName(name)
 
 	os.Args = append(os.Args, "workspace", *name)
-	err = cmd.Execute()
+	err := cmd.Execute()
 
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
 }
 
-func ForClientExtension(cmd *cobra.Command, name *string) {
-	if err := helper.FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
-		helper.HandleClientExtensionsOffline(config.GetConfigPath())
+func ForName(name *string) {
+	form := huh.NewForm(
+		huh.NewGroup(
+			NewInputName(name),
+		),
+	)
+
+	if config.NoColor {
+		form.WithTheme(huh.ThemeBase())
 	}
 
-	clientExtensionSamplesPath := filepath.Join(config.GetConfigPath(), config.ClientExtensionSampleProjectName)
-	templates := getTemplateNames(clientExtensionSamplesPath)
+	err := form.Run()
+
+	if err != nil {
+		logger.Fatal(err.Error())
+	}
+}
+
+func ForClientExtension(cmd *cobra.Command, sample, name *string) {
+	samples := helper.GetClientExtensionSampleNames()
 
 	form := huh.NewForm(
 		huh.NewGroup(
 			huh.NewSelect[string]().
 				Title("Chosse a sample:").
-				Options(huh.NewOptions(templates...)...),
+				Options(huh.NewOptions(samples...)...).
+				Value(sample),
 			NewInputName(name),
 		),
 	)
@@ -151,7 +149,7 @@ func ForClientExtension(cmd *cobra.Command, name *string) {
 		logger.Fatal(err.Error())
 	}
 
-	os.Args = append(os.Args, "cx", *name)
+	os.Args = append(os.Args, "cx", *sample, *name)
 	err = cmd.Execute()
 
 	if err != nil {
@@ -178,22 +176,4 @@ func isNotEmpty(input string) error {
 		return errors.New("cannot be empty")
 	}
 	return nil
-}
-
-func getTemplateNames(clientExtensionSamplesPath string) []string {
-	sampleDirs, err := os.ReadDir(clientExtensionSamplesPath)
-
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
-
-	var samples []string
-
-	for _, sampleDir := range sampleDirs {
-		if sampleDir.IsDir() && strings.Contains(sampleDir.Name(), config.ClientExtensionSamplePrefix) {
-			samples = append(samples, strings.Split(sampleDir.Name(), config.ClientExtensionSamplePrefix)[1])
-		}
-	}
-
-	return samples
 }

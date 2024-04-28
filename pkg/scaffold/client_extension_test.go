@@ -5,6 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
+	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/util/helper"
 )
 
@@ -15,7 +16,7 @@ func Test_HandleClientExtensionsOffline_ShouldIncludeGitFolderForFutureUpdates(t
 		t.Fatal(err)
 	}
 	helper.HandleClientExtensionsOffline(configTestPath)
-	if _, err := os.Stat(filepath.Join(configTestPath, ClientExtensionSampleProjectName, ".git")); err != nil {
+	if _, err := os.Stat(filepath.Join(configTestPath, config.ClientExtensionSampleProjectName, ".git")); err != nil {
 		t.Fatal(err)
 	}
 	if err := os.RemoveAll(configTestPath); err != nil {
