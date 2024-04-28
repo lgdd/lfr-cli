@@ -28,7 +28,7 @@ func SetCatalinaPid() error {
 		}
 	}
 
-	return os.Setenv("CATALINA_PID", filepath.Join(workingPath, ".liferay-pid"))
+	return os.Setenv("CATALINA_PID", filepath.Join(workingPath, "liferay.pid"))
 }
 
 // Get the catalina pid from an environment variable or file
@@ -54,7 +54,7 @@ func GetCatalinaPid() (int, error) {
 		return pid, nil
 	}
 
-	pidPath := filepath.Join(workingPath, ".liferay-pid")
+	pidPath := filepath.Join(workingPath, "liferay.pid")
 	pidFile, err := os.Open(pidPath)
 
 	if err != nil {

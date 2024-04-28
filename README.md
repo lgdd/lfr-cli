@@ -375,7 +375,7 @@ Start the Liferay Tomcat bundle initialized in your workspace:
 lfr start
 ```
 
-> It creates a file named `.liferay-pid` which is used by `lfr status` display if Tomcat is running or not (or it can be used to kill it if necessary).
+> It creates a file named `liferay.pid` which is used by `lfr status` display if Tomcat is running or not (or it can be used to kill it if necessary).
 
 ```shell
 Flags:
