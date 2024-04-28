@@ -13,7 +13,7 @@ import (
 
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // ServiceBuilderData contains the data to be injected into the template files
@@ -51,22 +51,19 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 	err := fileutil.CreateDirsFromAssets("tpl/service_builder", destModulePath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = fileutil.CreateFilesFromAssets("tpl/service_builder", destModulePath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = renameModuleServiceBuilderFiles(destModulePath, destModuleAPIPath, destModuleServicePath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
@@ -74,24 +71,21 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomPath = filepath.Join(destModuleAPIPath, "pom.xml")
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomPath = filepath.Join(destModuleServicePath, "pom.xml")
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	}
 
@@ -100,23 +94,20 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 		err = os.Remove(buildGradlePath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		buildGradlePath = filepath.Join(destModuleServicePath, "build.gradle")
 		err = os.Remove(buildGradlePath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomParentPath := filepath.Join(destModulePath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 		defer pomParent.Close()
 
@@ -126,8 +117,7 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		modules := append(pom.Modules.Module, name)
@@ -140,19 +130,17 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
-		printutil.Warning("update ")
+		logger.PrintWarn("modified ")
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
 	productVersion, err := fileutil.GetLiferayWorkspaceProductVersion(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	var majorVersionBuilder strings.Builder
@@ -162,8 +150,7 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	data := &ServiceBuilderData{
@@ -181,8 +168,7 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 	err = updateModuleServiceBuilderWithData(destModulePath, data)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	_ = filepath.Walk(destModulePath,
@@ -191,7 +177,7 @@ func CreateModuleServiceBuilder(liferayWorkspace, name string) {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
+				logger.PrintSuccess("created ")
 				fmt.Printf("%s\n", path)
 			}
 			return nil

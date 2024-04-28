@@ -21,7 +21,7 @@ import (
 	progressbar "github.com/schollz/progressbar/v3"
 
 	"github.com/lgdd/lfr-cli/internal/assets"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // XMLHeader is the first line to be written in an XML file
@@ -83,8 +83,7 @@ type WorkspacePom struct {
 func CreateDirs(path string) {
 	err := os.MkdirAll(path, os.ModePerm)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 
@@ -102,8 +101,7 @@ func createFile(path string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	_, err := os.Create(path)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 
@@ -145,24 +143,21 @@ func CreateFilesFromAssets(assetsRoot, baseDest string) error {
 func CopyFromTemplates(sourcePath, destPath string) {
 	source, err := assets.Templates.Open(sourcePath)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	defer source.Close()
 
 	dest, err := os.Create(destPath)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	defer dest.Close()
 
 	_, err = io.Copy(dest, source)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 }
@@ -172,24 +167,21 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	defer wg.Done()
 	source, err := assets.Templates.Open(sourcePath)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	defer source.Close()
 
 	dest, err := os.Create(destPath)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	defer dest.Close()
 
 	_, err = io.Copy(dest, source)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 
@@ -265,8 +257,7 @@ func FindFileInParent(fileName string) (string, error) {
 	dir, err := os.Getwd()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	var filePath string
@@ -316,8 +307,7 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 			}
 			err = bar.Add(1)
 			if err != nil {
-				printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-				os.Exit(1)
+				logger.Fatal(err.Error())
 			}
 			if info.Name() == fileName {
 				targetFilePath = path
@@ -332,8 +322,7 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 	err = bar.Clear()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	if targetFilePath == "" {
@@ -388,8 +377,8 @@ func GetTomcatScriptPath(script string) (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n\n", err.Error()))
-		fmt.Println("Did you initialize the Tomcat bundle from the root of your Liferay Workspace?")
+		logger.Errorf("%s\n", err.Error())
+		logger.Warn("Did you initialize the Tomcat bundle from the root of your Liferay Workspace?")
 		os.Exit(1)
 	}
 
@@ -402,8 +391,7 @@ func GetTomcatScriptPath(script string) (string, error) {
 	scriptParentDir, err := FindFileParentInDir(liferayHome, scriptName)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	scriptPath := filepath.Join(scriptParentDir, scriptName)
@@ -427,8 +415,7 @@ func GetCatalinaLogFile() (string, error) {
 	liferayHome, err := GetLiferayHomePath()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	return FindFileInDir(liferayHome, "catalina.out")
@@ -438,7 +425,7 @@ func GetCatalinaLogFile() (string, error) {
 func Tail(logFile string, follow bool) {
 	t, err := tail.TailFile(logFile, tail.Config{Follow: follow})
 	if err != nil {
-		panic(err)
+		logger.Fatal(err.Error())
 	}
 
 	for line := range t.Lines {

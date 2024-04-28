@@ -9,7 +9,7 @@ import (
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -47,44 +47,40 @@ func init() {
 
 func generateWorkspace(cmd *cobra.Command, args []string) {
 	if fileutil.IsInWorkspaceDir() {
-		printutil.Danger("You're already in a Liferay Workspace and I can't create a new one in it.\n")
-		os.Exit(1)
+		logger.Fatalf("You're already in a Liferay Workspace.")
 	}
 	name := args[0]
 	err := scaffold.CreateWorkspace(name, Build, Version, Edition)
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
-	printutil.Success(fmt.Sprintf("\nSuccessfully created a Liferay Workspace '%s'\n", name))
+	logger.PrintfSuccess("\nSuccessfully created a Liferay Workspace '%s'\n", name)
 
 	if Init {
 		runInit(name, Build)
 	} else {
-		printInitCmd(name, Build)
+		printInitCmd(name)
 	}
 }
 
 func runInit(name, build string) {
 	if err := os.Chdir(name); err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
-	fmt.Print("\nInitializing Liferay Bundle using:\n\n")
+	logger.Print("\nInitializing Liferay Bundle using:\n\n")
 
 	switch build {
 	case metadata.Gradle:
-		printutil.Info("lfr exec initBundle\n\n")
+		logger.PrintlnInfo("lfr exec initBundle\n")
 		exec.RunWrapperCmd([]string{"initBundle"})
 	case metadata.Maven:
-		printutil.Info("lfr exec bundle-support:init\n\n")
+		logger.PrintlnInfo("lfr exec bundle-support:init\n")
 		exec.RunWrapperCmd([]string{"bundle-support:init"})
 	}
 }
 
-func printInitCmd(name, build string) {
-	fmt.Println("\nInitialize your Liferay bundle:")
-	printutil.Info(fmt.Sprintf("cd %s && lfr init\n", name))
-	fmt.Print("\n")
+func printInitCmd(name string) {
+	logger.Println("\nInitialize your Liferay bundle:")
+	logger.PrintlnInfo(fmt.Sprintf("cd %s && lfr init\n", name))
 }

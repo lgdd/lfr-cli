@@ -1,12 +1,10 @@
 package logs
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -33,8 +31,7 @@ func run(cmd *cobra.Command, args []string) {
 	logFile, err := fileutil.GetCatalinaLogFile()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	fileutil.Tail(logFile, Follow)

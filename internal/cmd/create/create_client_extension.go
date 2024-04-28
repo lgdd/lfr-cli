@@ -2,7 +2,8 @@ package create
 
 import (
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/spf13/cobra"
 )
 
@@ -21,5 +22,5 @@ Samples available: https://github.com/liferay/liferay-portal/tree/master/workspa
 
 func generateClientExtension(cmd *cobra.Command, args []string) {
 	scaffold.CreateClientExtension(cmd, args)
-	printutil.Info("\n💡Checkout this tool to help you with client extensions development: https://github.com/bnheise/ce-cli\n")
+	logger.PrintInfo("\n💡Checkout this tool to help you with client extensions development: https://github.com/bnheise/ce-cli")
 }

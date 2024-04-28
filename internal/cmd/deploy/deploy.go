@@ -1,14 +1,11 @@
 package deploy
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 var (
@@ -25,20 +22,19 @@ var (
 func run(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
-		fmt.Print("\nRunning ")
-		printutil.Info("lfr exec deploy\n\n")
+		logger.Print("\nRunning ")
+		logger.PrintInfo("lfr exec deploy\n")
 		exec.RunWrapperCmd([]string{"deploy"})
 	}
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
-		fmt.Print("\nRunning ")
-		printutil.Info("lfr exec package\n\n")
+		logger.Print("\nRunning ")
+		logger.PrintInfo("lfr exec package\n")
 		exec.RunWrapperCmd([]string{"package"})
-		fmt.Print("\nRunning ")
-		printutil.Info("lfr exec bundle-support:deploy\n\n")
+		logger.Print("\nRunning ")
+		logger.PrintInfo("lfr exec bundle-support:deploy\n\n")
 		exec.RunWrapperCmd([]string{"bundle-support:deploy"})
 	}
 }

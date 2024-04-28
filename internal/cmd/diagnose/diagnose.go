@@ -3,7 +3,6 @@ package diagnose
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"math"
 	"os"
 	"path/filepath"
@@ -12,7 +11,8 @@ import (
 
 	humanize "github.com/dustin/go-humanize"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
@@ -30,33 +30,33 @@ func diagnose(cmd *cobra.Command, args []string) {
 	verifyJava()
 	verifyBlade()
 	dockerInstalled := verifyDocker()
-	fmt.Print("\n")
+	logger.Print("\n")
 	verifyBundles()
 	if dockerInstalled {
 		verifyLiferayDockerImages()
 		verifyElasticsearchDockerImages()
 	}
-	fmt.Println("\nMore information about compatibilities: https://www.liferay.com/compatibility-matrix")
+	logger.Println("\nMore information about compatibilities: https://www.liferay.com/compatibility-matrix")
 }
 
 func verifyJava() bool {
 	major, version, err := procutil.GetCurrentJavaVersion()
 
 	if err != nil {
-		printutil.Danger("[✗] ")
-		fmt.Printf("Liferay requires Java 8 or 11.\n")
+		logger.PrintError("[✗] ")
+		logger.Print("Liferay requires Java 8 or 11.\n")
 		return false
 	}
 
 	if major == "8" || major == "11" {
-		printutil.Success("[✓] ")
-		fmt.Printf("Java intalled (%s)\n", strings.Split(version, "\n")[0])
-		printlnBulletPoint("Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.")
-		printlnBulletPoint("JDK compatibility is for runtime and project compile time. DXP source compile is compatible with JDK 8 only.")
+		logger.PrintSuccess("[✓] ")
+		logger.Printf("Java intalled (%s)\n", strings.Split(version, "\n")[0])
+		logger.PrintlnBold("\t• Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.")
+		logger.PrintlnBold("\t• JDK compatibility is for runtime and project compile time. DXP source compile is compatible with JDK 8 only.")
 	} else {
-		printutil.Warning("[!] ")
-		fmt.Printf("Java (%s)\n", strings.Split(version, "\n")[0])
-		printlnBulletPointWarning("Liferay supports Java 8 and 11 only.")
+		logger.PrintWarn("[!] ")
+		logger.Printf("Java (%s)\n", strings.Split(version, "\n")[0])
+		logger.PrintlnBold("\t! Liferay supports Java 8 and 11 only.")
 	}
 	return true
 }
@@ -65,17 +65,17 @@ func verifyBlade() bool {
 	bladeVersionCmdOut, _, err := procutil.Exec("blade", "version")
 
 	if err != nil {
-		printutil.Danger("[✗] ")
-		fmt.Printf("Blade is not installed.\n")
-		printlnBulletPoint("You might like this tool, but Blade is still the official one with useful features.")
-		printlnBulletPoint("Blade is supported by Liferay and used by Liferay IDE behind the scenes.")
-		printlnBulletPoint("Checkout the documentation: https://learn.liferay.com/w/dxp/building-applications/tooling/blade-cli")
+		logger.PrintError("[✗] ")
+		logger.Printf("Blade is not installed.\n")
+		logger.PrintlnBold("\t• You might like this tool, but Blade is still the official one with useful features.")
+		logger.PrintlnBold("\t• Blade is supported by Liferay and used by Liferay IDE behind the scenes.")
+		logger.PrintlnBold("\t• Checkout the documentation: https://learn.liferay.com/w/dxp/building-applications/tooling/blade-cli")
 		return false
 	}
 
 	bladeVersionResult := bladeVersionCmdOut.String()
-	printutil.Success("[✓] ")
-	fmt.Printf("Blade installed (%s)\n", strings.Split(bladeVersionResult, "\n")[0])
+	logger.PrintSuccess("[✓] ")
+	logger.Printf("Blade installed (%s)\n", strings.Split(bladeVersionResult, "\n")[0])
 	return true
 }
 
@@ -83,18 +83,18 @@ func verifyDocker() bool {
 	dockerVersionCmdOut, _, err := procutil.Exec("docker", "version", "--format", "json")
 
 	if err != nil {
-		printutil.Warning("[!] ")
-		fmt.Printf("Docker is not installed.\n")
-		printlnBulletPoint("Docker is not required, but it's a easy way to get started and try Liferay DXP.")
-		printlnBulletPoint("Checkout official images: https://hub.docker.com/u/liferay")
+		logger.PrintWarn("[!] ")
+		logger.Printf("Docker is not installed.\n")
+		logger.PrintlnBold("\t• Docker is not required, but it's a easy way to get started and try Liferay DXP.")
+		logger.PrintlnBold("\t• Checkout official images: https://hub.docker.com/u/liferay")
 		return false
 	}
 
 	var dockerVersion DockerVersion
 	dockerVersionResult := dockerVersionCmdOut.String()
 	json.Unmarshal([]byte(dockerVersionResult), &dockerVersion)
-	printutil.Success("[✓] ")
-	fmt.Printf("Docker installed (%s)\n", strings.Split(dockerVersion.Server.Platform.Name, "\n")[0])
+	logger.PrintSuccess("[✓] ")
+	logger.Printf("Docker installed (%s)\n", strings.Split(dockerVersion.Server.Platform.Name, "\n")[0])
 	return true
 }
 
@@ -102,7 +102,7 @@ func verifyBundles() {
 	homeDir, err := os.UserHomeDir()
 
 	if err != nil {
-		panic(err)
+		logger.Fatal(err.Error())
 	}
 
 	liferayHomeDir := filepath.Join(homeDir, ".liferay")
@@ -111,9 +111,9 @@ func verifyBundles() {
 	bundlesDirSize, err := fileutil.DirSize(liferayHomeBundlesDir)
 
 	if err == nil && bundlesDirSize > 0 {
-		printutil.Info("[i] ")
-		fmt.Printf("Downloaded bundles are using ~%s.\n", humanize.Bytes(uint64(bundlesDirSize)))
-		printlnBulletPoint("They are stored under " + liferayHomeBundlesDir)
+		logger.PrintWarn("[!] ")
+		logger.Printf("Downloaded bundles are using ~%s.\n", humanize.Bytes(uint64(bundlesDirSize)))
+		logger.PrintlnBold("\t• They are stored under " + liferayHomeBundlesDir)
 	}
 }
 
@@ -123,10 +123,10 @@ func verifyLiferayDockerImages() {
 	dockerImagesTotalSize := dxpImagesTotalSize + portalImagesTotalSize
 
 	if dockerImagesTotalSize > 0 {
-		printutil.Info("[i] ")
-		fmt.Printf("Official Liferay Docker images are using ~%s.\n", humanize.Bytes(dockerImagesTotalSize))
-		printlnBulletPoint("Run 'docker images liferay/dxp' to list DXP Images (EE)")
-		printlnBulletPoint("Run 'docker images liferay/portal' to list Portal Images (CE)")
+		logger.PrintWarn("[!] ")
+		logger.Printf("Official Liferay Docker images are using ~%s.\n", humanize.Bytes(dockerImagesTotalSize))
+		logger.PrintlnBold("\t• Run 'docker images liferay/dxp' to list DXP Images (EE)")
+		logger.PrintlnBold("\t• Run 'docker images liferay/portal' to list Portal Images (CE)")
 	}
 }
 
@@ -138,10 +138,10 @@ func verifyElasticsearchDockerImages() {
 	dockerImagesTotalSize := dockerHubImagesTotalSize + elasticHubImagesTotalSize
 
 	if dockerImagesTotalSize > 0 {
-		printutil.Info("[i] ")
-		fmt.Printf("Official Elasticsearch Docker images are using ~%s.\n", humanize.Bytes(dockerImagesTotalSize))
-		printlnBulletPoint(fmt.Sprintf("Run 'docker images %s' to list images from Docker Hub", dockerHubTagName))
-		printlnBulletPoint(fmt.Sprintf("Run 'docker images %s' to list images from Elastic Hub", elasticHubTagName))
+		logger.PrintInfo("[i] ")
+		logger.Printf("Official Elasticsearch Docker images are using ~%s.\n", humanize.Bytes(dockerImagesTotalSize))
+		logger.PrintfBold("\t• Run 'docker images %s' to list images from Docker Hub\n", dockerHubTagName)
+		logger.PrintfBold("\t• Run 'docker images %s' to list images from Elastic Hub\n", elasticHubTagName)
 	}
 }
 
@@ -182,7 +182,7 @@ func parseBytesFromString(size string) (uint64, error) {
 	case "GB":
 		return uint64(sizeParsed * math.Pow(1000, 3)), nil
 	default:
-		return 0, errors.New("Unexpected unit for a Liferay docker image")
+		return 0, errors.New("unexpected unit for a Liferay docker image")
 	}
 }
 
@@ -195,16 +195,11 @@ type DockerVersion struct {
 }
 
 func printlnBulletPoint(msg string) {
-	printutil.Bold("    • ")
-	printutil.Bold(msg + "\n")
+	logger.Print("    • ")
+	logger.Print(msg)
 }
 
 func printlnBulletPointWarning(msg string) {
-	printutil.Bold("    ! ")
-	printutil.Bold(msg + "\n")
-}
-
-func printlnBulletPointDanger(msg string) {
-	printutil.Danger("    ✗ ")
-	printutil.Bold(msg + "\n")
+	logger.Print("    ! ")
+	logger.Print(msg)
 }

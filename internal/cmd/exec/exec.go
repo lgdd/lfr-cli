@@ -1,11 +1,10 @@
 package exec
 
 import (
-	"fmt"
 	"os"
 	"runtime"
 
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
@@ -32,15 +31,13 @@ func RunWrapperCmd(args []string) {
 	wrapper, err := getWrapper()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = procutil.ExecStd(wrapper, args...)
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 

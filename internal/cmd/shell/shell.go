@@ -2,8 +2,8 @@ package shell
 
 import (
 	"fmt"
-	"os"
 
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	telnet "github.com/reiver/go-telnet"
 	"github.com/spf13/cobra"
 )
@@ -32,7 +32,6 @@ func run(cmd *cobra.Command, args []string) {
 	fmt.Printf("Connecting to %v...\n", destination)
 	err := telnet.DialToAndCall(destination, caller)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }

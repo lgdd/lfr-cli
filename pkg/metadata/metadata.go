@@ -14,7 +14,7 @@ import (
 
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // WorkspaceData represents the basic informations associated with a Liferay workspace
@@ -144,7 +144,7 @@ func NewWorkspaceData(base, version, edition string) (*WorkspaceData, error) {
 		if err == ErrUnkownEdition || err == ErrUnsupportedVersion {
 			return nil, err
 		} else {
-			printutil.Warning(fmt.Sprintf("%s\n", err.Error()))
+			logger.PrintWarn(err.Error())
 			return getOfflineWorkspaceData(base, version, edition)
 		}
 	}

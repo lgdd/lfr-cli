@@ -1,10 +1,9 @@
 package completion
 
 import (
-	"fmt"
 	"os"
 
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -67,8 +66,7 @@ PowerShell:
 			err = cmd.Root().GenPowerShellCompletion(os.Stdout)
 		}
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	},
 }

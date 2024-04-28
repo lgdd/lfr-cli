@@ -1,14 +1,11 @@
 package build
 
 import (
-	"fmt"
-	"os"
-
 	"github.com/spf13/cobra"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 var (
@@ -25,17 +22,16 @@ var (
 func run(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
-		fmt.Print("\nRunning ")
-		printutil.Info("lfr exec build\n\n")
+		logger.Print("\nRunning ")
+		logger.PrintlnInfo("lfr exec build\n")
 		exec.RunWrapperCmd([]string{"build"})
 	}
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
-		fmt.Print("\nRunning ")
-		printutil.Info("lfr exec clean install\n\n")
+		logger.Print("\nRunning ")
+		logger.PrintlnInfo("lfr exec clean install\n")
 		exec.RunWrapperCmd([]string{"clean", "install"})
 	}
 }

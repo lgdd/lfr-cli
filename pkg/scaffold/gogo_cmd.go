@@ -12,7 +12,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // CmdData contains the data to be injected into the template files
@@ -32,8 +32,7 @@ func CreateModuleGogoCommand(name string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	portletPackage := metadata.PackageName
@@ -55,22 +54,19 @@ func CreateModuleGogoCommand(name string) {
 	err = fileutil.CreateDirsFromAssets("tpl/gogo_cmd", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = fileutil.CreateFilesFromAssets("tpl/gogo_cmd", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = os.Rename(filepath.Join(destPortletPath, "gitignore"), filepath.Join(destPortletPath, ".gitignore"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	fileutil.CreateDirs(packagePath)
@@ -84,8 +80,7 @@ func CreateModuleGogoCommand(name string) {
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	}
 
@@ -94,15 +89,13 @@ func CreateModuleGogoCommand(name string) {
 		err = os.Remove(buildGradlePath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomParentPath := filepath.Join(destPortletPath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 		defer pomParent.Close()
 
@@ -112,8 +105,7 @@ func CreateModuleGogoCommand(name string) {
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		modules := append(pom.Modules.Module, name)
@@ -126,19 +118,17 @@ func CreateModuleGogoCommand(name string) {
 		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
-		printutil.Warning("update ")
+		logger.PrintWarn("modified ")
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
 	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	data := &CmdData{
@@ -154,8 +144,7 @@ func CreateModuleGogoCommand(name string) {
 	err = updateModuleGogoCommandWithData(destPortletPath, data)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	_ = filepath.Walk(destPortletPath,
@@ -164,7 +153,7 @@ func CreateModuleGogoCommand(name string) {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
+				logger.PrintSuccess("created ")
 				fmt.Printf("%s\n", path)
 			}
 			return nil
@@ -177,8 +166,7 @@ func updateModuleGogoCommandJavaFiles(camelCaseName, modulePath, packagePath str
 	err := os.Rename(filepath.Join(defaultSrcPath, "Cmd.java"), filepath.Join(packagePath, camelCaseName+".java"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 

@@ -5,7 +5,7 @@ import (
 	"os"
 	"runtime"
 
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
@@ -22,20 +22,19 @@ var (
 
 func run(cmd *cobra.Command, args []string) {
 	if runtime.GOOS == "windows" {
-		printutil.Info("not available for Windows since the Tomcat process run in another command window")
+		logger.PrintInfo("not available for Windows since the Tomcat process run in another command window")
 		os.Exit(0)
 	}
 	isRunning, pid, err := procutil.IsCatalinaRunning()
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 	if isRunning {
 		fmt.Print("Liferay is ")
-		printutil.Success("RUNNING")
+		logger.PrintSuccess("RUNNING")
 		fmt.Printf(" (pid=%v)\n", pid)
 	} else {
 		fmt.Print("Liferay is ")
-		printutil.Danger("STOPPED\n")
+		logger.PrintError("STOPPED\n")
 	}
 }

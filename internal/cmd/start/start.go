@@ -1,12 +1,12 @@
 package start
 
 import (
-	"fmt"
 	"os"
 	"os/exec"
 
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
@@ -25,29 +25,25 @@ func run(cmd *cobra.Command, args []string) {
 	startupScript, err := fileutil.GetTomcatScriptPath("startup")
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	tomcatPath, err := fileutil.GetTomcatPath()
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = os.Setenv("CATALINA_HOME", tomcatPath)
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = procutil.SetCatalinaPid()
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	startupCmd := exec.Command(startupScript)
@@ -56,10 +52,9 @@ func run(cmd *cobra.Command, args []string) {
 	err = startupCmd.Run()
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
-	fmt.Println("\nFollow the logs:")
-	printutil.Info("lfr logs -f\n\n")
+	logger.Print("\nFollow the logs:")
+	logger.PrintInfo("lfr logs -f\n")
 }

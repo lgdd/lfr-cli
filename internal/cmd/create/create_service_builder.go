@@ -1,8 +1,6 @@
 package create
 
 import (
-	"fmt"
-	"os"
 	"strings"
 
 	"github.com/iancoleman/strcase"
@@ -10,7 +8,7 @@ import (
 
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 var (
@@ -25,8 +23,7 @@ var (
 func generateServiceBuilder(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 	name := args[0]
 	name = strcase.ToKebab(strings.ToLower(name))

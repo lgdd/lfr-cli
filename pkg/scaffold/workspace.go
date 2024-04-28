@@ -10,7 +10,8 @@ import (
 
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 )
 
@@ -58,7 +59,7 @@ func CreateWorkspace(base, build, version, edition string) error {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
+				logger.PrintSuccess("created ")
 				fmt.Printf("%s\n", path)
 			}
 			return nil
@@ -124,8 +125,7 @@ func updateGradleSettings(base string) error {
 	resp, err := http.Get("https://raw.githubusercontent.com/lgdd/liferay-product-info/main/com.liferay.gradle.plugins.workspace")
 
 	if err != nil {
-		warningMessage := fmt.Sprintf("couldn't get latest version for com.liferay.gradle.plugins.workspace (default to %s)\n", workspaceGradlePluginVersion)
-		printutil.Warning(warningMessage)
+		logger.PrintfWarn("couldn't get latest version for com.liferay.gradle.plugins.workspace (default to %s)\n", workspaceGradlePluginVersion)
 		err := fileutil.UpdateWithData(filepath.Join(base, "settings.gradle"), struct {
 			WorkspaceGradlePluginVersion string
 		}{WorkspaceGradlePluginVersion: workspaceGradlePluginVersion})

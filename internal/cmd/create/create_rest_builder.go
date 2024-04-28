@@ -11,7 +11,7 @@ import (
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -33,8 +33,7 @@ func init() {
 func generateRESTBuilder(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 	name := args[0]
 	name = strcase.ToKebab(strings.ToLower(name))
@@ -56,18 +55,17 @@ func generateRESTBuilder(cmd *cobra.Command, args []string) {
 func runCodeGen(workspace, name, build string) {
 	moduleImplPath := filepath.Join(workspace, "modules", name, name+"-impl")
 	if err := os.Chdir(moduleImplPath); err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
-	fmt.Print("\nExecutes code generation using:\n\n")
+	logger.Print("\nExecutes code generation using:\n")
 
 	switch build {
 	case metadata.Gradle:
-		printutil.Info("lfr exec buildREST\n\n")
+		logger.PrintlnInfo("lfr exec buildREST\n")
 		exec.RunWrapperCmd([]string{"buildREST"})
 	case metadata.Maven:
-		printutil.Info("lfr exec rest-builder:build\n\n")
+		logger.PrintlnInfo("lfr exec rest-builder:build\n")
 		exec.RunWrapperCmd([]string{"rest-builder:build"})
 	}
 }
@@ -77,9 +75,8 @@ func printCodeGenSuggestion(workspace, name, build string) {
 	fmt.Println("\nTo execute code generation:")
 	switch build {
 	case metadata.Gradle:
-		printutil.Info(fmt.Sprintf("cd %s && lfr exec buildREST\n", moduleImplPath))
+		logger.PrintlnInfo(fmt.Sprintf("cd %s && lfr exec buildREST", moduleImplPath))
 	case metadata.Maven:
-		printutil.Info(fmt.Sprintf("cd %s && lfr exec rest-builder:build\n", moduleImplPath))
+		logger.PrintlnInfo(fmt.Sprintf("cd %s && lfr exec rest-builder:build", moduleImplPath))
 	}
-	fmt.Print("\n")
 }

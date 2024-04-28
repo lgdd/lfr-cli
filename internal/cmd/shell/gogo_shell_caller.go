@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	oi "github.com/reiver/go-oi"
 	telnet "github.com/reiver/go-telnet"
 )
@@ -39,8 +39,7 @@ func (caller internalGogoShellCaller) CallTELNET(ctx telnet.Context, w telnet.Wr
 			_, err = oi.LongWrite(writer, p)
 
 			if err != nil {
-				printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-				os.Exit(1)
+				logger.Fatal(err.Error())
 			}
 		}
 	}(stdout, r)

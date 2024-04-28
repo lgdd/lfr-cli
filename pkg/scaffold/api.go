@@ -2,7 +2,6 @@ package scaffold
 
 import (
 	"encoding/xml"
-	"fmt"
 	"io"
 	"io/fs"
 	"os"
@@ -12,7 +11,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // ModuleAPIData contains the data to be injected into the template files
@@ -32,8 +31,7 @@ func CreateModuleAPI(name string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	portletPackage := metadata.PackageName
@@ -55,22 +53,19 @@ func CreateModuleAPI(name string) {
 	err = fileutil.CreateDirsFromAssets("tpl/api", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = fileutil.CreateFilesFromAssets("tpl/api", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = os.Rename(filepath.Join(destPortletPath, "gitignore"), filepath.Join(destPortletPath, ".gitignore"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	if !strings.HasSuffix(packagePath, "api") {
@@ -88,8 +83,7 @@ func CreateModuleAPI(name string) {
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	}
 
@@ -98,15 +92,13 @@ func CreateModuleAPI(name string) {
 		err = os.Remove(buildGradlePath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomParentPath := filepath.Join(destPortletPath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 		defer pomParent.Close()
 
@@ -116,8 +108,7 @@ func CreateModuleAPI(name string) {
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		modules := append(pom.Modules.Module, name)
@@ -130,19 +121,17 @@ func CreateModuleAPI(name string) {
 		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
-		printutil.Warning("update ")
-		fmt.Printf("%s\n", pomParentPath)
+		logger.PrintWarn("modified ")
+		logger.Printf("%s\n", pomParentPath)
 	}
 
 	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	data := &ModuleAPIData{
@@ -158,8 +147,7 @@ func CreateModuleAPI(name string) {
 	err = updateModuleAPIWithData(destPortletPath, data)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	_ = filepath.Walk(destPortletPath,
@@ -168,8 +156,8 @@ func CreateModuleAPI(name string) {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
-				fmt.Printf("%s\n", path)
+				logger.PrintSuccess("created ")
+				logger.Printf("%s\n", path)
 			}
 			return nil
 		})
@@ -181,8 +169,7 @@ func updateModuleAPIJavaFiles(camelCaseName, modulePath, packagePath string) {
 	err := os.Rename(filepath.Join(defaultSrcPath, "Api.java"), filepath.Join(packagePath, camelCaseName+".java"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 

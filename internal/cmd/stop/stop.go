@@ -6,7 +6,8 @@ import (
 	"runtime"
 
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 	"github.com/spf13/cobra"
 )
@@ -23,21 +24,19 @@ var (
 
 func run(cmd *cobra.Command, args []string) {
 	if runtime.GOOS == "windows" {
-		printutil.Info("not available for Windows since the Tomcat process run in another command window")
+		logger.PrintInfo("not available for Windows since the Tomcat process run in another command window")
 		os.Exit(0)
 	}
 	shutdownScript, err := fileutil.GetTomcatScriptPath("shutdown")
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	_, err = procutil.GetCatalinaPid()
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	shutdownCmd := exec.Command(shutdownScript)
@@ -46,8 +45,7 @@ func run(cmd *cobra.Command, args []string) {
 	err = shutdownCmd.Run()
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 }

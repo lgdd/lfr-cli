@@ -1,11 +1,9 @@
 package update
 
 import (
-	"log"
-	"os"
-
 	"github.com/blang/semver"
 	"github.com/lgdd/lfr-cli/internal/cmd/version"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/rhysd/go-github-selfupdate/selfupdate"
 	"github.com/spf13/cobra"
 )
@@ -23,13 +21,12 @@ func doSelfUpdate(cmd *cobra.Command, args []string) {
 	v := semver.MustParse(version.Number)
 	latest, err := selfupdate.UpdateSelf(v, "lgdd/liferay-cli")
 	if err != nil {
-		log.Println("Binary update failed:", err)
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 	if latest.Version.Equals(v) {
-		log.Printf("Current binary (%v) is the latest version (%v)\n", version.Number, latest.Version)
+		logger.Printf("Current binary (%v) is the latest version (%v)\n", version.Number, latest.Version)
 	} else {
-		log.Println("Successfully updated to version", latest.Version)
-		log.Println("Release note:\n", latest.ReleaseNotes)
+		logger.PrintfSuccess("Successfully updated to version %s", latest.Version)
+		logger.Printf("Release note:\n%s", latest.ReleaseNotes)
 	}
 }

@@ -13,7 +13,7 @@ import (
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/helper"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // DockerData contains the data to be injected into the template files
@@ -72,23 +72,23 @@ func CreateDockerFiles(liferayWorkspace string, multistage bool, java int) error
 			if err != nil {
 				return err
 			}
-			printutil.Success("created ")
+			logger.PrintSuccess("created ")
 			fmt.Printf("%s\n", path)
 			return nil
 		})
 
-	printutil.Success("created ")
+	logger.PrintSuccess("created ")
 	fmt.Println("Dockerfile")
-	printutil.Success("created ")
+	logger.PrintSuccess("created ")
 	fmt.Println("docker-compose.yml")
 
 	fmt.Print("\nTo get started:\n\n")
 	fmt.Println("Deploy your modules with:")
-	printutil.Info("lfr deploy\n\n")
+	logger.PrintInfo("lfr deploy\n\n")
 	fmt.Println("Start your docker containers with:")
-	printutil.Info("docker-compose up -d\n\n")
+	logger.PrintInfo("docker-compose up -d\n\n")
 	fmt.Println("And follow the logs with:")
-	printutil.Info("docker-compose logs -f\n\n")
+	logger.PrintInfo("docker-compose logs -f\n\n")
 
 	return nil
 }

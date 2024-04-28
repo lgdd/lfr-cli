@@ -11,7 +11,8 @@ import (
 	"github.com/ettle/strcase"
 	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/manifoldco/promptui"
 	cp "github.com/otiai10/copy"
 	progressbar "github.com/schollz/progressbar/v3"
@@ -27,7 +28,7 @@ func CreateClientExtension(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		panic(err)
+		logger.Fatal(err.Error())
 	}
 
 	if err := FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
@@ -46,8 +47,7 @@ func CreateClientExtension(cmd *cobra.Command, args []string) {
 	_, template, err := promptTemplate.Run()
 
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	template = filepath.Join(clientExtensionSamplesPath, ClientExtensionSamplePrefix+template)
@@ -69,8 +69,7 @@ func CreateClientExtension(cmd *cobra.Command, args []string) {
 		name, err = promptName.Run()
 
 		if err != nil {
-			fmt.Printf("Prompt failed %v\n", err)
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	}
 
@@ -80,7 +79,7 @@ func CreateClientExtension(cmd *cobra.Command, args []string) {
 	fileutil.CreateDirs(clientExtensionDir)
 
 	if err := cp.Copy(template, clientExtensionDir); err != nil {
-		panic(err)
+		logger.Fatal(err.Error())
 	}
 
 	_ = filepath.Walk(clientExtensionDir,
@@ -89,14 +88,14 @@ func CreateClientExtension(cmd *cobra.Command, args []string) {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
-				fmt.Printf("%s\n", path)
+				logger.PrintSuccess("created ")
+				logger.Printf("%s\n", path)
 			}
 			return nil
 		})
 
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
-		printutil.Warning("\nClient Extensions are not supported with Maven")
+		logger.PrintWarn("\nClient Extensions are not supported with Maven")
 	}
 }
 
@@ -104,7 +103,7 @@ func getTemplateNames(clientExtensionSamplesPath string) []string {
 	sampleDirs, err := os.ReadDir(clientExtensionSamplesPath)
 
 	if err != nil {
-		panic(err)
+		logger.Fatal(err.Error())
 	}
 
 	var samples []string
@@ -163,28 +162,25 @@ func FetchClientExtensionSamples(destination string) error {
 
 func HandleClientExtensionsOffline(configPath string) {
 	if _, err := os.Stat(filepath.Join(configPath, ClientExtensionSampleProjectName)); err != nil {
-		printutil.Warning("Couldn't fetch client extensions samples from GitHub.\n")
+		logger.PrintWarn("Couldn't fetch client extensions samples from GitHub.\n")
 		fmt.Println("Copying embedded versions from the CLI instead.")
 		err = fileutil.CreateDirsFromAssets("tpl/client_extension", configPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		err = fileutil.CreateFilesFromAssets("tpl/client_extension", configPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		oldGitDirectory := filepath.Join(configPath, ClientExtensionSampleProjectName, "git")
 		newGitDirectory := filepath.Join(configPath, ClientExtensionSampleProjectName, ".git")
 		if err := os.Rename(oldGitDirectory, newGitDirectory); err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	} else {
-		printutil.Warning("Couldn't update client extensions samples from GitHub.\n")
-		fmt.Println("Using latest versions fetched.")
+		logger.PrintWarn("Couldn't update client extensions samples from GitHub.\n")
+		logger.Print("Using latest versions fetched.")
 	}
 }

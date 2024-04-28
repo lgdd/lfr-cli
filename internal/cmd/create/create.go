@@ -2,14 +2,14 @@ package create
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"strings"
 
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
+
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -53,8 +53,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 	_, template, err := promptTemplate.Run()
 
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	if template == "docker" {
@@ -65,8 +64,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 		_, javaVersion, err := promptJavaVersion.Run()
 
 		if err != nil {
-			fmt.Printf("Prompt failed %v\n", err)
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		promptBuildOption := promptui.Select{
@@ -77,8 +75,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 		_, buildOption, err := promptBuildOption.Run()
 
 		if err != nil {
-			fmt.Printf("Prompt failed %v\n", err)
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		if buildOption == "Multi-stage" {
@@ -90,8 +87,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 		err = cmd.Execute()
 
 		if err != nil {
-			printutil.Danger(err.Error())
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		return
@@ -110,8 +106,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 	name, err := promptName.Run()
 
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	workspacePackage, _ := metadata.GetGroupId()
@@ -135,8 +130,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 	packageName, err := promptPackageName.Run()
 
 	if err != nil {
-		fmt.Printf("Prompt failed %v\n", err)
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	if template == "spring-mvc-portlet" {
@@ -148,16 +142,14 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 		_, templateEngine, err := promptTemplateEngine.Run()
 
 		if err != nil {
-			fmt.Printf("Prompt failed %v\n", err)
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		os.Args = append(os.Args, template, name, "-p", packageName, "-t", templateEngine)
 		err = cmd.Execute()
 
 		if err != nil {
-			printutil.Danger(err.Error())
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		return
@@ -167,8 +159,7 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 	err = cmd.Execute()
 
 	if err != nil {
-		printutil.Danger(err.Error())
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 }

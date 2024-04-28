@@ -12,7 +12,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // PortletData contains the data to be injected into the template files
@@ -34,8 +34,7 @@ func CreateModuleMVC(name string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	portletPackage := metadata.PackageName
@@ -57,22 +56,19 @@ func CreateModuleMVC(name string) {
 	err = fileutil.CreateDirsFromAssets("tpl/mvc_portlet", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = fileutil.CreateFilesFromAssets("tpl/mvc_portlet", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = os.Rename(filepath.Join(destPortletPath, "gitignore"), filepath.Join(destPortletPath, ".gitignore"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	fileutil.CreateDirs(packagePath)
@@ -84,8 +80,7 @@ func CreateModuleMVC(name string) {
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	}
 
@@ -94,15 +89,13 @@ func CreateModuleMVC(name string) {
 		err = os.Remove(buildGradlePath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomParentPath := filepath.Join(destPortletPath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 		defer pomParent.Close()
 
@@ -112,8 +105,7 @@ func CreateModuleMVC(name string) {
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		modules := append(pom.Modules.Module, name)
@@ -126,11 +118,10 @@ func CreateModuleMVC(name string) {
 		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
-		printutil.Warning("updated ")
+		logger.PrintWarn("updated ")
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
@@ -141,8 +132,7 @@ func CreateModuleMVC(name string) {
 	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	portletData := &PortletData{
@@ -160,8 +150,7 @@ func CreateModuleMVC(name string) {
 	err = updateModuleMVCWithData(destPortletPath, portletData)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	_ = filepath.Walk(destPortletPath,
@@ -170,7 +159,7 @@ func CreateModuleMVC(name string) {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
+				logger.PrintSuccess("created ")
 				fmt.Printf("%s\n", path)
 			}
 			return nil
@@ -182,8 +171,7 @@ func updateModuleMVCJavaFiles(camelCaseName, modulePath, packagePath string) {
 	err := os.Rename(filepath.Join(defaultSrcPath, "Portlet.java"), filepath.Join(packagePath, camelCaseName+".java"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	fileutil.CreateDirs(filepath.Join(packagePath, "constants"))
@@ -191,8 +179,7 @@ func updateModuleMVCJavaFiles(camelCaseName, modulePath, packagePath string) {
 	err = os.Rename(filepath.Join(defaultSrcPath, "PortletKeys.java"), filepath.Join(packagePath, "constants", camelCaseName+"Keys.java"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 }

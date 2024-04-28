@@ -1,12 +1,11 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/spf13/viper"
 )
 
@@ -44,8 +43,7 @@ func Init() {
 	viper.SafeWriteConfig()
 
 	if err := viper.ReadInConfig(); err != nil {
-		printutil.Danger(fmt.Sprintf("Reading config failed: %s", err))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
 
@@ -53,8 +51,7 @@ func GetConfigPath() string {
 	homeDir, err := os.UserHomeDir()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("Getting home dir failed: %s", err))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	return filepath.Join(homeDir, ".lfr")

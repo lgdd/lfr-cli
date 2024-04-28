@@ -13,7 +13,7 @@ import (
 
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/printutil"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // SpringPortletData contains the data to be injected into the template files
@@ -36,17 +36,14 @@ type SpringPortletData struct {
 func CreateModuleSpring(name, templateEngine string) {
 
 	if templateEngine != "thymeleaf" && templateEngine != "jsp" {
-		printutil.Danger("invalid template engine\n")
-		fmt.Println("Please use thymeleaf or jsp")
-		os.Exit(1)
+		logger.Fatal("invalid template engine: use thymeleaf or jsp")
 	}
 
 	sep := string(os.PathSeparator)
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	portletPackage := metadata.PackageName
@@ -68,22 +65,19 @@ func CreateModuleSpring(name, templateEngine string) {
 	err = fileutil.CreateDirsFromAssets("tpl/spring", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = fileutil.CreateFilesFromAssets("tpl/spring", destPortletPath)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = os.Rename(filepath.Join(destPortletPath, "gitignore"), filepath.Join(destPortletPath, ".gitignore"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	fileutil.CreateDirs(packagePath)
@@ -93,8 +87,7 @@ func CreateModuleSpring(name, templateEngine string) {
 		err = os.Remove(pomPath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 	}
 
@@ -103,15 +96,13 @@ func CreateModuleSpring(name, templateEngine string) {
 		err = os.Remove(buildGradlePath)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		pomParentPath := filepath.Join(destPortletPath, "../pom.xml")
 		pomParent, err := os.Open(pomParentPath)
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 		defer pomParent.Close()
 
@@ -121,8 +112,7 @@ func CreateModuleSpring(name, templateEngine string) {
 		err = xml.Unmarshal(byteValue, &pom)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
 		modules := append(pom.Modules.Module, name)
@@ -135,26 +125,23 @@ func CreateModuleSpring(name, templateEngine string) {
 		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
 
 		if err != nil {
-			printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-			os.Exit(1)
+			logger.Fatal(err.Error())
 		}
 
-		printutil.Warning("update ")
+		logger.PrintWarn("modified ")
 		fmt.Printf("%s\n", pomParentPath)
 	}
 
 	version, err := fileutil.GetLiferayWorkspaceProductVersion(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	portletIDKey := strcase.ToScreamingDelimited(name, '_', "", true)
@@ -181,8 +168,7 @@ func CreateModuleSpring(name, templateEngine string) {
 	err = updateMvcPortletWithData(destPortletPath, portletData)
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	_ = filepath.Walk(destPortletPath,
@@ -191,7 +177,7 @@ func CreateModuleSpring(name, templateEngine string) {
 				return err
 			}
 			if !info.IsDir() {
-				printutil.Success("created ")
+				logger.PrintSuccess("created ")
 				fmt.Printf("%s\n", path)
 			}
 			return nil
@@ -206,8 +192,7 @@ func updateFiles(portletData *SpringPortletData, modulePath, packagePath string)
 	err := os.Rename(filepath.Join(defaultSrcPath, "UserController.java"), filepath.Join(packagePath, "controller", "UserController.java"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	fileutil.CreateDirs(filepath.Join(packagePath, "dto"))
@@ -215,8 +200,7 @@ func updateFiles(portletData *SpringPortletData, modulePath, packagePath string)
 	err = os.Rename(filepath.Join(defaultSrcPath, "User.java"), filepath.Join(packagePath, "dto", "User.java"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	springPortletContextPath := filepath.Join(modulePath, "src", "main", "webapp", "WEB-INF", "spring-context", "portlet")
@@ -224,8 +208,7 @@ func updateFiles(portletData *SpringPortletData, modulePath, packagePath string)
 	err = os.Rename(filepath.Join(springPortletContextPath, "Spring.xml"), filepath.Join(springPortletContextPath, portletData.CamelCaseName+".xml"))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	viewsPath := filepath.Join(modulePath, "src", "main", "webapp", "WEB-INF", "views")
@@ -238,15 +221,13 @@ func updateFiles(portletData *SpringPortletData, modulePath, packagePath string)
 	err = os.Rename(filepath.Join(viewsPath, "user.tpl"), filepath.Join(viewsPath, "user"+viewsExt))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 	err = os.Rename(filepath.Join(viewsPath, "greeting.tpl"), filepath.Join(viewsPath, "greeting"+viewsExt))
 
 	if err != nil {
-		printutil.Danger(fmt.Sprintf("%s\n", err.Error()))
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 
 }

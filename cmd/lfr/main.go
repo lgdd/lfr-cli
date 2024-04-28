@@ -5,13 +5,14 @@ import (
 	"os"
 
 	"github.com/lgdd/lfr-cli/internal/cmd"
+	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 func main() {
 	if err := cmd.Execute(); err != nil {
 		if _, err := fmt.Fprintln(os.Stderr, err); err != nil {
-			panic(err)
+			logger.Fatal(err.Error())
 		}
-		os.Exit(1)
+		logger.Fatal(err.Error())
 	}
 }
