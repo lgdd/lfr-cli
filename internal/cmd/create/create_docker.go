@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -23,8 +25,11 @@ var (
 )
 
 func init() {
-	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", false, "use multi-stage build")
-	createDocker.Flags().IntVarP(&Java, "java", "j", 11, "Java version (8 or 11)")
+	config.Init()
+	defaultMultistage := viper.GetBool(config.DockerMultistage)
+	defaultJDK := viper.GetInt(config.DockerJDK)
+	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", defaultMultistage, "use multi-stage build")
+	createDocker.Flags().IntVarP(&Java, "java", "j", defaultJDK, "Java version (8 or 11)")
 }
 func generateDocker(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()

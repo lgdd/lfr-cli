@@ -5,11 +5,13 @@ import (
 	"os"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
+	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -30,10 +32,17 @@ var (
 )
 
 func init() {
-	createWorkspace.Flags().StringVarP(&Version, "version", "v", "7.4", "Liferay major version (7.x)")
-	createWorkspace.Flags().StringVarP(&Build, "build", "b", "gradle", "build tool (gradle or maven)")
-	createWorkspace.Flags().StringVarP(&Edition, "edition", "e", "portal", "Liferay edition (dxp or portal)")
-	createWorkspace.Flags().BoolVarP(&Init, "init", "i", false, "executes Liferay bundle initialization (i.e. download & unzip in the workspace)")
+	config.Init()
+
+	defaultVersion := viper.GetString(config.WorkspaceVersion)
+	defaultBuild := viper.GetString(config.WorkspaceBuild)
+	defaultEdition := viper.GetString(config.WorkspaceEdition)
+	defaultInit := viper.GetBool(config.WorkspaceInit)
+
+	createWorkspace.Flags().StringVarP(&Version, "version", "v", defaultVersion, "Liferay major version (7.x)")
+	createWorkspace.Flags().StringVarP(&Build, "build", "b", defaultBuild, "build tool (gradle or maven)")
+	createWorkspace.Flags().StringVarP(&Edition, "edition", "e", defaultEdition, "Liferay edition (dxp or portal)")
+	createWorkspace.Flags().BoolVarP(&Init, "init", "i", defaultInit, "executes Liferay bundle initialization (i.e. download & unzip in the workspace)")
 }
 
 func generateWorkspace(cmd *cobra.Command, args []string) {

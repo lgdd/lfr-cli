@@ -7,10 +7,12 @@ import (
 	"strings"
 
 	"github.com/iancoleman/strcase"
+	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
 	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -37,7 +39,9 @@ func init() {
 	Cmd.AddCommand(createServiceBuilder)
 	Cmd.AddCommand(createRESTBuilder)
 	Cmd.AddCommand(createDocker)
-	Cmd.PersistentFlags().StringVarP(&metadata.PackageName, "package", "p", "org.acme", "base package name")
+	config.Init()
+	defaultPackage := viper.GetString(config.ModulePackage)
+	Cmd.PersistentFlags().StringVarP(&metadata.PackageName, "package", "p", defaultPackage, "base package name")
 }
 
 func promptCreateChoices(cmd *cobra.Command, args []string) {

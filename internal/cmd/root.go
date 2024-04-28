@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/build"
 	"github.com/lgdd/lfr-cli/internal/cmd/completion"
@@ -27,8 +28,6 @@ var root = &cobra.Command{
 }
 
 func init() {
-	cobra.OnInitialize(config.Init)
-
 	root.AddCommand(completion.Cmd)
 	root.AddCommand(create.Cmd)
 	root.AddCommand(exec.Cmd)
@@ -43,7 +42,10 @@ func init() {
 	root.AddCommand(version.Cmd)
 	root.AddCommand(update.Cmd)
 	root.AddCommand(diagnose.Cmd)
-	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", false, "disable colors for output messages")
+
+	config.Init()
+	defaultNoColor := viper.GetBool(config.OutputNoColor)
+	root.PersistentFlags().BoolVar(&printutil.NoColor, "no-color", defaultNoColor, "disable colors for output messages")
 }
 
 // Run the the main command
