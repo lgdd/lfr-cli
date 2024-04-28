@@ -2,20 +2,18 @@ package scaffold
 
 import (
 	"errors"
-	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
 	"github.com/ettle/strcase"
 	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
+	"github.com/lgdd/lfr-cli/pkg/util/helper"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 
 	"github.com/manifoldco/promptui"
 	cp "github.com/otiai10/copy"
-	progressbar "github.com/schollz/progressbar/v3"
 	"github.com/spf13/cobra"
 )
 
@@ -31,8 +29,8 @@ func CreateClientExtension(cmd *cobra.Command, args []string) {
 		logger.Fatal(err.Error())
 	}
 
-	if err := FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
-		HandleClientExtensionsOffline(config.GetConfigPath())
+	if err := helper.FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
+		helper.HandleClientExtensionsOffline(config.GetConfigPath())
 	}
 
 	clientExtensionSamplesPath := filepath.Join(config.GetConfigPath(), ClientExtensionSampleProjectName)
@@ -115,72 +113,4 @@ func getTemplateNames(clientExtensionSamplesPath string) []string {
 	}
 
 	return samples
-}
-
-func FetchClientExtensionSamples(destination string) error {
-	clientExtensionsSamplesPath := filepath.Join(destination, ClientExtensionSampleProjectName)
-
-	// Clone & checkout if ~/.lfr/liferay-portal does not exist
-	if _, err := os.Stat(filepath.Join(destination, ClientExtensionSampleProjectName)); err != nil {
-		bar := progressbar.NewOptions(-1,
-			progressbar.OptionSetDescription("Fetching samples"),
-			progressbar.OptionSpinnerType(11))
-
-		bar.Add(1)
-		var gitProject strings.Builder
-		gitProject.WriteString("https://github.com/lgdd/")
-		gitProject.WriteString(ClientExtensionSampleProjectName)
-
-		gitClone := exec.Command("git", "clone", "--depth", "1", gitProject.String())
-		gitClone.Dir = destination
-
-		if err := gitClone.Run(); err != nil {
-			bar.Clear()
-			return err
-		}
-		bar.Clear()
-	} else {
-		// Repo already exists, try to update
-		bar := progressbar.NewOptions(-1,
-			progressbar.OptionSetDescription("Updating samples"),
-			progressbar.OptionSpinnerType(11))
-
-		bar.Add(1)
-
-		gitPull := exec.Command("git", "pull")
-		gitPull.Dir = clientExtensionsSamplesPath
-
-		if err := gitPull.Run(); err != nil {
-			bar.Clear()
-			return err
-		}
-
-		bar.Clear()
-	}
-	return nil
-}
-
-func HandleClientExtensionsOffline(configPath string) {
-	if _, err := os.Stat(filepath.Join(configPath, ClientExtensionSampleProjectName)); err != nil {
-		logger.PrintWarn("Couldn't fetch client extensions samples from GitHub.\n")
-		fmt.Println("Copying embedded versions from the CLI instead.")
-		err = fileutil.CreateDirsFromAssets("tpl/client_extension", configPath)
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		err = fileutil.CreateFilesFromAssets("tpl/client_extension", configPath)
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		oldGitDirectory := filepath.Join(configPath, ClientExtensionSampleProjectName, "git")
-		newGitDirectory := filepath.Join(configPath, ClientExtensionSampleProjectName, ".git")
-		if err := os.Rename(oldGitDirectory, newGitDirectory); err != nil {
-			logger.Fatal(err.Error())
-		}
-	} else {
-		logger.PrintWarn("Couldn't update client extensions samples from GitHub.\n")
-		logger.Print("Using latest versions fetched.")
-	}
 }

@@ -9,8 +9,10 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config keys
 const (
+	ClientExtensionSamplePrefix      = "liferay-sample-"
+	ClientExtensionSampleProjectName = "liferay-client-extensions-samples"
+	// Config file keys
 	WorkspaceEdition = "workspace.edition"
 	WorkspaceVersion = "workspace.version"
 	WorkspaceBuild   = "workspace.build"

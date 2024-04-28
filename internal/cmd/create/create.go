@@ -1,16 +1,14 @@
 package create
 
 import (
-	"errors"
 	"os"
-	"strings"
 
-	"github.com/iancoleman/strcase"
+	"github.com/charmbracelet/huh"
 	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/prompt"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 
-	"github.com/manifoldco/promptui"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,7 +21,7 @@ var (
 		Short:   "Create a Liferay project",
 		Run: func(cmd *cobra.Command, args []string) {
 			if len(args) == 0 {
-				promptCreateChoices(cmd, args)
+				runPrompt(cmd)
 			}
 		},
 	}
@@ -44,115 +42,69 @@ func init() {
 	Cmd.PersistentFlags().StringVarP(&metadata.PackageName, "package", "p", defaultPackage, "base package name")
 }
 
-func promptCreateChoices(cmd *cobra.Command, args []string) {
-	promptTemplate := promptui.Select{
-		Label: "Choose a template",
-		Items: []string{"client-extension", "api", "command", "docker", "mvc-portlet", "rest-builder", "service-builder", "spring-mvc-portlet", "workspace"},
+func runPrompt(cmd *cobra.Command) {
+	var template, name string
+	packageName := viper.GetString(config.ModulePackage)
+
+	form := huh.NewForm(
+		huh.NewGroup(
+			huh.NewSelect[string]().
+				Title("Choose a template:").
+				Options(
+					huh.NewOption("Liferay Workspace", "workspace"),
+					huh.NewOption("Client Extension", "client-extension"),
+					huh.NewOption("Docker (Dockerfile & docker-compose.yml)", "docker"),
+					huh.NewOption("OSGi - API Module", "api"),
+					huh.NewOption("OSGi - Gogo Shell Command", "command"),
+					huh.NewOption("OSGi - MVC Portlet", "mvc-portlet"),
+					huh.NewOption("OSGi - Spring MVC Portlet", "spring-mvc-portlet"),
+					huh.NewOption("OSGi - REST Builder", "rest-builder"),
+					huh.NewOption("OSGi - Service Builder", "service-builder"),
+				).
+				Value(&template),
+		),
+	)
+
+	if config.NoColor {
+		form.WithTheme(huh.ThemeBase())
 	}
 
-	_, template, err := promptTemplate.Run()
+	err := form.Run()
 
 	if err != nil {
 		logger.Fatal(err.Error())
+	}
+
+	if template == "workspace" {
+		prompt.ForWorkspace(cmd, &name)
+		return
 	}
 
 	if template == "docker" {
-		promptJavaVersion := promptui.Select{
-			Label: "Choose a Java version",
-			Items: []string{"8", "11"},
-		}
-		_, javaVersion, err := promptJavaVersion.Run()
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		promptBuildOption := promptui.Select{
-			Label: "Choose a build option",
-			Items: []string{"Multi-stage", "Single stage"},
-		}
-
-		_, buildOption, err := promptBuildOption.Run()
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		if buildOption == "Multi-stage" {
-			os.Args = append(os.Args, template, "-j", javaVersion, "-m")
-		} else {
-			os.Args = append(os.Args, template, "-j", javaVersion)
-		}
-
-		err = cmd.Execute()
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
+		prompt.ForDocker(cmd)
 		return
-	}
-
-	promptName := promptui.Prompt{
-		Label: "Choose a name",
-		Validate: func(input string) error {
-			if len(input) == 0 {
-				return errors.New("the name cannot be empty")
-			}
-			return nil
-		},
-	}
-
-	name, err := promptName.Run()
-
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
-
-	workspacePackage, _ := metadata.GetGroupId()
-	defaultPackageName := strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
-
-	if template == "workspace" {
-		defaultPackageName = "org.acme"
-	}
-
-	promptPackageName := promptui.Prompt{
-		Label:   "Choose a package name",
-		Default: defaultPackageName,
-		Validate: func(input string) error {
-			if len(input) == 0 {
-				return errors.New("the name cannot be empty")
-			}
-			return nil
-		},
-	}
-
-	packageName, err := promptPackageName.Run()
-
-	if err != nil {
-		logger.Fatal(err.Error())
 	}
 
 	if template == "spring-mvc-portlet" {
-		promptTemplateEngine := promptui.Select{
-			Label: "Choose a template engine",
-			Items: []string{"thymeleaf", "jsp"},
-		}
-
-		_, templateEngine, err := promptTemplateEngine.Run()
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		os.Args = append(os.Args, template, name, "-p", packageName, "-t", templateEngine)
-		err = cmd.Execute()
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
+		prompt.ForSpring(cmd, &packageName, &name)
 		return
+	}
+
+	form = huh.NewForm(
+		huh.NewGroup(
+			prompt.NewInputPackageName(&packageName),
+			prompt.NewInputName(&name),
+		),
+	)
+
+	if config.NoColor {
+		form.WithTheme(huh.ThemeBase())
+	}
+
+	err = form.Run()
+
+	if err != nil {
+		logger.Fatal(err.Error())
 	}
 
 	os.Args = append(os.Args, template, name, "-p", packageName)
@@ -161,5 +113,4 @@ func promptCreateChoices(cmd *cobra.Command, args []string) {
 	if err != nil {
 		logger.Fatal(err.Error())
 	}
-
 }
