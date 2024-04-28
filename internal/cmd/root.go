@@ -19,7 +19,6 @@ import (
 	"github.com/lgdd/lfr-cli/internal/cmd/update"
 	"github.com/lgdd/lfr-cli/internal/cmd/version"
 	"github.com/lgdd/lfr-cli/internal/config"
-	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 var root = &cobra.Command{
@@ -45,7 +44,7 @@ func init() {
 
 	config.Init()
 	defaultNoColor := viper.GetBool(config.OutputNoColor)
-	root.PersistentFlags().BoolVar(&logger.NoColor, "no-color", defaultNoColor, "disable colors for output messages")
+	root.PersistentFlags().BoolVar(&config.NoColor, "no-color", defaultNoColor, "disable colors for output messages")
 }
 
 // Run the the main command

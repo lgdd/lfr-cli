@@ -1,11 +1,11 @@
 package config
 
 import (
+	"log"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/spf13/viper"
 )
 
@@ -21,6 +21,9 @@ const (
 	DockerJDK        = "docker.jdk"
 	OutputNoColor    = "output.no_color"
 )
+
+// NoColor allows to disable colors for printed messages, default is false
+var NoColor bool
 
 func Init() {
 	configFile := "config.toml"
@@ -43,7 +46,7 @@ func Init() {
 	viper.SafeWriteConfig()
 
 	if err := viper.ReadInConfig(); err != nil {
-		logger.Fatal(err.Error())
+		log.Fatal(err.Error())
 	}
 }
 
@@ -51,7 +54,7 @@ func GetConfigPath() string {
 	homeDir, err := os.UserHomeDir()
 
 	if err != nil {
-		logger.Fatal(err.Error())
+		log.Fatal(err.Error())
 	}
 
 	return filepath.Join(homeDir, ".lfr")
