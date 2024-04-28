@@ -63,7 +63,7 @@ func runPrompt(cmd *cobra.Command) {
 				).
 				Value(&template),
 		),
-	)
+	).WithAccessible(viper.GetBool(config.OutputAccessible))
 
 	if config.NoColor {
 		form.WithTheme(huh.ThemeBase())
@@ -100,7 +100,7 @@ func runPrompt(cmd *cobra.Command) {
 			prompt.NewInputPackageName(&packageName),
 			prompt.NewInputName(&name),
 		),
-	)
+	).WithAccessible(viper.GetBool(config.OutputAccessible))
 
 	if config.NoColor {
 		form.WithTheme(huh.ThemeBase())

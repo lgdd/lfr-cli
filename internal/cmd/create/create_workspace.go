@@ -33,7 +33,6 @@ var (
 
 func init() {
 	config.Init()
-
 	defaultVersion := viper.GetString(config.WorkspaceVersion)
 	defaultBuild := viper.GetString(config.WorkspaceBuild)
 	defaultEdition := viper.GetString(config.WorkspaceEdition)

@@ -22,6 +22,7 @@ const (
 	DockerMultistage = "docker.multistage"
 	DockerJDK        = "docker.jdk"
 	OutputNoColor    = "output.no_color"
+	OutputAccessible = "output.accessible"
 )
 
 // NoColor allows to disable colors for printed messages, default is false
@@ -72,4 +73,5 @@ func setDefaults() {
 	viper.SetDefault(DockerMultistage, false)
 	viper.SetDefault(DockerJDK, 11)
 	viper.SetDefault(OutputNoColor, false)
+	viper.SetDefault(OutputAccessible, false)
 }
