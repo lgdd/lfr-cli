@@ -14,13 +14,14 @@ import (
 	"strings"
 	"sync"
 	"text/template"
-	"time"
 
+	"github.com/charmbracelet/huh/spinner"
 	"github.com/magiconair/properties"
 	"github.com/nxadm/tail"
-	progressbar "github.com/schollz/progressbar/v3"
+	"github.com/spf13/viper"
 
 	"github.com/lgdd/lfr-cli/internal/assets"
+	"github.com/lgdd/lfr-cli/internal/config"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
@@ -295,35 +296,27 @@ func FindFileParentInDir(dirPath string, fileName string) (string, error) {
 func FindFileInDir(dirPath string, fileName string) (string, error) {
 	targetFilePath := ""
 
-	bar := progressbar.NewOptions(-1,
-		progressbar.OptionSetDescription(fmt.Sprintf("Scanning files under %s", dirPath)),
-		progressbar.OptionSpinnerType(11),
-		progressbar.OptionThrottle(65*time.Millisecond))
-
-	err := filepath.Walk(dirPath,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			err = bar.Add(1)
-			if err != nil {
-				logger.Fatal(err.Error())
-			}
-			if info.Name() == fileName {
-				targetFilePath = path
-			}
-			return nil
-		})
-
-	if err != nil {
-		return targetFilePath, err
+	scan := func() {
+		filepath.Walk(dirPath,
+			func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				if err != nil {
+					logger.Fatal(err.Error())
+				}
+				if info.Name() == fileName {
+					targetFilePath = path
+				}
+				return nil
+			})
 	}
 
-	err = bar.Clear()
-
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
+	_ = spinner.New().
+		Title(fmt.Sprintf("Scanning files under %s", dirPath)).
+		Action(scan).
+		Accessible(viper.GetBool(config.OutputAccessible)).
+		Run()
 
 	if targetFilePath == "" {
 		return targetFilePath, fmt.Errorf("%s not found in directories under %s", fileName, dirPath)
