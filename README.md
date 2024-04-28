@@ -14,30 +14,38 @@
 
 **Table of contents**:
 
-- [Motivation](#motivation)
-- [Installation](#installation)
-- [Usage](#usage)
-  - [diagnose](#diagnose)
-  - [create](#create)
-    - [workspace](#workspace)
-    - [client-extension](#client-extension)
-    - [api](#api)
-    - [service-builder](#service-builder)
-    - [rest-builder](#rest-builder)
-    - [mvc-portlet](#mvc-portlet)
-    - [spring-mvc-portlet](#spring-mvc-portlet)
-    - [docker](#docker)
-  - [exec](#exec)
-  - [build](#build)
-  - [deploy](#deploy)
-  - [init](#init)
-  - [start](#start)
-  - [stop](#stop)
-  - [status](#status)
-  - [logs](#logs)
-  - [shell](#shell)
-- [Benchmarks](#benchmarks)
-- [License](#license)
+- [LFR](#lfr)
+  - [Motivation](#motivation)
+  - [Installation](#installation)
+    - [Completions](#completions)
+      - [Bash:](#bash)
+      - [Zsh:](#zsh)
+      - [fish:](#fish)
+      - [PowerShell:](#powershell)
+  - [Usage](#usage)
+    - [diagnose](#diagnose)
+    - [create](#create)
+      - [workspace](#workspace)
+      - [client-extension](#client-extension)
+      - [api](#api)
+      - [service-builder](#service-builder)
+      - [rest-builder](#rest-builder)
+      - [mvc-portlet](#mvc-portlet)
+      - [spring-mvc-portlet](#spring-mvc-portlet)
+      - [docker](#docker)
+      - [exec](#exec)
+      - [build](#build)
+      - [deploy](#deploy)
+      - [init](#init)
+      - [start](#start)
+      - [stop](#stop)
+      - [logs](#logs)
+      - [shell](#shell)
+  - [Benchmarks](#benchmarks)
+    - [Create Workspace (Gradle)](#create-workspace-gradle)
+    - [Create MVC Portlet](#create-mvc-portlet)
+    - [Create Service Builder](#create-service-builder)
+  - [License](#license)
 
 ## Motivation
 
@@ -462,28 +470,33 @@ The keyword `exit` can be safely used with this shell as it will disconnect inst
 
 ## Benchmarks
 
-Using [Hyperfine](https://github.com/sharkdp/hyperfine).
+Using [Hyperfine](https://github.com/sharkdp/hyperfine) with 5 warmup runs and the following setup:
+- `blade version 6.0.0.202404102137`
+- `lfr version v3.0.0`
 
-### Create Workspace
+### Create Workspace (Gradle)
 
 | Command                               |      Mean [s] | Min [s] | Max [s] |     Relative |
 | :------------------------------------ | ------------: | ------: | ------: | -----------: |
-| `blade init -v 7.4 liferay-workspace` | 1.837 ± 0.300 |   1.665 |   2.668 | 19.94 ± 5.69 |
-| `lfr create ws liferay-workspace`     | 0.092 ± 0.022 |   0.076 |   0.178 |         1.00 |
+| `lfr c ws liferayws`                  | 179.5 ± 17.2  | 165.9   | 237.1   | 1.00         |
+| `blade init -v 7.4 liferayws`         | 719.6 ± 7.2   | 709.5   | 728.9   | 4.01 ± 0.39  |
+> Summary: `lfr c ws liferayws` ran 4.01 ± 0.39 times faster than `blade init -v 7.4 liferayws`
 
 ### Create MVC Portlet
 
 | Command                                      |      Mean [s] | Min [s] | Max [s] |       Relative |
 | :------------------------------------------- | ------------: | ------: | ------: | -------------: |
-| `blade create -t mvc-portlet my-mvc-portlet` | 1.608 ± 0.021 |   1.570 |   1.647 | 59.70 ± 112.37 |
-| `lfr create mvc my-mvc-portlet`              | 0.027 ± 0.051 |   0.015 |   0.345 |           1.00 |
+| `lfr c mvc my-mvc-portlet`                   | 23.0 ± 4.4    | 20.5    | 47.0    | 1.00           |
+| `blade create -t mvc-portlet my-mvc-portlet` | 710.3 ± 6.1   | 703.6   | 720.5   | 30.82 ± 5.94   |
+> Summary: `lfr c mvc my-mvc-portlet` ran 30.82 ± 5.94 times faster than `blade create -t mvc-portlet my-mvc-portlet`
 
 ### Create Service Builder
 
 | Command                                              |      Mean [s] | Min [s] | Max [s] |       Relative |
 | :--------------------------------------------------- | ------------: | ------: | ------: | -------------: |
-| `blade create -t service-builder my-service-builder` | 1.628 ± 0.057 |   1.573 |   1.772 | 82.00 ± 134.01 |
-| `lfr create sb my-service-builder`                   | 0.020 ± 0.032 |   0.014 |   0.332 |           1.00 |
+| `lfr create sb my-service-builder`                   | 19.8 ± 2.8    | 17.6    | 31.2    | 1.00           |
+| `blade create -t service-builder my-service-builder` | 723.8 ± 11.0  | 708.9   | 738.8   | 36.65 ± 5.17   |
+> Summary: `lfr create sb my-service-builder` ran 36.65 ± 5.17 times faster than `blade create -t service-builder my-service-builder`
 
 ## License
 
