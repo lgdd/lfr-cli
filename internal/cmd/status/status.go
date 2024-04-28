@@ -35,6 +35,6 @@ func run(cmd *cobra.Command, args []string) {
 		fmt.Printf(" (pid=%v)\n", pid)
 	} else {
 		fmt.Print("Liferay is ")
-		logger.PrintError("STOPPED\n")
+		logger.PrintlnError("STOPPED")
 	}
 }
