@@ -78,17 +78,17 @@ func CreateDockerFiles(liferayWorkspace string, multistage bool, java int) error
 		})
 
 	logger.PrintSuccess("created ")
-	fmt.Println("Dockerfile")
+	logger.Println("Dockerfile")
 	logger.PrintSuccess("created ")
-	fmt.Println("docker-compose.yml")
+	logger.Println("docker-compose.yml")
 
-	fmt.Print("\nTo get started:\n\n")
-	fmt.Println("Deploy your modules with:")
-	logger.PrintInfo("lfr deploy\n\n")
-	fmt.Println("Start your docker containers with:")
-	logger.PrintInfo("docker-compose up -d\n\n")
-	fmt.Println("And follow the logs with:")
-	logger.PrintInfo("docker-compose logs -f\n\n")
+	logger.Print("\nTo get started:\n\n")
+	logger.Println("Deploy your modules with:")
+	logger.PrintlnInfo("lfr deploy\n")
+	logger.Println("Start your docker containers with:")
+	logger.PrintlnInfo("docker-compose up -d\n")
+	logger.Println("And follow the logs with:")
+	logger.PrintlnInfo("docker-compose logs -f\n")
 
 	return nil
 }
