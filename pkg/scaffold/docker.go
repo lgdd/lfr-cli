@@ -7,13 +7,13 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strconv"
 
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/helper"
 	"github.com/lgdd/lfr-cli/pkg/util/printutil"
-	"github.com/magiconair/properties"
 )
 
 // DockerData contains the data to be injected into the template files
@@ -112,10 +112,14 @@ func getLiferayDockerImage(workspacePath string) (string, error) {
 	}
 
 	if fileutil.IsGradleWorkspace(workspacePath) {
+		dockerImageRegex := regexp.MustCompile(`(liferay\/)(portal|dxp):.+`)
 		gradlePropsPath := filepath.Join(workspacePath, "gradle.properties")
-		gradleProps := properties.MustLoadFile(gradlePropsPath, properties.UTF8)
-		dockerImage := gradleProps.GetString("liferay.workspace.docker.image.liferay", "liferay/portal:7.4.3.30-ga30")
-		return dockerImage, nil
+		gradlePropsBytes, err := os.ReadFile(gradlePropsPath)
+
+		if err != nil {
+			return "", err
+		}
+		return dockerImageRegex.FindString(string(gradlePropsBytes)), nil
 	}
 
 	return "", nil
