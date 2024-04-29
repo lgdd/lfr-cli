@@ -50,9 +50,10 @@ func generateClientExtension(cmd *cobra.Command, args []string) {
 		name = args[2]
 	}
 
-	scaffold.CreateClientExtension(sample, name)
-
-	logger.PrintlnInfo("\n💡Checkout this tool to help you with client extensions development: https://github.com/bnheise/ce-cli")
+	if len(args) > 0 {
+		scaffold.CreateClientExtension(sample, name)
+		logger.PrintlnInfo("\n💡Checkout this tool to help you with client extensions development: https://github.com/bnheise/ce-cli")
+	}
 }
 
 func validateSample(sampleName string) {
