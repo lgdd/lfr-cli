@@ -5,6 +5,9 @@ nav_order: 3
 ---
 
 # Configuration
+{: .d-inline-block }
+New (v3.0.0)
+{: .label .label-green .mb-5 }
 
 `lfr` creates a configuration directory under your home directory: `~/.lfr`. This directory contains a `config.toml` file that allows to configure defaults for some flags:
 
