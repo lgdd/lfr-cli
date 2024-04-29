@@ -1,10 +1,10 @@
 ---
 layout: default
-title: lfr create client-extension
+title: client-extension
 grand_parent: Commands
-parent: lfr create
+parent: create
 nav_order: 2
-permalink: /commands/create/client-extension
+permalink: /cmd/create/client-extension
 ---
 
 # lfr create client-extension
@@ -41,10 +41,8 @@ lfr c cx commerce-payment-integration my-payment-connector
 
 ## Flags:
 - `-h`, `--help`
-  - help for `lfr create`
+  - help for `lfr create client-extension`
 
 ## Global Flags:
 - `--no-color`
   - disable colors for output messages
-- `-p`, `--package string`
-  - base package name (default "org.acme")

@@ -20,6 +20,9 @@ brew install lfr-cli
 
 For Windows, go to the [release page](https://github.com/lgdd/lfr-cli/releases){:target="_blank"} and download the zip file corresponding to your architecture. Then extract `lfr.exe` from the archive and move to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
 
+{: .note }
+Support for [Scoop](https://scoop.sh/) and [Chocolately](https://chocolatey.org/) are on the [roadmap](https://github.com/lgdd/lfr-cli/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement).
+
 # Completions
 
 ```shell

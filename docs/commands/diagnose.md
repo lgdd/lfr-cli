@@ -1,9 +1,9 @@
 ---
 layout: default
-title: lfr diagnose
+title: diagnose
 parent: Commands
 nav_order: 1
-permalink: /commands/diagnose
+permalink: /cmd/diagnose
 ---
 
 # lfr diagnose
@@ -43,7 +43,7 @@ More information about compatibilities: https://www.liferay.com/compatibility-ma
 
 ## Flags:
 - `-h`, `--help`
-  - help for `lfr init`
+  - help for `lfr diagnose`
 
 ## Global Flags:
 - `--no-color`

@@ -1,9 +1,9 @@
 ---
 layout: default
-title: lfr build
+title: build
 parent: Commands
 nav_order: 3
-permalink: /commands/build
+permalink: /cmd/build
 ---
 
 # lfr build

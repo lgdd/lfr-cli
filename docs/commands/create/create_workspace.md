@@ -1,10 +1,10 @@
 ---
 layout: default
-title: lfr create workspace
+title: workspace
 grand_parent: Commands
-parent: lfr create
+parent: create
 nav_order: 1
-permalink: /commands/create/workspace
+permalink: /cmd/create/workspace
 ---
 
 # lfr create workspace
@@ -34,10 +34,10 @@ For DXP releases, the Liferay Workspace will find a custom bundle URL in the `gr
 
 ## Flags:
 - `-h`, `--help`
-  - help for `lfr create`
+  - help for `lfr create workspace`
 
 ## Global Flags:
 - `--no-color`
   - disable colors for output messages
-- `-p`, `--package string`
-  - base package name (default "org.acme")
+- `-p`, `--package`
+  - base package name (default `org.acme`)

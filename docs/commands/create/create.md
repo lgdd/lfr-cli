@@ -1,10 +1,10 @@
 ---
 layout: default
-title: lfr create
+title: create
 parent: Commands
 nav_order: 2
 has_children: true
-permalink: /commands/create
+permalink: /cmd/create
 ---
 
 # lfr create
@@ -39,8 +39,8 @@ accessible = true
 ## Flags:
 - `-h`, `--help`
   - help for `lfr create`
-- `-p`, `--package string`
-  - base package name (default "org.acme")
+- `-p`, `--package`
+  - base package name (default `org.acme`)
 
 ## Global Flags:
 - `--no-color`

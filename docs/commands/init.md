@@ -1,9 +1,9 @@
 ---
 layout: default
-title: lfr init
+title: init
 parent: Commands
 nav_order: 5
-permalink: /commands/init
+permalink: /cmd/init
 ---
 
 # lfr init

@@ -1,9 +1,9 @@
 ---
 layout: default
-title: lfr deploy
+title: deploy
 parent: Commands
 nav_order: 4
-permalink: /commands/deploy
+permalink: /cmd/deploy
 ---
 
 # lfr deploy
@@ -21,7 +21,7 @@ lfr d
 
 ## Flags:
 - `-h`, `--help`
-  - help for `lfr init`
+  - help for `lfr deploy`
 
 ## Global Flags:
 - `--no-color`

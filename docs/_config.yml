@@ -22,7 +22,7 @@ title: lfr-cli
 description: >- # this means to ignore newlines until "baseurl:"
   lfr is an unofficial CLI tool written in Go that helps you create & manage Liferay projects.
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
+url: "https://lgdd.github.io/lfr-cli" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: jekyllrb
 github_username:  jekyll
 
@@ -49,6 +49,7 @@ aux_links:
   "On GitHub":
     - "//github.com/lgdd/lfr-cli"
 aux_links_new_tab: true
+
 back_to_top: true
 back_to_top_text: "Back to top"
 
