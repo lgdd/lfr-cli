@@ -17,7 +17,7 @@ multistage = false
 follow = false
 
 [module]
-package = 'org.acme' # package name used for your workspace and as default base for your moduels
+package = 'org.acme' # package name used for your workspace and as default base for your modules
 
 [output]
 accessible = false # make command line prompts accessible
