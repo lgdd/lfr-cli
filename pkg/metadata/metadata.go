@@ -210,11 +210,18 @@ func fetchReleases(version, edition string) ([]Release, error) {
 func (release *Release) BuildGithubBundleURL() {
 	var githubBundleURLBuilder strings.Builder
 	githubBaseURL := "https://github.com/lgdd/liferay-dxp-releases/releases/download/"
+	githubReleaseName := release.ReleaseKey
+
+	if release.Product == "portal" {
+		githubBaseURL = "https://github.com/liferay/liferay-portal/releases/download/"
+		githubReleaseName = strings.Split(release.ReleaseProperties.LiferayDockerImage, ":")[1]
+	}
+
 	bundleURLSplit := strings.Split(release.ReleaseProperties.BundleURL, "/")
 	bundleName := bundleURLSplit[len(bundleURLSplit)-1]
 
 	githubBundleURLBuilder.WriteString(githubBaseURL)
-	githubBundleURLBuilder.WriteString(release.ReleaseKey)
+	githubBundleURLBuilder.WriteString(githubReleaseName)
 	githubBundleURLBuilder.WriteString("/")
 	githubBundleURLBuilder.WriteString(bundleName)
 
