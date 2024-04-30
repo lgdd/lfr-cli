@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/charmbracelet/huh"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/helper"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
@@ -39,9 +39,9 @@ func ForDocker(cmd *cobra.Command) {
 				).
 				Value(&dockerBuildOption),
 		),
-	).WithAccessible(viper.GetBool(config.OutputAccessible))
+	).WithAccessible(viper.GetBool(conf.OutputAccessible))
 
-	if config.NoColor {
+	if conf.NoColor {
 		form.WithTheme(huh.ThemeBase())
 	}
 
@@ -78,9 +78,9 @@ func ForSpring(cmd *cobra.Command, packageName, name *string) {
 			NewInputPackageName(packageName),
 			NewInputName(name),
 		),
-	).WithAccessible(viper.GetBool(config.OutputAccessible))
+	).WithAccessible(viper.GetBool(conf.OutputAccessible))
 
-	if config.NoColor {
+	if conf.NoColor {
 		form.WithTheme(huh.ThemeBase())
 	}
 
@@ -114,9 +114,9 @@ func ForName(name *string) {
 		huh.NewGroup(
 			NewInputName(name),
 		),
-	).WithAccessible(viper.GetBool(config.OutputAccessible))
+	).WithAccessible(viper.GetBool(conf.OutputAccessible))
 
-	if config.NoColor {
+	if conf.NoColor {
 		form.WithTheme(huh.ThemeBase())
 	}
 
@@ -138,9 +138,9 @@ func ForClientExtension(cmd *cobra.Command, sample, name *string) {
 				Value(sample),
 			NewInputName(name),
 		),
-	).WithAccessible(viper.GetBool(config.OutputAccessible))
+	).WithAccessible(viper.GetBool(conf.OutputAccessible))
 
-	if config.NoColor {
+	if conf.NoColor {
 		form.WithTheme(huh.ThemeBase())
 	}
 

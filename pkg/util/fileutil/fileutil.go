@@ -21,7 +21,7 @@ import (
 	"github.com/spf13/viper"
 
 	"github.com/lgdd/lfr-cli/internal/assets"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
@@ -315,7 +315,7 @@ func FindFileInDir(dirPath string, fileName string) (string, error) {
 	_ = spinner.New().
 		Title(fmt.Sprintf("Scanning files under %s", dirPath)).
 		Action(scan).
-		Accessible(viper.GetBool(config.OutputAccessible)).
+		Accessible(viper.GetBool(conf.OutputAccessible)).
 		Run()
 
 	if targetFilePath == "" {

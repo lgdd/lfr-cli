@@ -6,6 +6,7 @@ import (
 
 	"github.com/lgdd/lfr-cli/internal/cmd/build"
 	"github.com/lgdd/lfr-cli/internal/cmd/completion"
+	"github.com/lgdd/lfr-cli/internal/cmd/config"
 	"github.com/lgdd/lfr-cli/internal/cmd/create"
 	"github.com/lgdd/lfr-cli/internal/cmd/deploy"
 	"github.com/lgdd/lfr-cli/internal/cmd/diagnose"
@@ -18,7 +19,7 @@ import (
 	"github.com/lgdd/lfr-cli/internal/cmd/stop"
 	"github.com/lgdd/lfr-cli/internal/cmd/update"
 	"github.com/lgdd/lfr-cli/internal/cmd/version"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 )
 
 var root = &cobra.Command{
@@ -41,10 +42,11 @@ func init() {
 	root.AddCommand(version.Cmd)
 	root.AddCommand(update.Cmd)
 	root.AddCommand(diagnose.Cmd)
+	root.AddCommand(config.Cmd)
 
-	config.Init()
-	defaultNoColor := viper.GetBool(config.OutputNoColor)
-	root.PersistentFlags().BoolVar(&config.NoColor, "no-color", defaultNoColor, "disable colors for output messages")
+	conf.Init()
+	defaultNoColor := viper.GetBool(conf.OutputNoColor)
+	root.PersistentFlags().BoolVar(&conf.NoColor, "no-color", defaultNoColor, "disable colors for output messages")
 }
 
 // Run the the main command

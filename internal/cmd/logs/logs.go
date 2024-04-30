@@ -1,7 +1,7 @@
 package logs
 
 import (
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 
@@ -22,8 +22,8 @@ var (
 )
 
 func init() {
-	config.Init()
-	defaultFollow := viper.GetBool(config.LogsFollow)
+	conf.Init()
+	defaultFollow := viper.GetBool(conf.LogsFollow)
 	Cmd.Flags().BoolVarP(&Follow, "follow", "f", defaultFollow, "--follow")
 }
 

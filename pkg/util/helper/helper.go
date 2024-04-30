@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
@@ -24,13 +24,13 @@ func IsSupportedJavaVersion(javaVersion int) bool {
 }
 
 func FetchClientExtensionSamples(destination string) error {
-	clientExtensionsSamplesPath := filepath.Join(destination, config.ClientExtensionSampleProjectName)
+	clientExtensionsSamplesPath := filepath.Join(destination, conf.ClientExtensionSampleProjectName)
 
 	// Clone & checkout if ~/.lfr/liferay-portal does not exist
-	if _, err := os.Stat(filepath.Join(destination, config.ClientExtensionSampleProjectName)); err != nil {
+	if _, err := os.Stat(filepath.Join(destination, conf.ClientExtensionSampleProjectName)); err != nil {
 		var gitProject strings.Builder
 		gitProject.WriteString("https://github.com/lgdd/")
-		gitProject.WriteString(config.ClientExtensionSampleProjectName)
+		gitProject.WriteString(conf.ClientExtensionSampleProjectName)
 
 		gitClone := exec.Command("git", "clone", "--depth", "1", gitProject.String())
 		gitClone.Dir = destination
@@ -55,7 +55,7 @@ func updateClientExtensionSamples(path string) {
 }
 
 func HandleClientExtensionsOffline(configPath string) {
-	if _, err := os.Stat(filepath.Join(configPath, config.ClientExtensionSampleProjectName)); err != nil {
+	if _, err := os.Stat(filepath.Join(configPath, conf.ClientExtensionSampleProjectName)); err != nil {
 		logger.PrintWarn("Couldn't fetch client extensions samples from GitHub.\n")
 		logger.Println("Copying embedded versions from the CLI instead.")
 		err = fileutil.CreateDirsFromAssets("tpl/client_extension", configPath)
@@ -68,8 +68,8 @@ func HandleClientExtensionsOffline(configPath string) {
 			logger.Fatal(err.Error())
 		}
 
-		oldGitDirectory := filepath.Join(configPath, config.ClientExtensionSampleProjectName, "git")
-		newGitDirectory := filepath.Join(configPath, config.ClientExtensionSampleProjectName, ".git")
+		oldGitDirectory := filepath.Join(configPath, conf.ClientExtensionSampleProjectName, "git")
+		newGitDirectory := filepath.Join(configPath, conf.ClientExtensionSampleProjectName, ".git")
 		if err := os.Rename(oldGitDirectory, newGitDirectory); err != nil {
 			logger.Fatal(err.Error())
 		}
@@ -80,11 +80,11 @@ func HandleClientExtensionsOffline(configPath string) {
 }
 
 func GetClientExtensionSampleNames() []string {
-	if err := FetchClientExtensionSamples(config.GetConfigPath()); err != nil {
-		HandleClientExtensionsOffline(config.GetConfigPath())
+	if err := FetchClientExtensionSamples(conf.GetConfigPath()); err != nil {
+		HandleClientExtensionsOffline(conf.GetConfigPath())
 	}
 
-	clientExtensionSamplesPath := filepath.Join(config.GetConfigPath(), config.ClientExtensionSampleProjectName)
+	clientExtensionSamplesPath := filepath.Join(conf.GetConfigPath(), conf.ClientExtensionSampleProjectName)
 	sampleDirs, err := os.ReadDir(clientExtensionSamplesPath)
 
 	if err != nil {
@@ -94,8 +94,8 @@ func GetClientExtensionSampleNames() []string {
 	var samples []string
 
 	for _, sampleDir := range sampleDirs {
-		if sampleDir.IsDir() && strings.Contains(sampleDir.Name(), config.ClientExtensionSamplePrefix) {
-			samples = append(samples, strings.Split(sampleDir.Name(), config.ClientExtensionSamplePrefix)[1])
+		if sampleDir.IsDir() && strings.Contains(sampleDir.Name(), conf.ClientExtensionSamplePrefix) {
+			samples = append(samples, strings.Split(sampleDir.Name(), conf.ClientExtensionSamplePrefix)[1])
 		}
 	}
 

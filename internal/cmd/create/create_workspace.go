@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
@@ -32,11 +32,11 @@ var (
 )
 
 func init() {
-	config.Init()
-	defaultVersion := viper.GetString(config.WorkspaceVersion)
-	defaultBuild := viper.GetString(config.WorkspaceBuild)
-	defaultEdition := viper.GetString(config.WorkspaceEdition)
-	defaultInit := viper.GetBool(config.WorkspaceInit)
+	conf.Init()
+	defaultVersion := viper.GetString(conf.WorkspaceVersion)
+	defaultBuild := viper.GetString(conf.WorkspaceBuild)
+	defaultEdition := viper.GetString(conf.WorkspaceEdition)
+	defaultInit := viper.GetBool(conf.WorkspaceInit)
 
 	createWorkspace.Flags().StringVarP(&Version, "version", "v", defaultVersion, "Liferay major version (7.x)")
 	createWorkspace.Flags().StringVarP(&Build, "build", "b", defaultBuild, "build tool (gradle or maven)")

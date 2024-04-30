@@ -1,7 +1,7 @@
 package create
 
 import (
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
@@ -23,9 +23,9 @@ var (
 )
 
 func init() {
-	config.Init()
-	defaultMultistage := viper.GetBool(config.DockerMultistage)
-	defaultJDK := viper.GetInt(config.DockerJDK)
+	conf.Init()
+	defaultMultistage := viper.GetBool(conf.DockerMultistage)
+	defaultJDK := viper.GetInt(conf.DockerJDK)
 	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", defaultMultistage, "use multi-stage build")
 	createDocker.Flags().IntVarP(&Java, "java", "j", defaultJDK, "Java version (8 or 11)")
 }

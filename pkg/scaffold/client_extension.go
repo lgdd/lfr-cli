@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/ettle/strcase"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 
@@ -20,10 +20,10 @@ func CreateClientExtension(sample, name string) {
 		logger.Fatal(err.Error())
 	}
 
-	clientExtensionSamplesPath := filepath.Join(config.GetConfigPath(), config.ClientExtensionSampleProjectName)
+	clientExtensionSamplesPath := filepath.Join(conf.GetConfigPath(), conf.ClientExtensionSampleProjectName)
 	clientExtensionsWorkspaceDir := filepath.Join(liferayWorkspace, "client-extensions")
 
-	samplePath := filepath.Join(clientExtensionSamplesPath, config.ClientExtensionSamplePrefix+sample)
+	samplePath := filepath.Join(clientExtensionSamplesPath, conf.ClientExtensionSamplePrefix+sample)
 
 	name = strcase.ToKebab(strings.ToLower(name))
 	clientExtensionDir := filepath.Join(clientExtensionsWorkspaceDir, name)

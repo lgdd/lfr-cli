@@ -7,7 +7,7 @@ import (
 
 	"github.com/charmbracelet/lipgloss"
 	"github.com/charmbracelet/log"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 )
 
 var (
@@ -26,7 +26,7 @@ var (
 
 func Debug(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Debug(msg, keyvals...)
@@ -34,7 +34,7 @@ func Debug(msg interface{}, keyvals ...interface{}) {
 
 func Info(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Info(msg, keyvals...)
@@ -42,7 +42,7 @@ func Info(msg interface{}, keyvals ...interface{}) {
 
 func Warn(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Warn(msg, keyvals...)
@@ -50,7 +50,7 @@ func Warn(msg interface{}, keyvals ...interface{}) {
 
 func Error(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Error(msg, keyvals...)
@@ -58,7 +58,7 @@ func Error(msg interface{}, keyvals ...interface{}) {
 
 func Fatal(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Fatal(msg, keyvals...)
@@ -66,7 +66,7 @@ func Fatal(msg interface{}, keyvals ...interface{}) {
 
 func Debugf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Debug(format, a...)
@@ -74,7 +74,7 @@ func Debugf(format string, a ...any) {
 
 func Infof(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Info(format, a...)
@@ -82,7 +82,7 @@ func Infof(format string, a ...any) {
 
 func Warnf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Warn(format, a...)
@@ -90,7 +90,7 @@ func Warnf(format string, a ...any) {
 
 func Errorf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Error(format, a...)
@@ -98,7 +98,7 @@ func Errorf(format string, a ...any) {
 
 func Fatalf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
-	if config.NoColor {
+	if conf.NoColor {
 		logger.SetStyles(noColorStyles())
 	}
 	logger.Fatal(format, a...)
@@ -130,7 +130,7 @@ func PrintfBold(format string, a ...any) {
 }
 
 func PrintInfo(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(infoStyle, msg))
@@ -139,7 +139,7 @@ func PrintInfo(msg string) {
 
 func PrintfInfo(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(infoStyle, msg))
@@ -148,7 +148,7 @@ func PrintfInfo(format string, a ...any) {
 
 func PrintlnInfo(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Println(msg)
 	} else {
 		fmt.Println(lipgloss.Style.Render(infoStyle, msg))
@@ -156,7 +156,7 @@ func PrintlnInfo(format string, a ...any) {
 }
 
 func PrintError(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(errorStyle, msg))
@@ -165,7 +165,7 @@ func PrintError(msg string) {
 
 func PrintfError(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(errorStyle, msg))
@@ -173,7 +173,7 @@ func PrintfError(format string, a ...any) {
 }
 
 func PrintlnError(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Println(msg)
 	} else {
 		fmt.Println(lipgloss.Style.Render(errorStyle, msg))
@@ -181,7 +181,7 @@ func PrintlnError(msg string) {
 }
 
 func PrintWarn(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(warnStyle, msg))
@@ -190,7 +190,7 @@ func PrintWarn(msg string) {
 
 func PrintfWarn(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(warnStyle, msg))
@@ -198,7 +198,7 @@ func PrintfWarn(format string, a ...any) {
 }
 
 func PrintlnWarn(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Println(msg)
 	} else {
 		fmt.Println(lipgloss.Style.Render(warnStyle, msg))
@@ -206,7 +206,7 @@ func PrintlnWarn(msg string) {
 }
 
 func PrintSuccess(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(successStyle, msg))
@@ -215,7 +215,7 @@ func PrintSuccess(msg string) {
 
 func PrintfSuccess(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Print(msg)
 	} else {
 		fmt.Print(lipgloss.Style.Render(successStyle, msg))
@@ -223,7 +223,7 @@ func PrintfSuccess(format string, a ...any) {
 }
 
 func PrintlnSuccess(msg string) {
-	if config.NoColor {
+	if conf.NoColor {
 		fmt.Println(msg)
 	} else {
 		fmt.Println(lipgloss.Style.Render(successStyle, msg))

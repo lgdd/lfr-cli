@@ -4,7 +4,7 @@ import (
 	"os"
 
 	"github.com/charmbracelet/huh"
-	"github.com/lgdd/lfr-cli/internal/config"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/internal/prompt"
 	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
@@ -37,14 +37,14 @@ func init() {
 	Cmd.AddCommand(createServiceBuilder)
 	Cmd.AddCommand(createRESTBuilder)
 	Cmd.AddCommand(createDocker)
-	config.Init()
-	defaultPackage := viper.GetString(config.ModulePackage)
+	conf.Init()
+	defaultPackage := viper.GetString(conf.ModulePackage)
 	Cmd.PersistentFlags().StringVarP(&metadata.PackageName, "package", "p", defaultPackage, "base package name")
 }
 
 func runPrompt(cmd *cobra.Command) {
 	var template, sample, name string
-	packageName := viper.GetString(config.ModulePackage)
+	packageName := viper.GetString(conf.ModulePackage)
 
 	form := huh.NewForm(
 		huh.NewGroup(
@@ -63,9 +63,9 @@ func runPrompt(cmd *cobra.Command) {
 				).
 				Value(&template),
 		),
-	).WithAccessible(viper.GetBool(config.OutputAccessible))
+	).WithAccessible(viper.GetBool(conf.OutputAccessible))
 
-	if config.NoColor {
+	if conf.NoColor {
 		form.WithTheme(huh.ThemeBase())
 	}
 
@@ -100,9 +100,9 @@ func runPrompt(cmd *cobra.Command) {
 			prompt.NewInputPackageName(&packageName),
 			prompt.NewInputName(&name),
 		),
-	).WithAccessible(viper.GetBool(config.OutputAccessible))
+	).WithAccessible(viper.GetBool(conf.OutputAccessible))
 
-	if config.NoColor {
+	if conf.NoColor {
 		form.WithTheme(huh.ThemeBase())
 	}
 
