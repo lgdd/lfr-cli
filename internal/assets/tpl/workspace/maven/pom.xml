@@ -13,8 +13,8 @@
   <name>{{.Name}}</name>
   <properties>
     <liferay.bom.version>{{.TargetPlatform}}</liferay.bom.version>
-    <liferay.workspace.bundle.url>{{.BundleUrl}}</liferay.workspace.bundle.url>
-    <!-- <liferay.workspace.bundle.url>{{.GithubBundleUrl}}</liferay.workspace.bundle.url> -->
+    <liferay.workspace.bundle.url>{{.GithubBundleUrl}}</liferay.workspace.bundle.url>
+    <!-- <liferay.workspace.bundle.url>{{.BundleUrl}}</liferay.workspace.bundle.url> -->
     <liferay.repository.url>https://repository-cdn.liferay.com/nexus/content/groups/public/</liferay.repository.url>
     <liferay.workspace.environment>local</liferay.workspace.environment>
     <liferay.docker.image>{{.DockerImage}}</liferay.docker.image>
