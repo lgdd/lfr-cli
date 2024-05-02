@@ -31,7 +31,7 @@ func run(cmd *cobra.Command, args []string) {
 	}
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		logger.Print("\nRunning ")
-		logger.PrintInfo("lfr exec bundle-support:init\n")
+		logger.PrintlnInfo("lfr exec bundle-support:init\n")
 		exec.RunWrapperCmd([]string{"bundle-support:init"})
 	}
 }
