@@ -37,6 +37,8 @@ func Init() {
 	viper.SetConfigType(configType)
 	viper.AddConfigPath(GetConfigPath())
 
+	createConfigFolder()
+
 	configFilePath := filepath.Join(GetConfigPath(), configFile)
 	configFileInfo, _ := os.Stat(configFilePath)
 
@@ -74,4 +76,16 @@ func setDefaults() {
 	viper.SetDefault(DockerJDK, 11)
 	viper.SetDefault(OutputNoColor, false)
 	viper.SetDefault(OutputAccessible, false)
+}
+
+func createConfigFolder() {
+	configFolderPath := GetConfigPath()
+	_, err := os.Stat(configFolderPath)
+
+	if os.IsNotExist(err) {
+		err := os.MkdirAll(configFolderPath, os.ModePerm)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+	}
 }
