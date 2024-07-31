@@ -44,20 +44,31 @@ func verifyJava() bool {
 
 	if err != nil {
 		logger.PrintError("[✗] ")
-		logger.Print("Liferay requires Java 8 or 11.\n")
+		logger.Print("Liferay requires Java 8, 11, 17 or 21.\n")
 		return false
 	}
 
 	if major == "8" || major == "11" {
+		logger.PrintWarn("[!] ")
+		logger.Printf("Java intalled (%s)\n", strings.Split(version, "\n")[0])
+		if major == "8" {
+			logger.PrintlnBold("\t! Liferay DXP 2024.Q1 and Liferay Portal 7.4 GA112 will be the last version to support Java 8.")
+		}
+		if major == "11" {
+			logger.PrintlnBold("\t! Liferay DXP DXP 2024.Q2 and Liferay Portal 7.4 GA120 will be the last version to support Java 11.")
+		}
+	} else if major == "17" || major == "21" {
 		logger.PrintSuccess("[✓] ")
 		logger.Printf("Java intalled (%s)\n", strings.Split(version, "\n")[0])
-		logger.PrintlnBold("\t• Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.")
-		logger.PrintlnBold("\t• JDK compatibility is for runtime and project compile time. DXP source compile is compatible with JDK 8 only.")
+		logger.PrintlnBold("\t• Liferay DXP 2024.Q2+ and Liferay Portal CE 7.4 GA120+ are fully certified to run on both Java JDK 17 and 21.")
+
 	} else {
 		logger.PrintWarn("[!] ")
-		logger.Printf("Java (%s)\n", strings.Split(version, "\n")[0])
+		logger.Printf("Java installed (%s)\n", strings.Split(version, "\n")[0])
 		logger.PrintlnBold("\t! Liferay supports Java 8 and 11 only.")
 	}
+	logger.PrintlnBold("\t• Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.")
+	logger.PrintlnBold("\t• JDK compatibility is for runtime and project compile time.")
 	return true
 }
 
