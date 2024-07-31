@@ -20,7 +20,13 @@ var (
 			if err := cobra.MaximumNArgs(2)(cmd, args); err != nil {
 				return err
 			}
-			if len(args) > 0 && !slices.Contains(viper.AllKeys(), args[0]) {
+			if len(args) == 1 && strings.Contains(args[0], "=") {
+				key := strings.Split(args[0], "=")[0]
+				if len(key) > 0 && !slices.Contains(viper.AllKeys(), key) {
+					return fmt.Errorf("invalid config key")
+				}
+			}
+			if len(args) > 1 && !slices.Contains(viper.AllKeys(), args[0]) {
 				return fmt.Errorf("invalid config key")
 			}
 			return nil
@@ -43,6 +49,9 @@ func run(cmd *cobra.Command, args []string) {
 	}
 
 	if len(args) == 1 {
+		if strings.Contains(args[0], "=") {
+			setKeyValue(args[0])
+		}
 		logger.Println(viper.GetString(args[0]))
 		os.Exit(0)
 	}
@@ -63,5 +72,15 @@ func printConfKeyValues() {
 			logger.Println(keyValueBuilder.String())
 		}
 		os.Exit(0)
+	}
+}
+
+func setKeyValue(arg string) {
+	keyValue := strings.Split(arg, "=")
+	key := keyValue[0]
+	value := keyValue[1]
+	if len(key) > 0 && len(value) > 0 {
+		viper.Set(key, value)
+		viper.WriteConfig()
 	}
 }
