@@ -29,6 +29,7 @@ var (
 func diagnose(cmd *cobra.Command, args []string) {
 	verifyJava()
 	verifyBlade()
+	verifyLCP()
 	dockerInstalled := verifyDocker()
 	logger.Print("\n")
 	verifyBundles()
@@ -87,6 +88,23 @@ func verifyBlade() bool {
 	bladeVersionResult := bladeVersionCmdOut.String()
 	logger.PrintSuccess("[✓] ")
 	logger.Printf("Blade installed (%s)\n", strings.Split(bladeVersionResult, "\n")[0])
+	return true
+}
+
+func verifyLCP() bool {
+	lcpVersionCmdOut, _, err := procutil.Exec("lcp", "-v")
+
+	if err != nil {
+		logger.PrintWarn("[!] ")
+		logger.Printf("LCP is not installed.\n")
+		logger.PrintlnBold("\t• If you work on Liferay PaaS or Liferay SaaS, LCP can be used to view and manage your Liferay Cloud services.")
+		logger.PrintlnBold("\t• Checkout the documentation: https://learn.liferay.com/w/liferay-cloud/reference/command-line-tool")
+		return false
+	}
+
+	lcpVersionResult := lcpVersionCmdOut.String()
+	logger.PrintSuccess("[✓] ")
+	logger.Printf("LCP installed (%s)\n", strings.Split(lcpVersionResult, "\n")[0])
 	return true
 }
 
