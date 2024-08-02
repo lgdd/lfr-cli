@@ -15,6 +15,11 @@ Without flags, it creates a Gradle workspace on the latest version and release o
 
 The command is also running a `git init` for the created workspace, and is adding a [GitHub Action](https://github.com/lgdd/lfr-cli/blob/main/internal/assets/tpl/github/liferay-upgrade.yml){:target="_blank"} to help you upgrade the Liferay Workspaces you host on GitHub.
 
+{: .new }
+> Starting with **v3.1.0**, the command is checking your Java version to provide more information about compatibilities with Liferay, Gradle and Liferay Gradle Workspace plugin versions.
+
+
+
 ## Usage:
 ```shell
 lfr create workspace NAME [flags]

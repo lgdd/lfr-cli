@@ -14,6 +14,9 @@ Inspired by the command `flutter doctor` from the [Flutter command-line tool](ht
 - See if [Docker](https://docs.docker.com/get-docker/) is installed and report how much space is taken by official Liferay Docker Images and official Elasticsearch Docker Images.
 - Report how much space is taken by the Liferay bundles stored under `~/.liferay/bundles` by Gradle or Maven when you intialize a Liferay Workspace.
 
+{: .new }
+> Starting with **v3.1.0**, the command also check if [LCP](https://learn.liferay.com/w/liferay-cloud/reference/command-line-tool) is installed.
+
 ## Usage:
 ```shell
 lfr diagnose [flags]
@@ -23,18 +26,22 @@ lfr diag
 
 ## Result example:
 ```shell
-[✓] Java intalled (11.0.23)
+[!] Java intalled (11.0.24)
+    ! Liferay DXP DXP 2024.Q2 and Liferay Portal 7.4 GA120 will be the last version to support Java 11.
     • Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.
-    • JDK compatibility is for runtime and project compile time. DXP source compile is compatible with JDK 8 only.
+    • JDK compatibility is for runtime and project compile time.
 [✗] Blade is not installed.
     • You might like this tool, but Blade is still the official one with useful features.
     • Blade is supported by Liferay and used by Liferay IDE behind the scenes.
     • Checkout the documentation: https://learn.liferay.com/w/dxp/building-applications/tooling/blade-cli
-[✓] Docker installed (Docker Desktop 4.29.0 (145265))
+[!] LCP is not installed.
+    • If you work on Liferay PaaS or Liferay SaaS, LCP can be used to view and manage your Liferay Cloud services.
+    • Checkout the documentation: https://learn.liferay.com/w/liferay-cloud/reference/command-line-tool
+[✓] Docker installed (27.1.1)
 
-[!] Downloaded bundles are using ~2.0 GB.
-    • They are stored under ~/.liferay/bundles
-[!] Official Liferay Docker images are using ~4.6 GB.
+[!] Downloaded bundles are using ~1.9 GB.
+    • They are stored under /home/lgd/.liferay/bundles
+[!] Official Liferay Docker images are using ~2.2 GB.
     • Run 'docker images liferay/dxp' to list DXP Images (EE)
     • Run 'docker images liferay/portal' to list Portal Images (CE)
 

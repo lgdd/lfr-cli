@@ -6,7 +6,7 @@ nav_order: 1
 
 # lfr-cli
 {: .d-inline-block }
-v3.0.0
+v3.1.0
 {: .label .mb-5 }
 
 `lfr` is an unofficial CLI tool written in Go that helps you create & manage Liferay projects.
@@ -33,3 +33,7 @@ To reach some of the goals of this tool, other projects have been built in order
 - [https://github.com/lgdd/liferay-product-info](https://github.com/lgdd/liferay-product-info)
 - [https://github.com/lgdd/liferay-dxp-releases](https://github.com/lgdd/liferay-dxp-releases)
 - [https://github.com/lgdd/liferay-client-extensions-samples](https://github.com/lgdd/liferay-client-extensions-samples)
+
+# Changelog
+
+Available on [GitHub](https://github.com/lgdd/lfr-cli/blob/main/CHANGELOG.md).

@@ -19,7 +19,7 @@ lfr c docker [flags]
 To change the default Java version and type of build (multi-stage or not), you can edit the `/.lfr/config.toml`:
 ```toml
 [docker]
-jdk = 8 # or 11
+jdk = 8 # 11, 17 or 21
 multistage = true
 ```
 
@@ -27,7 +27,7 @@ multistage = true
 - `-h`, `--help`
   - help for `lfr create docker`
 - `-j`, `--java` 
-  - Java version to use in the Dockerfile (8 or 11)
+  - Java version to use in the Dockerfile (8, 11, 17 or 21)
 - `-m`, `--multi-stage`
   - Creates a multi-stage Dockerfile (build & run stages)
 
