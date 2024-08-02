@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.1.0](https://github.com/lgdd/lfr-cli/compare/v3.0.0...v3.1.0) (2024-08-02)
+
+
+### Features
+
+* add config command ([45a932c](https://github.com/lgdd/lfr-cli/commit/45a932cdd579b3f0b1a34e8068a2e65524d4f263))
+* add diagnose info on workspace creation ([43c5a7e](https://github.com/lgdd/lfr-cli/commit/43c5a7e4f487700532d1222b869eefd000fa3f0d))
+* add LCP to diagnose ([fc8d1c4](https://github.com/lgdd/lfr-cli/commit/fc8d1c44fa5deb5135f4681e364e240da3de8d98))
+* add more info about java 17 & 21 ([bf195c6](https://github.com/lgdd/lfr-cli/commit/bf195c65c7c0f229f476e16423c384ecbc451bb3))
+* config supports setting using = ([f3490c6](https://github.com/lgdd/lfr-cli/commit/f3490c65d7d7ee9d1eb7360a5ffdbca8a569c193))
+* use github urls by default ([66281ea](https://github.com/lgdd/lfr-cli/commit/66281eaf43e1a806fe0ec9fd7c2fea2b34a26a98))
+
+
+### Bug Fixes
+
+* config folder not created ([#20](https://github.com/lgdd/lfr-cli/issues/20)) ([7652fcc](https://github.com/lgdd/lfr-cli/commit/7652fcc9d462bc330b63cece1c5b018a5c3b9851))
+* docker version output by lfr diag ([2830af1](https://github.com/lgdd/lfr-cli/commit/2830af193283a7876ab7335f9c27e077b7980c23))
+* output printed twice when running 'lfr c cx' ([9857217](https://github.com/lgdd/lfr-cli/commit/9857217f20866b69148aaa88525674250f823916))
+* wrong github urls for portal workspaces ([#17](https://github.com/lgdd/lfr-cli/issues/17)) ([4ca0436](https://github.com/lgdd/lfr-cli/commit/4ca0436d45030f914be27be38b0b1b7524dad85b))
+
 ## [3.0.0](https://github.com/lgdd/lfr-cli/compare/v2.0.0...v3.0.0) (2024-04-28)
 
 
