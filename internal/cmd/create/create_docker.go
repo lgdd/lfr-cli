@@ -27,7 +27,7 @@ func init() {
 	defaultMultistage := viper.GetBool(conf.DockerMultistage)
 	defaultJDK := viper.GetInt(conf.DockerJDK)
 	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", defaultMultistage, "use multi-stage build")
-	createDocker.Flags().IntVarP(&Java, "java", "j", defaultJDK, "Java version (8 or 11)")
+	createDocker.Flags().IntVarP(&Java, "java", "j", defaultJDK, "Java version (8, 11, 17 or 21)")
 }
 func generateDocker(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
