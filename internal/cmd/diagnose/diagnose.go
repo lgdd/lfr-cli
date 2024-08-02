@@ -123,7 +123,7 @@ func verifyDocker() bool {
 	dockerVersionResult := dockerVersionCmdOut.String()
 	json.Unmarshal([]byte(dockerVersionResult), &dockerVersion)
 	logger.PrintSuccess("[✓] ")
-	logger.Printf("Docker installed (%s)\n", strings.Split(dockerVersion.Server.Platform.Name, "\n")[0])
+	logger.Printf("Docker installed (%s)\n", strings.Split(dockerVersion.Server.Version, "\n")[0])
 	return true
 }
 
@@ -217,9 +217,7 @@ func parseBytesFromString(size string) (uint64, error) {
 
 type DockerVersion struct {
 	Server struct {
-		Platform struct {
-			Name string `json:"Name"`
-		} `json:"Platform"`
+		Version string `json:"Version"`
 	} `json:"Server"`
 }
 
