@@ -62,11 +62,12 @@ func verifyJava() bool {
 		logger.PrintSuccess("[✓] ")
 		logger.Printf("Java intalled (%s)\n", strings.Split(version, "\n")[0])
 		logger.PrintlnBold("\t• Liferay DXP 2024.Q2+ and Liferay Portal CE 7.4 GA120+ are fully certified to run on both Java JDK 17 and 21.")
+		logger.PrintlnBold("\t• JDK 21 is the recommended runtime.")
 
 	} else {
 		logger.PrintWarn("[!] ")
 		logger.Printf("Java installed (%s)\n", strings.Split(version, "\n")[0])
-		logger.PrintlnBold("\t! Liferay supports Java 8 and 11 only.")
+		logger.PrintlnBold("\t! Liferay only supports Java 8, 11, 17 and 21 at this moment.")
 	}
 	logger.PrintlnBold("\t• Make sure that your Java edition is a Java Technical Compatibility Kit (TCK) compliant build.")
 	logger.PrintlnBold("\t• JDK compatibility is for runtime and project compile time.")
