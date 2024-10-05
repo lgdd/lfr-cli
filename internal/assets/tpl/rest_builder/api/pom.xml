@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>com.liferay</groupId>
 			<artifactId>com.liferay.portal.vulcan.api</artifactId>
-			<version>7.13.2</version>
+			<version>7.22.0</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
