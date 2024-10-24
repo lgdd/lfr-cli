@@ -1,9 +1,13 @@
 package deploy
 
 import (
+	"strings"
+
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 
 	"github.com/lgdd/lfr-cli/internal/cmd/exec"
+	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
@@ -17,7 +21,15 @@ var (
 		Args:    cobra.NoArgs,
 		Run:     run,
 	}
+
+	DeployClean bool
 )
+
+func init() {
+	conf.Init()
+	defaultDeployClean := viper.GetBool(conf.DeployClean)
+	Cmd.Flags().BoolVarP(&DeployClean, "clean", "c", defaultDeployClean, "run a clean deploy command")
+}
 
 func run(cmd *cobra.Command, args []string) {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
@@ -25,14 +37,22 @@ func run(cmd *cobra.Command, args []string) {
 		logger.Fatal(err.Error())
 	}
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
+		cmdArgs := []string{"deploy"}
+		if DeployClean {
+			cmdArgs = []string{"clean", "deploy"}
+		}
 		logger.Print("\nRunning ")
-		logger.PrintlnInfo("lfr exec deploy\n")
-		exec.RunWrapperCmd([]string{"deploy"})
+		logger.PrintfInfo("lfr exec %s\n", strings.Join(cmdArgs, " "))
+		exec.RunWrapperCmd(cmdArgs)
 	}
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
+		cmdArgs := []string{"package"}
+		if DeployClean {
+			cmdArgs = []string{"clean", "package"}
+		}
 		logger.Print("\nRunning ")
-		logger.PrintlnInfo("lfr exec package\n")
-		exec.RunWrapperCmd([]string{"package"})
+		logger.PrintfInfo("lfr exec %s\n", strings.Join(cmdArgs, " "))
+		exec.RunWrapperCmd(cmdArgs)
 		logger.Print("\nRunning ")
 		logger.PrintlnInfo("lfr exec bundle-support:deploy\n")
 		exec.RunWrapperCmd([]string{"bundle-support:deploy"})

@@ -18,6 +18,7 @@ const (
 	WorkspaceBuild   = "workspace.build"
 	WorkspaceInit    = "workspace.init"
 	LogsFollow       = "logs.follow"
+	DeployClean      = "deploy.clean"
 	ModulePackage    = "module.package"
 	DockerMultistage = "docker.multistage"
 	DockerJDK        = "docker.jdk"
@@ -47,12 +48,12 @@ func Init() {
 		os.Remove(configFilePath)
 	}
 
-	setDefaults()
-	viper.SafeWriteConfig()
-
 	if err := viper.ReadInConfig(); err != nil {
 		log.Fatal(err.Error())
 	}
+
+	setDefaults()
+	viper.WriteConfig()
 }
 
 func GetConfigPath() string {
@@ -66,16 +67,23 @@ func GetConfigPath() string {
 }
 
 func setDefaults() {
-	viper.SetDefault(WorkspaceEdition, "portal")
-	viper.SetDefault(WorkspaceVersion, "7.4")
-	viper.SetDefault(WorkspaceBuild, "gradle")
-	viper.SetDefault(WorkspaceInit, false)
-	viper.SetDefault(LogsFollow, false)
-	viper.SetDefault(ModulePackage, "org.acme")
-	viper.SetDefault(DockerMultistage, false)
-	viper.SetDefault(DockerJDK, 11)
-	viper.SetDefault(OutputNoColor, false)
-	viper.SetDefault(OutputAccessible, false)
+	setDefault(WorkspaceEdition, "portal")
+	setDefault(WorkspaceVersion, "7.4")
+	setDefault(WorkspaceBuild, "gradle")
+	setDefault(WorkspaceInit, false)
+	setDefault(LogsFollow, false)
+	setDefault(DeployClean, false)
+	setDefault(ModulePackage, "org.acme")
+	setDefault(DockerMultistage, false)
+	setDefault(DockerJDK, 11)
+	setDefault(OutputNoColor, false)
+	setDefault(OutputAccessible, false)
+}
+
+func setDefault(key string, value any) {
+	if viper.Get(key) == nil {
+		viper.SetDefault(key, value)
+	}
 }
 
 func createConfigFolder() {
