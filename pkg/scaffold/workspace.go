@@ -120,7 +120,7 @@ func updateGradleProps(base string, workspaceData *metadata.WorkspaceData) error
 }
 
 func updateGradleSettings(base string) error {
-	workspaceGradlePluginVersion := "10.0.6"
+	workspaceGradlePluginVersion := "10.1.9"
 
 	resp, err := http.Get("https://raw.githubusercontent.com/lgdd/liferay-product-info/main/com.liferay.gradle.plugins.workspace")
 
