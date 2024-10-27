@@ -93,6 +93,11 @@ func createGradleFiles(base string, workspaceData *metadata.WorkspaceData) error
 		return err
 	}
 
+	err = updateGradleWrapper(base, workspaceData)
+	if err != nil {
+		return err
+	}
+
 	err = updateGradleProps(base, workspaceData)
 	if err != nil {
 		return err
@@ -112,6 +117,15 @@ func updateGradleProps(base string, workspaceData *metadata.WorkspaceData) error
 		return err
 	}
 	err = fileutil.UpdateWithData(filepath.Join(base, "build.gradle"), workspaceData)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func updateGradleWrapper(base string, workspaceData *metadata.WorkspaceData) error {
+	err := fileutil.UpdateWithData(filepath.Join(base, "gradle", "wrapper", "gradle-wrapper.properties"), workspaceData)
 	if err != nil {
 		return err
 	}

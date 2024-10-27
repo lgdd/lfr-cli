@@ -19,16 +19,17 @@ import (
 
 // WorkspaceData represents the basic informations associated with a Liferay workspace
 type WorkspaceData struct {
-	Edition         string
-	Product         string
-	BundleUrl       string
-	GithubBundleUrl string
-	TomcatVersion   string
-	TargetPlatform  string
-	DockerImage     string
-	GroupId         string
-	ArtifactId      string
-	Name            string
+	Edition              string
+	Product              string
+	BundleUrl            string
+	GithubBundleUrl      string
+	TomcatVersion        string
+	TargetPlatform       string
+	DockerImage          string
+	GradleWrapperVersion string
+	GroupId              string
+	ArtifactId           string
+	Name                 string
 }
 
 type Release struct {
@@ -151,23 +152,30 @@ func NewWorkspaceData(base, version, edition string) (*WorkspaceData, error) {
 
 	latestRelease := releases[0]
 
+	gradleWrapperVersion := "7.6.4"
+
 	// workaround issue in releases.json for 7.1
 	if edition == Portal && version == "7.1" {
 		latestRelease = releases[1]
 	}
 
+	if version == "7.4" {
+		gradleWrapperVersion = "8.5"
+	}
+
 	latestRelease.BuildGithubBundleURL()
 
 	return &WorkspaceData{
-		Edition:         edition,
-		Product:         latestRelease.ReleaseKey,
-		BundleUrl:       latestRelease.ReleaseProperties.BundleURL,
-		GithubBundleUrl: latestRelease.ReleaseProperties.GithubBundleURL,
-		TargetPlatform:  latestRelease.TargetPlatformVersion,
-		DockerImage:     latestRelease.ReleaseProperties.LiferayDockerImage,
-		GroupId:         strcase.ToDelimited(PackageName, '.'),
-		ArtifactId:      strcase.ToKebab(strings.ToLower(base)),
-		Name:            strcase.ToCamel(strings.ToLower(base)),
+		Edition:              edition,
+		Product:              latestRelease.ReleaseKey,
+		BundleUrl:            latestRelease.ReleaseProperties.BundleURL,
+		GithubBundleUrl:      latestRelease.ReleaseProperties.GithubBundleURL,
+		TargetPlatform:       latestRelease.TargetPlatformVersion,
+		DockerImage:          latestRelease.ReleaseProperties.LiferayDockerImage,
+		GradleWrapperVersion: gradleWrapperVersion,
+		GroupId:              strcase.ToDelimited(PackageName, '.'),
+		ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+		Name:                 strcase.ToCamel(strings.ToLower(base)),
 	}, nil
 }
 
@@ -233,116 +241,126 @@ func getOfflineWorkspaceData(base, version, edition string) (*WorkspaceData, err
 		switch version {
 		case "7.4":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "dxp-2024.q1.5",
-				BundleUrl:      "https://releases-cdn.liferay.com/dxp/2024.q1.5/liferay-dxp-tomcat-2024.q1.5-1712566347.7z",
-				TargetPlatform: "2024.q1.5",
-				DockerImage:    "liferay/dxp:2024.q1.5",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "dxp-2024.q1.5",
+				BundleUrl:            "https://releases-cdn.liferay.com/dxp/2024.q1.5/liferay-dxp-tomcat-2024.q1.5-1712566347.7z",
+				TargetPlatform:       "2024.q1.5",
+				DockerImage:          "liferay/dxp:2024.q1.5",
+				GradleWrapperVersion: "8.5",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.3":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "dxp-7.3-u36",
-				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.3.10-u36/liferay-dxp-tomcat-7.3.10-u36-1706652128.7z",
-				TargetPlatform: "7.3.10.u36",
-				DockerImage:    "liferay/dxp:7.3.10-u36",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "dxp-7.3-u36",
+				BundleUrl:            "https://releases-cdn.liferay.com/dxp/7.3.10-u36/liferay-dxp-tomcat-7.3.10-u36-1706652128.7z",
+				TargetPlatform:       "7.3.10.u36",
+				DockerImage:          "liferay/dxp:7.3.10-u36",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.2":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "dxp-7.2.8",
-				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.2.10.8/liferay-dxp-tomcat-7.2.10.8-sp8-20220912234451782.7z",
-				TargetPlatform: "7.2.10.8",
-				DockerImage:    "liferay/dxp:7.2.10-sp8",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "dxp-7.2.8",
+				BundleUrl:            "https://releases-cdn.liferay.com/dxp/7.2.10.8/liferay-dxp-tomcat-7.2.10.8-sp8-20220912234451782.7z",
+				TargetPlatform:       "7.2.10.8",
+				DockerImage:          "liferay/dxp:7.2.10-sp8",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.1":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "dxp-7.1-dxp-28",
-				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.1.10-dxp-28/liferay-dxp-tomcat-7.1.10-dxp-28-20220823192814876.7z",
-				TargetPlatform: "7.1.10.8",
-				DockerImage:    "liferay/dxp:7.1.10-dxp-28",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "dxp-7.1-dxp-28",
+				BundleUrl:            "https://releases-cdn.liferay.com/dxp/7.1.10-dxp-28/liferay-dxp-tomcat-7.1.10-dxp-28-20220823192814876.7z",
+				TargetPlatform:       "7.1.10.8",
+				DockerImage:          "liferay/dxp:7.1.10-dxp-28",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.0":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "dxp-7.0.17",
-				BundleUrl:      "https://releases-cdn.liferay.com/dxp/7.0.10.17/liferay-dxp-digital-enterprise-tomcat-7.0.10.17-sp17-slim-20211014075354439.7z",
-				TargetPlatform: "7.0.10.17",
-				DockerImage:    "liferay/dxp:7.0.10-sp17",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "dxp-7.0.17",
+				BundleUrl:            "https://releases-cdn.liferay.com/dxp/7.0.10.17/liferay-dxp-digital-enterprise-tomcat-7.0.10.17-sp17-slim-20211014075354439.7z",
+				TargetPlatform:       "7.0.10.17",
+				DockerImage:          "liferay/dxp:7.0.10-sp17",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		}
 	} else {
 		switch version {
 		case "7.4":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "portal-7.4-ga112",
-				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.4.3.112-ga112/liferay-ce-portal-tomcat-7.4.3.112-ga112-20240226061339195.7z",
-				TargetPlatform: "7.4.3.112",
-				DockerImage:    "liferay/portal:7.4.3.112-ga112",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "portal-7.4-ga112",
+				BundleUrl:            "https://github.com/liferay/liferay-portal/releases/download/7.4.3.112-ga112/liferay-ce-portal-tomcat-7.4.3.112-ga112-20240226061339195.7z",
+				TargetPlatform:       "7.4.3.112",
+				DockerImage:          "liferay/portal:7.4.3.112-ga112",
+				GradleWrapperVersion: "8.5",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.3":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "portal-7.3-ga8",
-				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.7z",
-				TargetPlatform: "7.3.7",
-				DockerImage:    "liferay/portal:7.3.7-ga8",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "portal-7.3-ga8",
+				BundleUrl:            "https://github.com/liferay/liferay-portal/releases/download/7.3.7-ga8/liferay-ce-portal-tomcat-7.3.7-ga8-20210610183559721.7z",
+				TargetPlatform:       "7.3.7",
+				DockerImage:          "liferay/portal:7.3.7-ga8",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.2":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "portal-7.2-ga2",
-				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z",
-				TargetPlatform: "7.2.1-1",
-				DockerImage:    "liferay/portal:7.2.1-ga2",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "portal-7.2-ga2",
+				BundleUrl:            "https://github.com/liferay/liferay-portal/releases/download/7.2.1-ga2/liferay-ce-portal-tomcat-7.2.1-ga2-20191111141448326.7z",
+				TargetPlatform:       "7.2.1-1",
+				DockerImage:          "liferay/portal:7.2.1-ga2",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.1":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "portal-7.1-ga4",
-				BundleUrl:      "https://github.com/liferay/liferay-portal/releases/download/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.7z",
-				TargetPlatform: "7.1.3-1",
-				DockerImage:    "liferay/portal:7.1.3-ga4",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "portal-7.1-ga4",
+				BundleUrl:            "https://github.com/liferay/liferay-portal/releases/download/7.1.3-ga4/liferay-ce-portal-tomcat-7.1.3-ga4-20190508171117552.7z",
+				TargetPlatform:       "7.1.3-1",
+				DockerImage:          "liferay/portal:7.1.3-ga4",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		case "7.0":
 			return &WorkspaceData{
-				Edition:        edition,
-				Product:        "portal-7.0-ga7",
-				BundleUrl:      "https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip",
-				TargetPlatform: "7.0.6-2",
-				DockerImage:    "liferay/portal:7.0.6-ga7",
-				GroupId:        strcase.ToDelimited(PackageName, '.'),
-				ArtifactId:     strcase.ToKebab(strings.ToLower(base)),
-				Name:           strcase.ToCamel(strings.ToLower(base)),
+				Edition:              edition,
+				Product:              "portal-7.0-ga7",
+				BundleUrl:            "https://releases-cdn.liferay.com/portal/7.0.6-ga7/liferay-ce-portal-tomcat-7.0-ga7-20180507111753223.zip",
+				TargetPlatform:       "7.0.6-2",
+				DockerImage:          "liferay/portal:7.0.6-ga7",
+				GradleWrapperVersion: "7.6.4",
+				GroupId:              strcase.ToDelimited(PackageName, '.'),
+				ArtifactId:           strcase.ToKebab(strings.ToLower(base)),
+				Name:                 strcase.ToCamel(strings.ToLower(base)),
 			}, nil
 		}
 	}
