@@ -42,7 +42,7 @@ func CreateWorkspace(base, build, version, edition string) error {
 		if err != nil {
 			return err
 		}
-		if err := createGradleFiles(base, workspaceData); err != nil {
+		if err := createGradleFiles(base, version, edition, workspaceData); err != nil {
 			return err
 		}
 		createCommonEmptyDirs(base)
@@ -68,7 +68,7 @@ func CreateWorkspace(base, build, version, edition string) error {
 	return nil
 }
 
-func createGradleFiles(base string, workspaceData *metadata.WorkspaceData) error {
+func createGradleFiles(base, version, edition string, workspaceData *metadata.WorkspaceData) error {
 	err := fileutil.CreateDirsFromAssets("tpl/workspace/gradle", base)
 
 	if err != nil {
@@ -103,7 +103,7 @@ func createGradleFiles(base string, workspaceData *metadata.WorkspaceData) error
 		return err
 	}
 
-	err = updateGradleSettings(base)
+	err = updateGradleSettings(base, version, edition)
 	if err != nil {
 		return err
 	}
@@ -133,8 +133,18 @@ func updateGradleWrapper(base string, workspaceData *metadata.WorkspaceData) err
 	return nil
 }
 
-func updateGradleSettings(base string) error {
+func updateGradleSettings(base, version, edition string) error {
 	workspaceGradlePluginVersion := "10.1.9"
+
+	if version != "7.4" || edition == metadata.Portal {
+		err := fileutil.UpdateWithData(filepath.Join(base, "settings.gradle"), struct {
+			WorkspaceGradlePluginVersion string
+		}{WorkspaceGradlePluginVersion: workspaceGradlePluginVersion})
+		if err != nil {
+			return err
+		}
+		return nil
+	}
 
 	resp, err := http.Get("https://raw.githubusercontent.com/lgdd/liferay-product-info/main/com.liferay.gradle.plugins.workspace")
 
