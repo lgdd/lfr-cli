@@ -17,6 +17,7 @@ import (
 	"github.com/lgdd/lfr-cli/internal/cmd/start"
 	"github.com/lgdd/lfr-cli/internal/cmd/status"
 	"github.com/lgdd/lfr-cli/internal/cmd/stop"
+	"github.com/lgdd/lfr-cli/internal/cmd/trial"
 	"github.com/lgdd/lfr-cli/internal/cmd/update"
 	"github.com/lgdd/lfr-cli/internal/cmd/version"
 	"github.com/lgdd/lfr-cli/internal/conf"
@@ -43,6 +44,7 @@ func init() {
 	root.AddCommand(update.Cmd)
 	root.AddCommand(diagnose.Cmd)
 	root.AddCommand(config.Cmd)
+	root.AddCommand(trial.Cmd)
 
 	conf.Init()
 	defaultNoColor := viper.GetBool(conf.OutputNoColor)

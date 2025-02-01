@@ -8,8 +8,8 @@ permalink: /cmd/config
 
 # lfr config
 {: .d-inline-block }
-New (v3.1.0)
-{: .label .label-green .mb-5 }
+v3.1.0+
+{: .label .label-info .mb-5 }
 
 Helper command to quickly set new values in your configuration as an alternative to edit the file under `$HOME/.lfr/config.toml` (see [Configuration](/configuration)).
 
