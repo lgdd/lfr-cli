@@ -1,5 +1,19 @@
 # Changelog
 
+## [3.2.0](https://github.com/lgdd/lfr-cli/compare/v3.1.0...v3.2.0) (2025-02-01)
+
+
+### Features
+
+* add flag clean for deploy command ([#26](https://github.com/lgdd/lfr-cli/issues/26)) ([8a8d1b1](https://github.com/lgdd/lfr-cli/commit/8a8d1b15f0fbfbcf3a16906b1c75cff5da51a62d))
+* add trial command to get a DXP trial key ([fecad66](https://github.com/lgdd/lfr-cli/commit/fecad660c3d9477f1982db67b1ba61501b7e5733))
+
+
+### Bug Fixes
+
+* gradle wrapper version used with liferay major versions ([7a851b2](https://github.com/lgdd/lfr-cli/commit/7a851b288d36cc3dbf15c18e606b340ec1195bcd))
+* workspace gradle plugin version used with liferay editions/versions ([4fa4c3f](https://github.com/lgdd/lfr-cli/commit/4fa4c3f041b73f51b2c78eaa309ab7eebf7b825c))
+
 ## [3.1.0](https://github.com/lgdd/lfr-cli/compare/v3.0.0...v3.1.0) (2024-08-02)
 
 
