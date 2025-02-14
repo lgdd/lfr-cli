@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
@@ -19,14 +20,16 @@ var (
 		Args:    cobra.NoArgs,
 		Run:     run,
 	}
-	Follow bool
+	Directory string
 )
 
 func init() {
 	conf.Init()
+	Cmd.Flags().StringVarP(&Directory, "directory", "d", ".", "--directory")
 }
 
 func run(cmd *cobra.Command, args []string) {
+	destination := path.Join(Directory, "trial.xml")
 	resp, error := http.Get("https://raw.githubusercontent.com/lgdd/liferay-product-info/refs/heads/main/dxp-trial/trial.xml")
 
 	if error != nil {
@@ -35,11 +38,11 @@ func run(cmd *cobra.Command, args []string) {
 
 	defer resp.Body.Close()
 	body, _ := io.ReadAll(resp.Body)
-	if _, error = os.Stat("trial.xml"); error == nil {
-		logger.PrintWarn("trial.xml already exists")
+	if _, error = os.Stat(destination); error == nil {
+		logger.PrintfWarn("%s already exists", destination)
 	} else {
-		os.WriteFile("trial.xml", body, 0666)
+		os.WriteFile(destination, body, 0666)
 		logger.PrintSuccess("created ")
-		logger.Print("trial.xml")
+		logger.Print(destination)
 	}
 }
