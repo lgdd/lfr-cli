@@ -14,7 +14,7 @@
 	<packaging>war</packaging>
   <properties>
 		<spring.scope>compile</spring.scope>
-		<spring.security.version>5.5.1</spring.security.version>
+		<spring.security.version>5.8.16</spring.security.version>
 		<spring.version>5.3.27</spring.version>
   </properties>
 	<dependencyManagement>
