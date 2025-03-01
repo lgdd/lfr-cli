@@ -31,7 +31,11 @@ func CreateClientExtension(sample, name string) {
 	fileutil.CreateDirs(clientExtensionDir)
 
 	if err := cp.Copy(samplePath, clientExtensionDir); err != nil {
-		logger.Fatal(err.Error())
+		clientExtensionExtraSamplesPath := filepath.Join(conf.GetConfigPath(), conf.ClientExtensionExtraSampleProjectName)
+		extraSamplePath := filepath.Join(clientExtensionExtraSamplesPath, conf.ClientExtensionExtraSamplePrefix+sample)
+		if err := cp.Copy(extraSamplePath, clientExtensionDir); err != nil {
+			logger.Fatal(err.Error())
+		}
 	}
 
 	_ = filepath.Walk(clientExtensionDir,

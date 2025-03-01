@@ -92,8 +92,17 @@ $RECYCLE.BIN/
 dist/
 
 # Specific files for the embedded assets
+# Client Extensions Samples
 internal/assets/tpl/client_extension/liferay-client-extensions-samples/.github
 internal/assets/tpl/client_extension/liferay-client-extensions-samples/.gitignore
 internal/assets/tpl/client_extension/liferay-client-extensions-samples/HOW-TO.md
 internal/assets/tpl/client_extension/liferay-client-extensions-samples/LICENSE
 internal/assets/tpl/client_extension/liferay-client-extensions-samples/README.md
+# Client Extensions Extra Samples
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/.dockerignore
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/.gitignore
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/Dockerfile
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/LICENSE
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/README.md
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/build.gradle
+internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples/docker-compose.yml

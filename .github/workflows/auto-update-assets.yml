@@ -25,6 +25,14 @@ jobs:
           git clean -d -f .
           git pull
           mv .git git
+      - name: Update Client Extensions Extra Samples
+        working-directory: ./internal/assets/tpl/client_extension/liferay-client-extensions-extra-samples
+        run: |
+          mv git .git
+          git reset --hard HEAD
+          git clean -d -f .
+          git pull
+          mv .git git
       - name: Commit Client Extensions Changes
         run: |
           git config --global user.name 'github-actions[bot]'

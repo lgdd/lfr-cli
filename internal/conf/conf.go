@@ -10,8 +10,10 @@ import (
 )
 
 const (
-	ClientExtensionSamplePrefix      = "liferay-sample-"
-	ClientExtensionSampleProjectName = "liferay-client-extensions-samples"
+	ClientExtensionSamplePrefix           = "liferay-sample-"
+	ClientExtensionExtraSamplePrefix      = "sample-"
+	ClientExtensionSampleProjectName      = "liferay-client-extensions-samples"
+	ClientExtensionExtraSampleProjectName = "liferay-client-extensions-extra-samples"
 	// Config file keys
 	WorkspaceEdition = "workspace.edition"
 	WorkspaceVersion = "workspace.version"
