@@ -1,0 +1,12 @@
+sample-etc-java-quarkus-oauth-application-user-agent:
+  .serviceAddress: localhost:8083
+  .serviceScheme: http
+  name: Sample Etc Java Quarkus OAuth Application User Agent
+  scopes:
+    - Liferay.Headless.Admin.User.read
+  type: oAuthApplicationUserAgent
+sample-etc-java-quarkus-object-action-1:
+  name: Sample Etc Java Quarkus Object Action 1
+  oAuth2ApplicationExternalReferenceCode: sample-etc-java-quarkus-oauth-application-user-agent
+  resourcePath: /object/action/1
+  type: objectAction

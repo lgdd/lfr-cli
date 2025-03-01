@@ -1,0 +1,12 @@
+[project]
+name = "sample-etc-python-fastapi"
+version = "1.0.0"
+description = "Liferay client extension sample using Python, FastAPI and PyJWT"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.115.8",
+    "pyjwt[crypto]>=2.10.1",
+    "requests>=2.32.3",
+    "uvicorn>=0.34.0",
+]

@@ -1,0 +1,13 @@
+assemble:
+  - from: dist/assets
+    into: static
+sample-custom-element-svelte:
+  friendlyURLMapping: sample-custom-element-svelte
+  htmlElementName: sample-custom-element-svelte
+  instanceable: false
+  name: Sample Custom Element Svelte
+  portletCategoryName: category.client-extensions
+  type: customElement
+  urls:
+    - index-*.js
+  useESM: true

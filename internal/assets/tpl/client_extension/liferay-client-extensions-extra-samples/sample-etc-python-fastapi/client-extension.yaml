@@ -1,0 +1,12 @@
+sample-etc-python-fastapi-oauth-application-user-agent:
+  .serviceAddress: localhost:8502
+  .serviceScheme: http
+  name: Sample Etc Python FastAPI OAuth Application User Agent
+  scopes:
+    - Liferay.Headless.Admin.User.read
+  type: oAuthApplicationUserAgent
+sample-etc-python-fastapi-object-action-1:
+  name: Sample Etc Python FastAPI Object Action 1
+  oAuth2ApplicationExternalReferenceCode: sample-etc-python-fastapi-oauth-application-user-agent
+  resourcePath: /object/action/1
+  type: objectAction

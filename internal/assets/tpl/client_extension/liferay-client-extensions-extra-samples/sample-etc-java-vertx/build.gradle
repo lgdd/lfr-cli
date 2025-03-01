@@ -1,0 +1,65 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+  id 'java'
+  id 'application'
+  id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'org.acme'
+version = '1.0.0-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+def vertxVersion = "4.5.13"
+def junitJupiterVersion = "5.9.1"
+
+def mainVerticleName = "org.acme.liferay.client.extension.vertx.sample.MainVerticle"
+def launcherClassName = "org.acme.liferay.client.extension.vertx.sample.VertxApplication"
+
+def watchForChange = "src/**/*"
+def doOnChange = "${projectDir}/gradlew classes"
+
+application {
+  mainClass.set(launcherClassName)
+}
+
+dependencies {
+  implementation platform("io.vertx:vertx-stack-depchain:${vertxVersion}")
+  implementation "io.vertx:vertx-config"
+  implementation "io.vertx:vertx-web"
+  implementation "io.vertx:vertx-web-client"
+  implementation "io.vertx:vertx-auth-jwt"
+  testImplementation "io.vertx:vertx-junit5"
+  testImplementation "org.junit.jupiter:junit-jupiter:${junitJupiterVersion}"
+}
+
+java {
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
+}
+
+tasks.withType(ShadowJar) {
+  archiveClassifier.set("fat")
+  manifest {
+    attributes([ 'Main-Verticle': mainVerticleName ])
+  }
+  mergeServiceFiles()
+}
+
+tasks.withType(Test) {
+  useJUnitPlatform()
+  testLogging {
+    events = [
+            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
+    ].toSet()
+  }
+}
+
+tasks.withType(JavaExec) {
+  args = ["run", mainVerticleName, "--redeploy=${watchForChange}", "--launcher-class=${launcherClassName}", "--on-redeploy=${doOnChange}"]
+}

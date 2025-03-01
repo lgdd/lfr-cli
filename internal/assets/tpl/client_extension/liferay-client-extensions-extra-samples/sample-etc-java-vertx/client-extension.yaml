@@ -1,0 +1,12 @@
+sample-etc-java-vertx-oauth-application-user-agent:
+  .serviceAddress: localhost:8082
+  .serviceScheme: http
+  name: Sample Etc Java Vert.x OAuth Application User Agent
+  scopes:
+    - Liferay.Headless.Admin.User.read
+  type: oAuthApplicationUserAgent
+sample-etc-java-vertx-object-action-1:
+  name: Sample Etc Java Vert.x Object Action 1
+  oAuth2ApplicationExternalReferenceCode: sample-etc-java-vertx-oauth-application-user-agent
+  resourcePath: /object/action/1
+  type: objectAction
