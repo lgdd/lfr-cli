@@ -1,5 +1,14 @@
 # Changelog
 
+## [3.3.0](https://github.com/lgdd/lfr-cli/compare/v3.2.0...v3.3.0) (2025-03-01)
+
+
+### Features
+
+* add client extension extra samples ([b17798e](https://github.com/lgdd/lfr-cli/commit/b17798eba6a04a73bbe736171c85b4f1f50a30a3))
+* add flag to create trial.xml in a specific directory ([9eb16ef](https://github.com/lgdd/lfr-cli/commit/9eb16effc3a95a1ce4eaa1c746d0214846199c2a))
+* improved stop command feedback ([869a483](https://github.com/lgdd/lfr-cli/commit/869a483d1a2aec4974abe5469fce8a3fa62a19a6))
+
 ## [3.2.0](https://github.com/lgdd/lfr-cli/compare/v3.1.0...v3.2.0) (2025-02-01)
 
 
