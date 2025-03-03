@@ -1,7 +1,0 @@
-{
-  "com.liferay.lxc.dxp.domains": "localhost:8080",
-  "com.liferay.lxc.dxp.mainDomain": "localhost:8080",
-  "com.liferay.lxc.dxp.server.protocol": "http",
-  "liferay.oauth.application.external.reference.codes": "sample-etc-java-vertx-oauth-application-user-agent",
-  "liferay.oauth.urls.excludes": "/ready"
-}

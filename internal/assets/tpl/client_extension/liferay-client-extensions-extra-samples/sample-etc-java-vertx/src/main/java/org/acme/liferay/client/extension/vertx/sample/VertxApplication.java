@@ -13,8 +13,22 @@ public class VertxApplication extends Launcher {
   public static void main(String[] args) {
     Vertx vertx = Vertx.vertx();
 
-    ConfigRetriever retriever = ConfigRetriever.create(vertx, new ConfigRetrieverOptions()
-        .addStore(new ConfigStoreOptions().setType("file").setConfig(new JsonObject().put("path", "conf/dxp-metadata.json"))));
+    ConfigStoreOptions properties = new ConfigStoreOptions()
+        .setType("file")
+        .setFormat("properties")
+        .setConfig(
+            new JsonObject()
+                .put("path", "application.properties")
+        );
+
+    ConfigStoreOptions env = new ConfigStoreOptions()
+        .setType("env");
+
+    ConfigRetrieverOptions options = new ConfigRetrieverOptions()
+        .addStore(properties)
+        .addStore(env);
+
+    ConfigRetriever retriever = ConfigRetriever.create(vertx, options);
 
     retriever.getConfig().onComplete(json -> {
       vertx.deployVerticle(new MainVerticle(), new DeploymentOptions().setConfig(json.result()));
