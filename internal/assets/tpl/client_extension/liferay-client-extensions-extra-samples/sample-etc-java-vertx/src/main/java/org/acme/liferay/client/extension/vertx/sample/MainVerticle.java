@@ -1,6 +1,5 @@
 package org.acme.liferay.client.extension.vertx.sample;
 
-import io.netty.util.internal.StringUtil;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
@@ -22,72 +21,13 @@ public class MainVerticle extends AbstractVerticle {
   @Override
   public void start(Promise<Void> startPromise) throws Exception {
     HttpServer server = vertx.createHttpServer();
-    WebClient client = WebClient.create(vertx);
+    WebClient webClient = WebClient.create(vertx);
     Router router = Router.router(vertx);
 
     router.route().handler(BodyHandler.create());
 
     Handler<RoutingContext> jwtHandler = ctx -> {
-      final String token = ctx.request().headers().get("Authorization").split("Bearer ")[1];
-      final String liferayDomain = config().getString("com.liferay.lxc.dxp.mainDomain",
-          "localhost:8080");
-      final String liferayHost = liferayDomain.split(":")[0];
-      final int liferayPort = Integer.parseInt(liferayDomain.split(":")[1]);
-      final String externalReferenceCode = config().getString(
-          "liferay.oauth.application.external.reference.codes").split(",")[0];
-
-      client
-          .get(liferayPort, liferayHost, "/o/oauth2/jwks")
-          .send()
-          .onSuccess(response -> {
-            JsonObject jwksResponse = response.bodyAsJsonObject();
-            List<JsonObject> jwks =
-                jwksResponse
-                    .getJsonArray("keys")
-                    .stream()
-                    .map(JsonObject.class::cast)
-                    .toList();
-
-            JWTAuthOptions jwtOptions = new JWTAuthOptions();
-            jwtOptions.setJwks(jwks);
-
-            JWTAuth jwtAuth = JWTAuth.create(vertx, jwtOptions);
-            jwtAuth.authenticate(
-                new JsonObject().put("token", token)
-            ).onSuccess(user -> {
-              JsonObject decodedToken = user.principal();
-              final String tokenClientId = decodedToken.getString("client_id");
-              final String oauth2ApplicationURI =
-                  "/o/oauth2/application?externalReferenceCode=" + externalReferenceCode;
-
-              client
-                  .get(liferayPort, liferayHost, oauth2ApplicationURI)
-                  .send()
-                  .onSuccess(res -> {
-                    JsonObject oauth2Application = res.bodyAsJsonObject();
-                    if(tokenClientId.equals(oauth2Application.getString("client_id"))) {
-                      ctx.next();
-                    } else {
-                      String message = "Client id from token and oauth application matched";
-                      _log.error(message);
-                      ctx.fail(new Exception(message));
-                    }
-                  })
-                  .onFailure(error -> {
-                    _log.error(error.getMessage());
-                    ctx.fail(error);
-                  });
-
-            }).onFailure(error -> {
-              _log.error(error.getMessage());
-              ctx.fail(error);
-            });
-
-          })
-          .onFailure(error -> {
-            _log.error(error.getMessage());
-            ctx.fail(error);
-          });
+      validateJWT(ctx, webClient);
     };
 
     router
@@ -131,6 +71,92 @@ public class MainVerticle extends AbstractVerticle {
           } else {
             startPromise.fail(http.cause());
           }
+        });
+  }
+
+  private void validateJWT(RoutingContext ctx, WebClient webClient) {
+    final String token = ctx.request().headers().get("Authorization").split("Bearer ")[1];
+    final String externalReferenceCode =
+        config()
+            .getString("liferay.oauth.application.external.reference.codes")
+            .split(",")[0];
+    final String liferayDomain =
+        config()
+            .getString("com.liferay.lxc.dxp.mainDomain", "localhost:8080");
+    final String liferayHost = liferayDomain.split(":")[0];
+    final int liferayPort = Integer.parseInt(liferayDomain.split(":")[1]);
+
+    webClient
+        .get(liferayPort, liferayHost, "/o/oauth2/jwks")
+        .send()
+        .onSuccess(response -> {
+          JsonObject jwksResponse = response.bodyAsJsonObject();
+          List<JsonObject> jwks =
+              jwksResponse
+                  .getJsonArray("keys")
+                  .stream()
+                  .map(JsonObject.class::cast)
+                  .toList();
+
+          JWTAuthOptions jwtOptions = new JWTAuthOptions();
+          jwtOptions.setJwks(jwks);
+          JWTAuth jwtAuth = JWTAuth.create(vertx, jwtOptions);
+
+          jwtAuth.authenticate(
+              new JsonObject().put("token", token)
+          ).onSuccess(user -> {
+            final JsonObject decodedToken = user.principal();
+            final String tokenClientId = decodedToken.getString("client_id");
+            final String oauth2ApplicationURI =
+                "/o/oauth2/application?externalReferenceCode=" + externalReferenceCode;
+
+            _log.info("JWT Claims: " + decodedToken);
+            _log.info("JWT ID: " + decodedToken.getString("jti"));
+            _log.info("JWT Subject: " + decodedToken.getString("sub"));
+
+            validateClientId(ctx, webClient, tokenClientId);
+
+          }).onFailure(error -> {
+            _log.error(error.getMessage());
+            ctx.fail(error);
+          });
+
+        })
+        .onFailure(error -> {
+          _log.error(error.getMessage());
+          ctx.fail(error);
+        });
+  }
+
+  private void validateClientId(RoutingContext ctx, WebClient webClient, String tokenClientId) {
+    final String externalReferenceCode =
+        config()
+            .getString("liferay.oauth.application.external.reference.codes")
+            .split(",")[0];
+    final String liferayDomain =
+        config()
+            .getString("com.liferay.lxc.dxp.mainDomain", "localhost:8080");
+    final String liferayHost = liferayDomain.split(":")[0];
+    final int liferayPort = Integer.parseInt(liferayDomain.split(":")[1]);
+    final String oauth2ApplicationURI =
+        "/o/oauth2/application?externalReferenceCode=" + externalReferenceCode;
+
+    webClient
+        .get(liferayPort, liferayHost, oauth2ApplicationURI)
+        .send()
+        .onSuccess(res -> {
+          JsonObject oauth2Application = res.bodyAsJsonObject();
+          if (tokenClientId.equals(oauth2Application.getString("client_id"))) {
+            ctx.next();
+          } else {
+            String message = "Client id from token and oauth application matched";
+            _log.error(message);
+            ctx.fail(new Exception(message));
+          }
+        })
+        .onFailure(error -> {
+          _log.error(error.getMessage());
+          ctx.fail(error);
         });
   }
 

@@ -1,0 +1,12 @@
+sample-etc-bun-oauth-application-user-agent:
+  .serviceAddress: localhost:8228
+  .serviceScheme: http
+  name: Sample Etc Bun OAuth Application User Agent
+  scopes:
+    - Liferay.Headless.Admin.User.read
+  type: oAuthApplicationUserAgent
+sample-etc-bun-object-action-1:
+  name: Sample Etc Golang Object Action 1
+  oAuth2ApplicationExternalReferenceCode: sample-etc-bun-oauth-application-user-agent
+  resourcePath: /object/action/1
+  type: objectAction

@@ -12,4 +12,7 @@ RUN sed -i -e 's/localhost/liferay/g' dxp-metadata/com.liferay.lxc.dxp.mainDomai
 
 RUN go build -v -o /usr/local/bin/app ./...
 
+# add path to Liferay client extension metadata
+ENV LIFERAY_ROUTES_DXP=/usr/src/app/dxp-metadata
+
 ENTRYPOINT ["app"]
