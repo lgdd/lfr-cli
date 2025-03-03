@@ -35,6 +35,6 @@ version = '7.4' # or 7.3, 7.2, 7.1, 7.0
 ```
 > See also [`lfr config`](/cmd/config)
 
-The configuration directory will also contains the Client Extensions samples. The samples are cloned from a [custom repository](https://github.com/lgdd/liferay-client-extensions-samples){:target="_blank"} that mirrors the [official samples contained in the monorepo](https://github.com/liferay/liferay-portal/tree/master/workspaces/liferay-sample-workspace/client-extensions){:target="_blank"} and rename some components to be more intelligible.
+The configuration directory will also contains the Client Extensions samples. The samples are cloned from a [custom repository](https://github.com/lgdd/liferay-client-extensions-samples){:target="_blank"} that mirrors the [official samples contained in the monorepo](https://github.com/liferay/liferay-portal/tree/master/workspaces/liferay-sample-workspace/client-extensions){:target="_blank"} and rename some components to be more intelligible. It also includes some unofficial extra samples you can find on [this repository](https://github.com/lgdd/liferay-client-extensions-extra-samples){:target="_blank"}
 
 The Client Extensions samples are cloned when running the `lfr create client-extension` (or the short version `lfr c cx`) for the first time, and the next time it will refresh it with a `git pull` in the background.

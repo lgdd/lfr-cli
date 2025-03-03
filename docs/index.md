@@ -30,9 +30,10 @@ Also, I get sometimes frustrated by [Blade](https://github.com/liferay/liferay-b
 # Related projects
 
 To reach some of the goals of this tool, other projects have been built in order to enhance the developer experience:
-- [https://github.com/lgdd/liferay-product-info](https://github.com/lgdd/liferay-product-info)
-- [https://github.com/lgdd/liferay-dxp-releases](https://github.com/lgdd/liferay-dxp-releases)
-- [https://github.com/lgdd/liferay-client-extensions-samples](https://github.com/lgdd/liferay-client-extensions-samples)
+- [https://github.com/lgdd/liferay-product-info](https://github.com/lgdd/liferay-product-info){:target="_blank"}
+- [https://github.com/lgdd/liferay-dxp-releases](https://github.com/lgdd/liferay-dxp-releases){:target="_blank"}
+- [https://github.com/lgdd/liferay-client-extensions-samples](https://github.com/lgdd/liferay-client-extensions-samples){:target="_blank"}
+- [https://github.com/lgdd/liferay-client-extensions-extra-samples](https://github.com/lgdd/liferay-client-extensions-extra-samples){:target="_blank"}
 
 # Changelog
 
