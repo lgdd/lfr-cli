@@ -1,0 +1,13 @@
+assemble:
+  - from: dist/assets
+    into: static
+sample-custom-element-vue:
+  friendlyURLMapping: sample-custom-element-vue
+  htmlElementName: sample-custom-element-vue
+  instanceable: false
+  name: Sample Custom Element Vue.js
+  portletCategoryName: category.client-extensions
+  type: customElement
+  urls:
+    - http://localhost:5173/src/main.js
+  useESM: true

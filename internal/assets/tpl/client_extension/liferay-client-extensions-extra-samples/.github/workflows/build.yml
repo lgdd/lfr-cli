@@ -1,0 +1,38 @@
+name: build
+run-name: Build
+
+on:
+  push:
+
+jobs:
+  build-workspace:
+    name: Build Workspace
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Blade
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/liferay/liferay-blade-cli/master/cli/installers/local | bash
+          echo "/home/runner/jpm/bin" >> $GITHUB_PATH
+      - name: Create Liferay Workspace
+        run: |
+          blade init -v dxp-2025.q1.0-lts workspace
+          mkdir -p workspace/client-extensions
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: workspace/client-extensions
+      - uses: lgdd/liferay-build-action@v2
+        with:
+          java-version: 21
+          upload-bundle: false
+          upload-artifacts: false
+          workspace-directory: ./workspace
+  build-docker:
+    name: Build Docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Docker Compose
+        run: |
+          docker compose build
