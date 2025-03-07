@@ -1,6 +1,5 @@
 package org.acme.liferay.client.extension.vertx.sample.handler;
 
-import io.vertx.core.Handler;
 import io.vertx.core.Vertx;
 import io.vertx.core.impl.logging.Logger;
 import io.vertx.core.impl.logging.LoggerFactory;
@@ -12,12 +11,10 @@ import io.vertx.ext.web.client.WebClient;
 import java.util.List;
 import java.util.Map;
 
-public class JWTHandler implements Handler<RoutingContext> {
+public class JWTHandler extends BaseHandler {
 
   public JWTHandler(Vertx vertx, WebClient webClient, Map<String, String> configMap) {
-    this._webClient = webClient;
-    this._configMap = configMap;
-    this._vertx = vertx;
+    super(vertx, webClient, configMap);
   }
 
   @Override
@@ -106,10 +103,6 @@ public class JWTHandler implements Handler<RoutingContext> {
           ctx.fail(error);
         });
   }
-
-  private final Map<String, String> _configMap;
-  private final WebClient _webClient;
-  private final Vertx _vertx;
 
   private static final Logger _log = LoggerFactory.getLogger(JWTHandler.class);
 }

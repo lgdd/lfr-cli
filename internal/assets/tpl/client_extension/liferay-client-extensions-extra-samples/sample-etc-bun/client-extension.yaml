@@ -3,7 +3,7 @@ sample-etc-bun-oauth-application-user-agent:
   .serviceScheme: http
   name: Sample Etc Bun OAuth Application User Agent
   scopes:
-    - Liferay.Headless.Admin.User.read
+    - Liferay.Headless.Admin.User.everything.read
   type: oAuthApplicationUserAgent
 sample-etc-bun-object-action-1:
   name: Sample Etc Golang Object Action 1

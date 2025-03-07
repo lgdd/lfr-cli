@@ -3,7 +3,7 @@ sample-etc-golang-oauth-application-user-agent:
   .serviceScheme: http
   name: Sample Etc Golang OAuth Application User Agent
   scopes:
-    - Liferay.Headless.Admin.User.read
+    - Liferay.Headless.Admin.User.everything.read
   type: oAuthApplicationUserAgent
 sample-etc-golang-object-action-1:
   name: Sample Etc Golang Object Action 1

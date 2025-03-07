@@ -3,7 +3,7 @@ import {log} from "./log.ts";
 import {type JSONWebKeySet, type JWK, type JWTPayload, jwtVerify} from "jose";
 import {getConfigMap} from "./config.ts";
 
-const configMap  = await getConfigMap()
+const configMap = await getConfigMap()
 const externalReferenceCode = configMap.get("liferay.oauth.application.external.reference.codes")?.split(",")[0]
 const liferayHost = `${configMap.get("com.liferay.lxc.dxp.server.protocol")}://${configMap.get("com.liferay.lxc.dxp.mainDomain")}`
 
@@ -13,37 +13,73 @@ const AuthError = (message: string) => {
   return error;
 }
 
-const validateJWT = async (req: Request) => {
+const getJWT = async (req: Request) => {
   const authorization = req.headers.get("Authorization")
+
   if (authorization == null) {
     throw AuthError("Authorization header is missing")
   }
+
   if (!authorization.startsWith("Bearer")) {
     throw AuthError("Bearer token is missing")
   }
-  const jwt = authorization.slice("Bearer ".length)
+
+  return authorization.slice("Bearer ".length)
+}
+
+const validateJWT = async (jwt: string) => {
   const response = await fetch(`${liferayHost}/o/oauth2/jwks`)
   const jwks: JSONWebKeySet = await response.json()
   const jwk: JWK = jwks.keys[0]
-  const { payload } = await jwtVerify(jwt, jwk)
+  const {payload} = await jwtVerify(jwt, jwk)
   log.info(`Decoded JWT: ${JSON.stringify(payload)}`)
   return payload
 }
+
 const validateClientId = async (req: Request, decodedToken: JWTPayload) => {
   const response = await fetch(`${liferayHost}/o/oauth2/application?externalReferenceCode=${externalReferenceCode}`)
   const jsonResponse = await response.json()
   const clientId = jsonResponse["client_id"]
-  if(clientId !== decodedToken["client_id"]) {
+  if (clientId !== decodedToken["client_id"]) {
     throw AuthError("Client id from token and OAuth application don't match")
   }
 }
 
 const objectAction1 = async (req: Request) => {
-  const decodedToken = await validateJWT(req)
+  const jwt = await getJWT(req)
+  const decodedToken = await validateJWT(jwt)
   await validateClientId(req, decodedToken)
 
-  const objectEntry = await req.json()
-  log.info(JSON.stringify(objectEntry))
+  const data = await req.json()
+  log.info(JSON.stringify(data))
+
+  const authorUserId = data.objectEntry.userId
+
+  const authorUserInfoURL = `${liferayHost}/o/headless-admin-user/v1.0/user-accounts/${authorUserId}`
+  const headers = new Headers();
+  headers.set('Authorization', `Bearer ${jwt}`);
+  headers.set('Content-Type', 'application/json');
+
+  const requestOptions = {
+    method: 'GET',
+    headers: headers
+  };
+
+  log.info(`Fetching author user information at ${authorUserInfoURL}`)
+  const userInfoResponse = await fetch(`${authorUserInfoURL}`, requestOptions)
+
+  if (userInfoResponse.status / 100 != 2) {
+    const errorMessage = `Could not fetch author user information: ${userInfoResponse.status} error`
+    log.error(errorMessage)
+    return new Response('', {
+      status: 500,
+      statusText: errorMessage
+    })
+  }
+
+  const authorUserInfo = await userInfoResponse.json()
+
+  log.info(JSON.stringify(authorUserInfo));
 
   return new Response('', {
     status: 202

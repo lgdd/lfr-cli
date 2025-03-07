@@ -3,7 +3,7 @@ sample-etc-java-quarkus-oauth-application-user-agent:
   .serviceScheme: http
   name: Sample Etc Java Quarkus OAuth Application User Agent
   scopes:
-    - Liferay.Headless.Admin.User.read
+    - Liferay.Headless.Admin.User.everything.read
   type: oAuthApplicationUserAgent
 sample-etc-java-quarkus-object-action-1:
   name: Sample Etc Java Quarkus Object Action 1

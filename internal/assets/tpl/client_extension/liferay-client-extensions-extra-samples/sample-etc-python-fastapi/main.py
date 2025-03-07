@@ -18,6 +18,7 @@ configTreePathsEnvs = ["LIFERAY_ROUTES_DXP", "LIFERAY_ROUTES_CLIENT_EXTENSION"]
 configTreePaths = []
 config = {}
 
+@app.on_event("startup")
 def init_config():
     for env in configTreePathsEnvs:
         configTreePath = os.environ.get(env)
@@ -30,7 +31,6 @@ def init_config():
         configTreePaths.append("dxp-metadata")
 
     logger.info("Load config:")
-    config = {}
     for configTreePath in configTreePaths:
         dxp_metadata = os.scandir(configTreePath)
         for entry in dxp_metadata:
@@ -79,7 +79,7 @@ def validate_client_id(client_id):
         raise HTTPException(status_code=500, detail=error_msg)
 
 @app.middleware("http")
-async def jwt_middleware(request: Request, call_next, authorization: Annotated[str | None, Header()] = None):
+async def jwt_middleware(request: Request, call_next):
     if request.get("path") != "/ready" and request.get("path") != "/":
         headers = dict(request.get("headers"))
         token = headers[b'authorization'].decode('utf-8').split("Bearer ")[1]
@@ -98,9 +98,21 @@ async def ready():
 
 @app.post("/object/action/1")
 async def object_action_1(request: Request):
-    object_entry = await request.json()
-    logger.info(object_entry)
+    data = await request.json()
+    logger.info(data)
+
+    headers = dict(request.get("headers"))
+    token = headers[b'authorization'].decode('utf-8')
+
+    author_user_id = data["objectEntry"]["userId"]
+    protocol = config["com.liferay.lxc.dxp.server.protocol"]
+    domain = config["com.liferay.lxc.dxp.mainDomain"]
+
+    author_user_info_uri = protocol + "://" + domain + "/o/headless-admin-user/v1.0/user-accounts/" + str(author_user_id)
+
+    logger.info("Fetching author user information from " + author_user_info_uri)
+    response = requests.get(author_user_info_uri, headers={"Authorization": token, "Content-Type": "application/json"})
+    logger.info(response.json())
 
 if __name__ == "__main__":
-    init_config()
-    uvicorn.run("main:app", host="0.0.0.0", port=8502, log_level="info")
+    uvicorn.run("main:app", host="0.0.0.0", port=8502, log_level="info", reload=True)

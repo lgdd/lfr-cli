@@ -33,7 +33,7 @@ public class MainVerticle extends AbstractVerticle {
     _configMap = getConfigMap();
 
     JWTHandler jwtHandler = new JWTHandler(vertx, webClient, _configMap);
-    ObjectAction1Handler objectAction1Handler = new ObjectAction1Handler();
+    ObjectAction1Handler objectAction1Handler = new ObjectAction1Handler(vertx, webClient, _configMap);
 
     router.route().handler(BodyHandler.create());
 

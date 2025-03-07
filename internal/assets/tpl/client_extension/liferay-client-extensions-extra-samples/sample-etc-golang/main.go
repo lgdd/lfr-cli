@@ -222,10 +222,33 @@ func validateClientId(token jwt.Token) error {
 	return errors.New("client id from token and oauth application don't match")
 }
 
+func getJWT(r *http.Request) (string, error) {
+	authHeader := r.Header.Get("Authorization")
+
+	if authHeader == "" {
+		errorMessage := "authorization header is missing"
+		slog.Error(errorMessage)
+		return "", errors.New(errorMessage)
+	}
+
+	tokenString := strings.Split(authHeader, "Bearer ")[1]
+
+	if tokenString == "" {
+		errorMessage := "bearer token is missing"
+		slog.Error(errorMessage)
+		return "", errors.New(errorMessage)
+	}
+	return tokenString, nil
+}
+
 func jwtHandler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
-		tokenString := strings.Split(authHeader, "Bearer ")[1]
+		tokenString, error := getJWT(r)
+
+		if error != nil {
+			http.Error(w, error.Error(), 401)
+			return
+		}
 
 		token, err := validateJWT(tokenString)
 
@@ -241,6 +264,70 @@ func jwtHandler(next http.Handler) http.Handler {
 
 		next.ServeHTTP(w, r)
 	})
+}
+
+func getBodyByteArray(body io.ReadCloser) ([]byte, error) {
+	var data interface{}
+	err := json.NewDecoder(body).Decode(&data)
+
+	if err != nil {
+		return nil, err
+	}
+
+	dataByteArray, err := json.MarshalIndent(data, "", "\t")
+
+	if err != nil {
+		return nil, err
+	}
+
+	return dataByteArray, nil
+}
+
+func fetchAuthorUserInfo(token, userId string) (string, error) {
+	var authorUserInfoURLBuilder strings.Builder
+
+	protocol := Config["com.liferay.lxc.dxp.server.protocol"]
+	host := Config["com.liferay.lxc.dxp.mainDomain"]
+
+	authorUserInfoURLBuilder.WriteString(protocol)
+	authorUserInfoURLBuilder.WriteString("://")
+	authorUserInfoURLBuilder.WriteString(host)
+	authorUserInfoURLBuilder.WriteString("/o/headless-admin-user/v1.0/user-accounts/")
+	authorUserInfoURLBuilder.WriteString(userId)
+
+	httpClient := &http.Client{}
+	request, err := http.NewRequest("GET", authorUserInfoURLBuilder.String(), nil)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	auth := strings.Join([]string{"Bearer", token}, " ")
+
+	request.Header.Add("Authorization", auth)
+	request.Header.Add("Content-Type", "application/json")
+
+	slog.Info(fmt.Sprintf("Fetching author user information from %s", authorUserInfoURLBuilder.String()))
+
+	response, err := httpClient.Do(request)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer response.Body.Close()
+
+	if response.StatusCode/100 != 2 {
+		return "", errors.New(fmt.Sprintf("could not fetch author user information: %v error", response.StatusCode))
+	}
+
+	dataByteArray, err := getBodyByteArray(response.Body)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	return string(dataByteArray), nil
 }
 
 func main() {
@@ -275,21 +362,34 @@ func main() {
 	objectAction1Handler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		slog.Info("execute /object/action/1")
 
-		var objectEntry interface{}
-		err := json.NewDecoder(r.Body).Decode(&objectEntry)
+		token, _ := getJWT(r)
+
+		dataByteArray, err := getBodyByteArray(r.Body)
+
+		slog.Info(string(dataByteArray))
 
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		objectEntryJsonBytes, err := json.MarshalIndent(objectEntry, "", "\t")
+		data := make(map[string]any)
+
+		err = json.Unmarshal(dataByteArray, &data)
 
 		if err != nil {
-			log.Fatal(err)
+			slog.Error(err.Error())
 		}
 
-		objectEntryJsonString := string(objectEntryJsonBytes)
-		slog.Info(objectEntryJsonString)
+		objectEntry := data["objectEntry"].(map[string]any)
+		authorUserId := objectEntry["userId"]
+
+		authorUserInfo, err := fetchAuthorUserInfo(token, fmt.Sprintf("%#v", authorUserId))
+
+		if err != nil {
+			slog.Error(err.Error())
+		}
+
+		slog.Info(authorUserInfo)
 	})
 
 	http.Handle("/", homeHandler)
