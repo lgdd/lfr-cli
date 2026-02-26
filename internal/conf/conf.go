@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -32,17 +33,21 @@ const (
 var NoColor bool
 
 func Init() {
+	initWithPath(GetConfigPath())
+}
+
+func initWithPath(configPath string) {
 	configFile := "config.toml"
 	configName := strings.Split(configFile, ".")[0]
 	configType := strings.Split(configFile, ".")[1]
 
 	viper.SetConfigName(configName)
 	viper.SetConfigType(configType)
-	viper.AddConfigPath(GetConfigPath())
+	viper.AddConfigPath(configPath)
 
-	createConfigFolder()
+	createConfigFolderAt(configPath)
 
-	configFilePath := filepath.Join(GetConfigPath(), configFile)
+	configFilePath := filepath.Join(configPath, configFile)
 	configFileInfo, _ := os.Stat(configFilePath)
 
 	// if empty, remove to set defaults
@@ -51,11 +56,14 @@ func Init() {
 	}
 
 	if err := viper.ReadInConfig(); err != nil {
-		log.Fatal(err.Error())
+		var configFileNotFoundError viper.ConfigFileNotFoundError
+		if !errors.As(err, &configFileNotFoundError) {
+			log.Fatal(err.Error())
+		}
 	}
 
 	setDefaults()
-	viper.WriteConfig()
+	viper.WriteConfigAs(configFilePath)
 }
 
 func GetConfigPath() string {
@@ -88,12 +96,11 @@ func setDefault(key string, value any) {
 	}
 }
 
-func createConfigFolder() {
-	configFolderPath := GetConfigPath()
-	_, err := os.Stat(configFolderPath)
+func createConfigFolderAt(configPath string) {
+	_, err := os.Stat(configPath)
 
 	if os.IsNotExist(err) {
-		err := os.MkdirAll(configFolderPath, os.ModePerm)
+		err := os.MkdirAll(configPath, os.ModePerm)
 		if err != nil {
 			log.Fatal(err.Error())
 		}
