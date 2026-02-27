@@ -56,3 +56,9 @@ pkg/util/procutil/       # Shell command execution and Java/process detection
 **Interactive vs non-interactive**: Every `create` subcommand works both with direct CLI arguments and with a charmbracelet/huh TUI prompt when no arguments are given. The prompt path re-executes the command by appending synthesized args to `os.Args`.
 
 **Configuration**: Stored in `~/.lfr/config.toml`, managed by Viper. Keys are constants in `internal/conf/conf.go` (e.g. `workspace.edition`, `workspace.version`, `workspace.build`, `module.package`). Defaults are set via `conf.setDefaults()` on first run.
+
+### Conventions
+
+**Scaffold error handling**: All public functions in `pkg/scaffold/` return `error` and never call `logger.Fatal` directly. The cmd layer (`internal/cmd/create/`) is responsible for handling errors and calling `logger.Fatal`. Shared helpers live in `pkg/scaffold/helpers.go`.
+
+**Testing scaffold functions**: Functions that call `fileutil.GetLiferayWorkspacePath()` internally (e.g. `CreateModuleAPI`, `CreateModuleMVC`, `CreateModuleGogoCommand`, `CreateModuleSpring`) require the working directory to be inside a Liferay workspace. Use the `chdirWorkspace(t, path)` test helper (defined in `helpers_test.go`) before calling them. Functions that take the workspace path as a parameter (e.g. `CreateModuleRESTBuilder`, `CreateModuleServiceBuilder`) do not need this.
