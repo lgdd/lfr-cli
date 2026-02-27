@@ -15,8 +15,6 @@ require (
 	github.com/mitchellh/go-ps v1.0.0
 	github.com/nxadm/tail v1.4.11
 	github.com/otiai10/copy v1.14.0
-	github.com/reiver/go-oi v1.0.0
-	github.com/reiver/go-telnet v0.0.0-20180421082511-9ff0b2ab096e
 	github.com/rhysd/go-github-selfupdate v1.2.3
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/viper v1.18.2
