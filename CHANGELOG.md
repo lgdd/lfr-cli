@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.3.1](https://github.com/lgdd/lfr-cli/compare/v3.3.0...v3.3.1) (2026-02-27)
+
+
+### Bug Fixes
+
+* **conf:** avoid spurious "config not found" error on first run ([e54f6ce](https://github.com/lgdd/lfr-cli/commit/e54f6ce7e88e3b8c84d7d500ca5ffc480f3b4bcd))
+* **conf:** create config file with defaults on first install ([12505c4](https://github.com/lgdd/lfr-cli/commit/12505c44d21761135a42f0a96f567dac2b68b50e))
+* **helper:** handle missing extra samples in offline fallback ([95439ab](https://github.com/lgdd/lfr-cli/commit/95439ab61520920ed503be90df4e470af9f2d760))
+* **shell:** resolve 1-minute delay connecting to Gogo Shell ([7ec9f9e](https://github.com/lgdd/lfr-cli/commit/7ec9f9e976479770ae7bde7894c6e37e0dbbadc2)), closes [#3](https://github.com/lgdd/lfr-cli/issues/3)
+* **version:** add --version flag to root command ([76ff062](https://github.com/lgdd/lfr-cli/commit/76ff062244a2abae2c61b331984294a1645d24cb))
+* **version:** match --version output to `lfr version` subcommand ([52e17a3](https://github.com/lgdd/lfr-cli/commit/52e17a34f26105c41ff1fc9945c9aface2e23349))
+
 ## [3.3.0](https://github.com/lgdd/lfr-cli/compare/v3.2.0...v3.3.0) (2025-03-01)
 
 
