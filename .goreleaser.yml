@@ -1,3 +1,5 @@
+version: 2
+
 project_name: "lfr-cli"
 before:
   hooks:
@@ -29,7 +31,7 @@ builds:
 archives:
   - format_overrides:
       - goos: windows
-        format: zip
+        formats: [zip]
 nfpms:
   - description: LFR is an unofficial tool written in Go that helps you create & manage your Liferay projects.
     homepage: https://github.com/lgdd/lfr-cli
@@ -39,20 +41,41 @@ nfpms:
       - deb
       - rpm
       - apk
-brews:
-  - repository:
+homebrew_casks:
+  - name: lfr
+    binaries:
+      - lfr
+    repository:
       owner: lgdd
       name: homebrew-tap
       token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
-    directory: Formula
+    directory: Casks
     homepage: https://github.com/lgdd/lfr-cli
     description: LFR is an unofficial tool written in Go that helps you create & manage your Liferay projects.
-    install: |
-      bin.install "lfr"
+winget:
+  - name: lfr-cli
+    publisher: lgdd
+    publisher_url: https://github.com/lgdd
+    publisher_support_url: https://github.com/lgdd/lfr-cli/issues
+    homepage: https://github.com/lgdd/lfr-cli
+    short_description: Unofficial CLI to create & manage Liferay projects.
+    description: LFR is an unofficial tool written in Go that helps you create & manage your Liferay projects.
+    license: MIT
+    license_url: https://github.com/lgdd/lfr-cli/blob/main/LICENSE
+    repository:
+      owner: lgdd
+      name: winget-pkgs
+      token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
+      pull_request:
+        enabled: true
+        base:
+          owner: microsoft
+          name: winget-pkgs
+          branch: master
 checksum:
   name_template: "checksums.txt"
 snapshot:
-  name_template: "{{ .Tag }}"
+  version_template: "{{ .Tag }}"
 changelog:
   sort: asc
   filters:
