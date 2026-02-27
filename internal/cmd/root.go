@@ -1,6 +1,8 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
@@ -48,6 +50,9 @@ func init() {
 	root.AddCommand(diagnose.Cmd)
 	root.AddCommand(config.Cmd)
 	root.AddCommand(trial.Cmd)
+
+	root.SetVersionTemplate(fmt.Sprintf("Version: %s\nCommit: %s\nDate: %s\n",
+		version.Number, version.Commit, version.Date))
 
 	conf.Init()
 	defaultNoColor := viper.GetBool(conf.OutputNoColor)
