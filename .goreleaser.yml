@@ -62,16 +62,18 @@ winget:
     description: LFR is an unofficial tool written in Go that helps you create & manage your Liferay projects.
     license: MIT
     license_url: https://github.com/lgdd/lfr-cli/blob/main/LICENSE
-    repository:
-      owner: lgdd
-      name: winget-pkgs
-      token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
-      pull_request:
-        enabled: true
-        base:
-          owner: microsoft
-          name: winget-pkgs
-          branch: master
+    # repository omitted intentionally — first submission to winget-pkgs must be a manual PR.
+    # Restore this block after the initial PR is accepted:
+    # repository:
+    #   owner: lgdd
+    #   name: winget-pkgs
+    #   token: "{{ .Env.LFR_CLI_GH_TOKEN }}"
+    #   pull_request:
+    #     enabled: true
+    #     base:
+    #       owner: microsoft
+    #       name: winget-pkgs
+    #       branch: master
 checksum:
   name_template: "checksums.txt"
 snapshot:
