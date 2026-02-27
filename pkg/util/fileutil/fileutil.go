@@ -186,6 +186,36 @@ func CopyFromAssets(sourcePath, destPath string, wg *sync.WaitGroup) {
 	}
 }
 
+// AppendModuleToPom adds a module entry to an existing Maven pom.xml file
+func AppendModuleToPom(pomPath, moduleName string) error {
+	pomFile, err := os.Open(pomPath)
+	if err != nil {
+		return err
+	}
+	defer pomFile.Close()
+
+	byteValue, err := io.ReadAll(pomFile)
+	if err != nil {
+		return err
+	}
+
+	var pom Pom
+	if err = xml.Unmarshal(byteValue, &pom); err != nil {
+		return err
+	}
+
+	pom.Modules.Module = append(pom.Modules.Module, moduleName)
+	pom.Xsi = "http://www.w3.org/2001/XMLSchema-instance"
+	pom.SchemaLocation = "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+
+	finalPomBytes, err := xml.MarshalIndent(pom, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(pomPath, []byte(XMLHeader+string(finalPomBytes)), 0644)
+}
+
 // Update template files with given data
 func UpdateWithData(file string, data interface{}) error {
 	content, err := os.ReadFile(file)

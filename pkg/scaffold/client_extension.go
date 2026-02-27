@@ -1,7 +1,6 @@
 package scaffold
 
 import (
-	"os"
 	"path/filepath"
 	"strings"
 
@@ -13,11 +12,10 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
-func CreateClientExtension(sample, name string) {
+func CreateClientExtension(sample, name string) error {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
-
 	if err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
 
 	clientExtensionSamplesPath := filepath.Join(conf.GetConfigPath(), conf.ClientExtensionSampleProjectName)
@@ -34,23 +32,15 @@ func CreateClientExtension(sample, name string) {
 		clientExtensionExtraSamplesPath := filepath.Join(conf.GetConfigPath(), conf.ClientExtensionExtraSampleProjectName)
 		extraSamplePath := filepath.Join(clientExtensionExtraSamplesPath, conf.ClientExtensionExtraSamplePrefix+sample)
 		if err := cp.Copy(extraSamplePath, clientExtensionDir); err != nil {
-			logger.Fatal(err.Error())
+			return err
 		}
 	}
 
-	_ = filepath.Walk(clientExtensionDir,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if !info.IsDir() {
-				logger.PrintSuccess("created ")
-				logger.Printf("%s\n", path)
-			}
-			return nil
-		})
+	printCreatedFiles(clientExtensionDir)
 
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
 		logger.PrintlnWarn("\nClient Extensions are not supported with Maven")
 	}
+
+	return nil
 }

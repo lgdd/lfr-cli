@@ -1,18 +1,12 @@
 package scaffold
 
 import (
-	"encoding/xml"
-	"fmt"
-	"io"
-	"io/fs"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/iancoleman/strcase"
-	"github.com/lgdd/lfr-cli/pkg/metadata"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 // PortletData contains the data to be injected into the template files
@@ -29,100 +23,49 @@ type PortletData struct {
 }
 
 // Creates the structure for a portlet module
-func CreateModuleMVC(name string) {
-	sep := string(os.PathSeparator)
+func CreateModuleMVC(name string) error {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
-
 	if err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
 
-	portletPackage := metadata.PackageName
-	workspacePackage, _ := metadata.GetGroupId()
-
-	if portletPackage == "org.acme" && workspacePackage != "org.acme" {
-		portletPackage = strings.Join([]string{workspacePackage, strcase.ToDelimited(name, '.')}, ".")
-	}
-
+	portletPackage, workspacePackage := resolvePackageName(name)
 	name = strcase.ToKebab(name)
 	destPortletParentPath := filepath.Join(liferayWorkspace, "modules")
 	destPortletPath := filepath.Join(destPortletParentPath, name)
 	packagePath := strings.ReplaceAll(portletPackage, ".", string(os.PathSeparator))
 	packagePath = filepath.Join(destPortletPath, "src", "main", "java", packagePath)
 	camelCaseName := strcase.ToCamel(name)
-	workspaceSplit := strings.Split(liferayWorkspace, sep)
-	workspaceName := workspaceSplit[len(workspaceSplit)-1]
+	workspaceName := workspaceBaseName(liferayWorkspace)
 
-	err = fileutil.CreateDirsFromAssets("tpl/mvc_portlet", destPortletPath)
-
-	if err != nil {
-		logger.Fatal(err.Error())
+	if err = fileutil.CreateDirsFromAssets("tpl/mvc_portlet", destPortletPath); err != nil {
+		return err
 	}
 
-	err = fileutil.CreateFilesFromAssets("tpl/mvc_portlet", destPortletPath)
-
-	if err != nil {
-		logger.Fatal(err.Error())
+	if err = fileutil.CreateFilesFromAssets("tpl/mvc_portlet", destPortletPath); err != nil {
+		return err
 	}
 
-	err = os.Rename(filepath.Join(destPortletPath, "gitignore"), filepath.Join(destPortletPath, ".gitignore"))
-
-	if err != nil {
-		logger.Fatal(err.Error())
+	if err = os.Rename(filepath.Join(destPortletPath, "gitignore"), filepath.Join(destPortletPath, ".gitignore")); err != nil {
+		return err
 	}
 
 	fileutil.CreateDirs(packagePath)
 
-	updateModuleMVCJavaFiles(camelCaseName, destPortletPath, packagePath)
+	if err = updateModuleMVCJavaFiles(camelCaseName, destPortletPath, packagePath); err != nil {
+		return err
+	}
 
-	if fileutil.IsGradleWorkspace(liferayWorkspace) {
-		pomPath := filepath.Join(destPortletPath, "pom.xml")
-		err = os.Remove(pomPath)
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
+	if err = removeUnusedBuildFile(liferayWorkspace, destPortletPath); err != nil {
+		return err
 	}
 
 	if fileutil.IsMavenWorkspace(liferayWorkspace) {
-		buildGradlePath := filepath.Join(destPortletPath, "build.gradle")
-		err = os.Remove(buildGradlePath)
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
 		pomParentPath := filepath.Join(destPortletPath, "../pom.xml")
-		pomParent, err := os.Open(pomParentPath)
-		if err != nil {
-			logger.Fatal(err.Error())
+		if err = fileutil.AppendModuleToPom(pomParentPath, name); err != nil {
+			return err
 		}
-		defer pomParent.Close()
-
-		byteValue, _ := io.ReadAll(pomParent)
-
-		var pom fileutil.Pom
-		err = xml.Unmarshal(byteValue, &pom)
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		modules := append(pom.Modules.Module, name)
-		pom.Modules.Module = modules
-		pom.Xsi = "http://www.w3.org/2001/XMLSchema-instance"
-		pom.SchemaLocation = "http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-
-		finalPomBytes, _ := xml.MarshalIndent(pom, "", "  ")
-
-		err = os.WriteFile(pomParentPath, []byte(fileutil.XMLHeader+string(finalPomBytes)), 0644)
-
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-
-		logger.PrintWarn("updated ")
-		fmt.Printf("%s\n", pomParentPath)
+		printModified(pomParentPath)
 	}
 
 	portletIDKey := strcase.ToScreamingDelimited(name, '_', "", true)
@@ -130,9 +73,8 @@ func CreateModuleMVC(name string) {
 	portletIDValue := strings.ToLower(portletIDKey) + "_" + camelCaseName
 
 	workspaceProductEdition, err := fileutil.GetLiferayWorkspaceProductEdition(liferayWorkspace)
-
 	if err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
 
 	portletData := &PortletData{
@@ -147,58 +89,21 @@ func CreateModuleMVC(name string) {
 		WorkspaceProductEdition: workspaceProductEdition,
 	}
 
-	err = updateModuleMVCWithData(destPortletPath, portletData)
-
-	if err != nil {
-		logger.Fatal(err.Error())
+	if err = updateFilesWithData(destPortletPath, portletData); err != nil {
+		return err
 	}
 
-	_ = filepath.Walk(destPortletPath,
-		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			if !info.IsDir() {
-				logger.PrintSuccess("created ")
-				fmt.Printf("%s\n", path)
-			}
-			return nil
-		})
+	printCreatedFiles(destPortletPath)
+	return nil
 }
 
-func updateModuleMVCJavaFiles(camelCaseName, modulePath, packagePath string) {
+func updateModuleMVCJavaFiles(camelCaseName, modulePath, packagePath string) error {
 	defaultSrcPath := filepath.Join(modulePath, "src", "main", "java")
-	err := os.Rename(filepath.Join(defaultSrcPath, "Portlet.java"), filepath.Join(packagePath, camelCaseName+".java"))
-
-	if err != nil {
-		logger.Fatal(err.Error())
+	if err := os.Rename(filepath.Join(defaultSrcPath, "Portlet.java"), filepath.Join(packagePath, camelCaseName+".java")); err != nil {
+		return err
 	}
 
 	fileutil.CreateDirs(filepath.Join(packagePath, "constants"))
 
-	err = os.Rename(filepath.Join(defaultSrcPath, "PortletKeys.java"), filepath.Join(packagePath, "constants", camelCaseName+"Keys.java"))
-
-	if err != nil {
-		logger.Fatal(err.Error())
-	}
-
-}
-
-func updateModuleMVCWithData(destPortletPath string, portletData *PortletData) error {
-	return filepath.Walk(destPortletPath, func(path string, info fs.FileInfo, err error) error {
-
-		if err != nil {
-			return err
-		}
-
-		if !info.IsDir() {
-			err = fileutil.UpdateWithData(path, portletData)
-		}
-
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
+	return os.Rename(filepath.Join(defaultSrcPath, "PortletKeys.java"), filepath.Join(packagePath, "constants", camelCaseName+"Keys.java"))
 }
