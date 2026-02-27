@@ -1,10 +1,11 @@
 package create
 
 import (
+	"fmt"
+
 	"github.com/lgdd/lfr-cli/internal/conf"
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/logger"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -14,7 +15,7 @@ var (
 	createDocker = &cobra.Command{
 		Use:  "docker",
 		Args: cobra.NoArgs,
-		Run:  generateDocker,
+		RunE: generateDocker,
 	}
 	// MultiStage holds the option to create a Dockerfile with multi-stage build
 	MultiStage bool
@@ -29,17 +30,14 @@ func init() {
 	createDocker.Flags().BoolVarP(&MultiStage, "multi-stage", "m", defaultMultistage, "use multi-stage build")
 	createDocker.Flags().IntVarP(&Java, "java", "j", defaultJDK, "Java version (8, 11, 17 or 21)")
 }
-func generateDocker(cmd *cobra.Command, args []string) {
+
+func generateDocker(cmd *cobra.Command, args []string) error {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
 	if Java == 8 || Java == 11 {
-		err := scaffold.CreateDockerFiles(liferayWorkspace, MultiStage, Java)
-		if err != nil {
-			logger.Fatal(err.Error())
-		}
-	} else {
-		logger.Fatalf("Java %v is not supported", Java)
+		return scaffold.CreateDockerFiles(liferayWorkspace, MultiStage, Java)
 	}
+	return fmt.Errorf("Java %v is not supported", Java)
 }

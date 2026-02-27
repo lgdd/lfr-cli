@@ -8,7 +8,6 @@ import (
 
 	"github.com/lgdd/lfr-cli/pkg/scaffold"
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
-	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
 var (
@@ -16,16 +15,15 @@ var (
 		Use:     "service-builder NAME",
 		Aliases: []string{"sb"},
 		Args:    cobra.ExactArgs(1),
-		Run:     generateServiceBuilder,
+		RunE:    generateServiceBuilder,
 	}
 )
 
-func generateServiceBuilder(cmd *cobra.Command, args []string) {
+func generateServiceBuilder(cmd *cobra.Command, args []string) error {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
-	name := args[0]
-	name = strcase.ToKebab(strings.ToLower(name))
-	scaffold.CreateModuleServiceBuilder(liferayWorkspace, name)
+	name := strcase.ToKebab(strings.ToLower(args[0]))
+	return scaffold.CreateModuleServiceBuilder(liferayWorkspace, name)
 }

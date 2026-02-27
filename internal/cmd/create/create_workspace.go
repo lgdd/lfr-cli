@@ -21,7 +21,7 @@ var (
 		Use:     "workspace NAME",
 		Aliases: []string{"ws"},
 		Args:    cobra.ExactArgs(1),
-		Run:     generateWorkspace,
+		RunE:    generateWorkspace,
 	}
 	// Version is the Liferay version
 	Version string
@@ -46,27 +46,26 @@ func init() {
 	createWorkspace.Flags().BoolVarP(&Init, "init", "i", defaultInit, "executes Liferay bundle initialization (i.e. download & unzip in the workspace)")
 }
 
-func generateWorkspace(cmd *cobra.Command, args []string) {
+func generateWorkspace(cmd *cobra.Command, args []string) error {
 	if fileutil.IsInWorkspaceDir() {
-		logger.Fatalf("You're already in a Liferay Workspace.")
+		return fmt.Errorf("you're already in a Liferay Workspace")
 	}
 	name := args[0]
-	err := scaffold.CreateWorkspace(name, Build, Version, Edition)
-	if err != nil {
-		logger.Fatal(err.Error())
+	if err := scaffold.CreateWorkspace(name, Build, Version, Edition); err != nil {
+		return err
 	}
 	logger.PrintfSuccess("\nSuccessfully created a Liferay Workspace '%s'\n", name)
 
 	if Init {
-		runInit(name, Build)
-	} else {
-		printInitCmd(name)
+		return runInit(name, Build)
 	}
+	printInitCmd(name)
+	return nil
 }
 
-func runInit(name, build string) {
+func runInit(name, build string) error {
 	if err := os.Chdir(name); err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
 
 	logger.Print("\nInitializing Liferay Bundle using:\n\n")
@@ -79,6 +78,7 @@ func runInit(name, build string) {
 		logger.PrintlnInfo("lfr exec bundle-support:init\n")
 		exec.RunWrapperCmd([]string{"bundle-support:init"})
 	}
+	return nil
 }
 
 func printInitCmd(name string) {

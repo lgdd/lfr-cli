@@ -10,11 +10,10 @@ var (
 		Use:     "command NAME",
 		Aliases: []string{"cmd"},
 		Args:    cobra.ExactArgs(1),
-		Run:     generateCmdModule,
+		RunE:    generateCmdModule,
 	}
 )
 
-func generateCmdModule(cmd *cobra.Command, args []string) {
-	name := args[0]
-	scaffold.CreateModuleGogoCommand(name)
+func generateCmdModule(cmd *cobra.Command, args []string) error {
+	return scaffold.CreateModuleGogoCommand(args[0])
 }

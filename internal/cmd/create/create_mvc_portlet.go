@@ -10,11 +10,10 @@ var (
 		Use:     "mvc-portlet NAME",
 		Aliases: []string{"mvc"},
 		Args:    cobra.ExactArgs(1),
-		Run:     generateMvcPortlet,
+		RunE:    generateMvcPortlet,
 	}
 )
 
-func generateMvcPortlet(cmd *cobra.Command, args []string) {
-	name := args[0]
-	scaffold.CreateModuleMVC(name)
+func generateMvcPortlet(cmd *cobra.Command, args []string) error {
+	return scaffold.CreateModuleMVC(args[0])
 }

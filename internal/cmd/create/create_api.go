@@ -9,11 +9,10 @@ var (
 	createApiModule = &cobra.Command{
 		Use:  "api NAME",
 		Args: cobra.ExactArgs(1),
-		Run:  generateApiModule,
+		RunE: generateApiModule,
 	}
 )
 
-func generateApiModule(cmd *cobra.Command, args []string) {
-	name := args[0]
-	scaffold.CreateModuleAPI(name)
+func generateApiModule(cmd *cobra.Command, args []string) error {
+	return scaffold.CreateModuleAPI(args[0])
 }

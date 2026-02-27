@@ -20,7 +20,7 @@ var (
 		Use:     "rest-builder NAME",
 		Aliases: []string{"rb"},
 		Args:    cobra.ExactArgs(1),
-		Run:     generateRESTBuilder,
+		RunE:    generateRESTBuilder,
 	}
 	// CodeGen holds the option to run the code generation of the rest builder
 	CodeGen bool
@@ -30,32 +30,32 @@ func init() {
 	createRESTBuilder.Flags().BoolVarP(&CodeGen, "generate", "g", false, "executes code generation")
 }
 
-func generateRESTBuilder(cmd *cobra.Command, args []string) {
+func generateRESTBuilder(cmd *cobra.Command, args []string) error {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
-	name := args[0]
-	name = strcase.ToKebab(strings.ToLower(name))
-	scaffold.CreateModuleRESTBuilder(liferayWorkspace, name)
+	name := strcase.ToKebab(strings.ToLower(args[0]))
+	if err := scaffold.CreateModuleRESTBuilder(liferayWorkspace, name); err != nil {
+		return err
+	}
 
 	build := metadata.Maven
-
 	if fileutil.IsGradleWorkspace(liferayWorkspace) {
 		build = metadata.Gradle
 	}
 
 	if CodeGen {
-		runCodeGen(liferayWorkspace, name, build)
-	} else {
-		printCodeGenSuggestion(liferayWorkspace, name, build)
+		return runCodeGen(liferayWorkspace, name, build)
 	}
+	printCodeGenSuggestion(liferayWorkspace, name, build)
+	return nil
 }
 
-func runCodeGen(workspace, name, build string) {
+func runCodeGen(workspace, name, build string) error {
 	moduleImplPath := filepath.Join(workspace, "modules", name, name+"-impl")
 	if err := os.Chdir(moduleImplPath); err != nil {
-		logger.Fatal(err.Error())
+		return err
 	}
 
 	logger.Print("\nExecutes code generation using:\n")
@@ -68,6 +68,7 @@ func runCodeGen(workspace, name, build string) {
 		logger.PrintlnInfo("lfr exec rest-builder:build\n")
 		exec.RunWrapperCmd([]string{"rest-builder:build"})
 	}
+	return nil
 }
 
 func printCodeGenSuggestion(workspace, name, build string) {
