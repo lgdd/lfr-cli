@@ -42,7 +42,7 @@ nfpms:
       - rpm
       - apk
 homebrew_casks:
-  - name: lfr
+  - name: lfr-cli
     binaries:
       - lfr
     repository:
