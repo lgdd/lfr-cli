@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"errors"
 	"log"
 	"os"
 	"path/filepath"
@@ -55,9 +54,8 @@ func initWithPath(configPath string) {
 		os.Remove(configFilePath)
 	}
 
-	if err := viper.ReadInConfig(); err != nil {
-		var configFileNotFoundError viper.ConfigFileNotFoundError
-		if !errors.As(err, &configFileNotFoundError) {
+	if _, statErr := os.Stat(configFilePath); statErr == nil {
+		if err := viper.ReadInConfig(); err != nil {
 			log.Fatal(err.Error())
 		}
 	}
