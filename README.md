@@ -33,9 +33,9 @@ For macOS or Linux, you can install it using [Homebrew](https://brew.sh):
 
 ```shell
 brew tap lgdd/homebrew-tap
-brew install lfr-cli
+brew install --cask lfr-cli
 ```
-> if you already installed it using `brew install liferay-cli`, make sure to run `brew update` to be able to update to the latest version matching the new name. 
+> If you previously installed it via `brew install lfr-cli` (formula) or `brew install liferay-cli`, run `brew uninstall lfr-cli` then `brew install --cask lfr-cli` to migrate to the new cask.
 
 For Windows, go to the [release page](https://github.com/lgdd/lfr-cli/releases) and download the zip file corresponding to your architecture. Then extract `lfr.exe` from the archive and move to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
 
