@@ -23,7 +23,7 @@ jobs:
       - name: Run Go Build
         run: go build ./...
       - name: Run GoReleaser
-        uses: goreleaser/goreleaser-action@v5
+        uses: goreleaser/goreleaser-action@v7
         with:
           version: latest
           args: release --snapshot --skip-publish --clean
