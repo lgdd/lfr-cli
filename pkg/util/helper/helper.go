@@ -69,10 +69,13 @@ func updateClientExtensionSamples(path string) {
 }
 
 func HandleAllClientExtensionsOffline(configPath string) {
-	if _, err := os.Stat(filepath.Join(configPath, conf.ClientExtensionSampleProjectName)); err != nil {
+	_, errOfficial := os.Stat(filepath.Join(configPath, conf.ClientExtensionSampleProjectName))
+	_, errExtra := os.Stat(filepath.Join(configPath, conf.ClientExtensionExtraSampleProjectName))
+
+	if errOfficial != nil || errExtra != nil {
 		logger.PrintWarn("Couldn't fetch client extensions samples from GitHub.\n")
 		logger.Println("Copying embedded versions from the CLI instead.")
-		err = fileutil.CreateDirsFromAssets("tpl/client_extension", configPath)
+		err := fileutil.CreateDirsFromAssets("tpl/client_extension", configPath)
 		if err != nil {
 			logger.Fatal(err.Error())
 		}
@@ -82,10 +85,12 @@ func HandleAllClientExtensionsOffline(configPath string) {
 			logger.Fatal(err.Error())
 		}
 
-		oldGitDirectory := filepath.Join(configPath, conf.ClientExtensionSampleProjectName, "git")
-		newGitDirectory := filepath.Join(configPath, conf.ClientExtensionSampleProjectName, ".git")
-		if err := os.Rename(oldGitDirectory, newGitDirectory); err != nil {
-			logger.Fatal(err.Error())
+		for _, projectName := range []string{conf.ClientExtensionSampleProjectName, conf.ClientExtensionExtraSampleProjectName} {
+			oldGitDirectory := filepath.Join(configPath, projectName, "git")
+			newGitDirectory := filepath.Join(configPath, projectName, ".git")
+			if err := os.Rename(oldGitDirectory, newGitDirectory); err != nil {
+				logger.Fatal(err.Error())
+			}
 		}
 	} else {
 		logger.PrintWarn("Couldn't update client extensions samples from GitHub.\n")
