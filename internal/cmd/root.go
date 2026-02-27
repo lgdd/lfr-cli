@@ -24,8 +24,9 @@ import (
 )
 
 var root = &cobra.Command{
-	Use:          "lfr",
-	Short:        "LFR is an unofficial tool written in Go that helps you manage your Liferay projects.",
+	Use:           "lfr",
+	Short:         "LFR is an unofficial tool written in Go that helps you manage your Liferay projects.",
+	Version:       version.Number,
 	SilenceErrors: true,
 	SilenceUsage:  true,
 }
