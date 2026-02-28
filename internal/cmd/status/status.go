@@ -1,3 +1,5 @@
+// Package status implements the status subcommand, which reports whether the
+// Liferay Tomcat bundle is currently running or stopped.
 package status
 
 import (

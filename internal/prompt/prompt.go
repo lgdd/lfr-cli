@@ -1,3 +1,7 @@
+// Package prompt provides interactive TUI forms built with charmbracelet/huh.
+// Each For* function collects user input, appends the synthesized arguments to
+// os.Args, and re-executes the given Cobra command so the non-interactive code
+// path handles the actual work.
 package prompt
 
 import (
@@ -13,6 +17,8 @@ import (
 	"github.com/spf13/viper"
 )
 
+// ForDocker presents an interactive form to collect the Java version and
+// Docker build option, then re-executes cmd with the gathered arguments.
 func ForDocker(cmd *cobra.Command) {
 	var dockerBuildOption string
 	javaVersion, _, err := procutil.GetCurrentJavaVersion()
@@ -64,6 +70,8 @@ func ForDocker(cmd *cobra.Command) {
 	}
 }
 
+// ForSpring presents an interactive form to collect the template engine,
+// package name, and module name for a Spring MVC portlet, then re-executes cmd.
 func ForSpring(cmd *cobra.Command, packageName, name *string) {
 	var templateEngine string
 	form := huh.NewForm(
@@ -98,6 +106,8 @@ func ForSpring(cmd *cobra.Command, packageName, name *string) {
 	}
 }
 
+// ForWorkspace presents an interactive form to collect the workspace name,
+// then re-executes cmd with the gathered argument.
 func ForWorkspace(cmd *cobra.Command, name *string) {
 	ForName(name)
 
@@ -109,6 +119,7 @@ func ForWorkspace(cmd *cobra.Command, name *string) {
 	}
 }
 
+// ForName presents an interactive form to collect a single name value.
 func ForName(name *string) {
 	form := huh.NewForm(
 		huh.NewGroup(
@@ -127,6 +138,8 @@ func ForName(name *string) {
 	}
 }
 
+// ForClientExtension presents an interactive form to select a client extension
+// sample and collect a name, then re-executes cmd with the gathered arguments.
 func ForClientExtension(cmd *cobra.Command, sample, name *string) {
 	samples := helper.GetClientExtensionSampleNames()
 
@@ -158,6 +171,7 @@ func ForClientExtension(cmd *cobra.Command, sample, name *string) {
 	}
 }
 
+// NewInputName returns a reusable huh text input field for collecting a name.
 func NewInputName(name *string) *huh.Input {
 	return huh.NewInput().
 		Title("Choose a name:").
@@ -165,6 +179,7 @@ func NewInputName(name *string) *huh.Input {
 		Validate(isNotEmpty)
 }
 
+// NewInputPackageName returns a reusable huh text input field for collecting a Java package name.
 func NewInputPackageName(packageName *string) *huh.Input {
 	return huh.NewInput().
 		Title("Choose a package name:").

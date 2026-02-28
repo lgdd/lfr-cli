@@ -15,13 +15,16 @@ import (
 	"github.com/lgdd/lfr-cli/pkg/util/procutil"
 )
 
-// Build options (i.e. Maven or Gradle)
+// Build tool options for a Liferay workspace.
 const (
+	// Gradle is the build tool identifier for a Gradle workspace.
 	Gradle = "gradle"
-	Maven  = "maven"
+	// Maven is the build tool identifier for a Maven workspace.
+	Maven = "maven"
 )
 
-// Create the structure of a Liferay workspace
+// CreateWorkspace creates the file and directory structure for a new Liferay
+// workspace at base, using the specified build tool, Liferay version, and edition.
 func CreateWorkspace(base, build, version, edition string) error {
 	workspaceData, err := metadata.NewWorkspaceData(base, version, edition)
 	if err != nil {

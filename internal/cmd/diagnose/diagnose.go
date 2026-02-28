@@ -1,3 +1,6 @@
+// Package diagnose implements the diagnose subcommand, which inspects the
+// local environment (Java, Blade, Docker, LCP, bundles) and reports
+// compatibility information for Liferay development.
 package diagnose
 
 import (
@@ -18,6 +21,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'diagnose' which verifies the local environment for Liferay development.
 	Cmd = &cobra.Command{
 		Use:     "diagnose",
 		Aliases: []string{"diag"},

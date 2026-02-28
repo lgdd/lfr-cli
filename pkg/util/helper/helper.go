@@ -1,3 +1,6 @@
+// Package helper provides high-level helpers for fetching and managing
+// Liferay client extension samples from GitHub, with an embedded offline
+// fallback, and for validating Java version compatibility.
 package helper
 
 import (
@@ -14,7 +17,7 @@ import (
 
 var supportedJavaVersions = [2]int{8, 11}
 
-// Checks if the Java version is supported by Liferay
+// IsSupportedJavaVersion reports whether javaVersion is supported by Liferay.
 func IsSupportedJavaVersion(javaVersion int) bool {
 	for _, version := range supportedJavaVersions {
 		if javaVersion == version {
@@ -24,6 +27,8 @@ func IsSupportedJavaVersion(javaVersion int) bool {
 	return false
 }
 
+// FetchAllClientExtensionSamples clones (or updates) both the official and
+// extra client extension sample repositories into destination.
 func FetchAllClientExtensionSamples(destination string) error {
 	err := fetchClientExtensionSamples(destination, conf.ClientExtensionSampleProjectName)
 	if err != nil {
@@ -68,6 +73,10 @@ func updateClientExtensionSamples(path string) {
 	}
 }
 
+// HandleAllClientExtensionsOffline falls back to the embedded client extension
+// samples when the GitHub repositories are unreachable. If neither repository
+// directory exists under configPath it copies the embedded assets; otherwise
+// it logs a warning and uses the previously fetched versions.
 func HandleAllClientExtensionsOffline(configPath string) {
 	_, errOfficial := os.Stat(filepath.Join(configPath, conf.ClientExtensionSampleProjectName))
 	_, errExtra := os.Stat(filepath.Join(configPath, conf.ClientExtensionExtraSampleProjectName))
@@ -123,6 +132,9 @@ func handleClientExtensionsOffline(configPath, projectName string) {
 	}
 }
 
+// GetClientExtensionSampleNames returns a sorted list of available client
+// extension sample names, fetching them from GitHub if possible or falling
+// back to the embedded offline copies.
 func GetClientExtensionSampleNames() []string {
 	if err := FetchAllClientExtensionSamples(conf.GetConfigPath()); err != nil {
 		HandleAllClientExtensionsOffline(conf.GetConfigPath())

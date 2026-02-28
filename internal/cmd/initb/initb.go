@@ -1,3 +1,5 @@
+// Package initb implements the init subcommand, which runs the Gradle or Maven
+// wrapper task to download and initialize the Liferay bundle.
 package initb
 
 import (

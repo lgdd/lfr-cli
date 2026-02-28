@@ -1,3 +1,5 @@
+// Package cmd registers all Cobra subcommands on the root command and exposes
+// the Execute entry point called by the binary's main function.
 package cmd
 
 import (
@@ -59,7 +61,7 @@ func init() {
 	root.PersistentFlags().BoolVar(&conf.NoColor, "no-color", defaultNoColor, "disable colors for output messages")
 }
 
-// Run the the main command
+// Execute runs the root lfr command and returns any error.
 func Execute() error {
 	return root.Execute()
 }

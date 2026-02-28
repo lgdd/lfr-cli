@@ -1,3 +1,5 @@
+// Package config implements the config subcommand, which lets users read and
+// write entries in the ~/.lfr/config.toml configuration file.
 package config
 
 import (
@@ -13,6 +15,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'config' which gets and sets lfr configuration values.
 	Cmd = &cobra.Command{
 		Use:   "config",
 		Short: "Get and set your configuration for lfr",
@@ -33,6 +36,7 @@ var (
 		},
 		Run: run,
 	}
+	// List enables printing all configuration key/value pairs when set to true.
 	List bool
 )
 

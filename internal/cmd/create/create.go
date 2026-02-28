@@ -1,3 +1,5 @@
+// Package create implements the create subcommand and its subcommands for
+// scaffolding Liferay workspaces, modules, client extensions, and Docker files.
 package create
 
 import (

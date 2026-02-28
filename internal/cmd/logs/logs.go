@@ -1,3 +1,5 @@
+// Package logs implements the logs subcommand, which tails the Liferay Tomcat
+// catalina.out log file with an optional follow mode.
 package logs
 
 import (
@@ -18,6 +20,7 @@ var (
 		Args:    cobra.NoArgs,
 		Run:     run,
 	}
+	// Follow continuously streams new log lines when set to true.
 	Follow bool
 )
 

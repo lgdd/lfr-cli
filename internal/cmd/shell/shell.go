@@ -1,3 +1,5 @@
+// Package shell implements the shell subcommand, which opens a Gogo Shell
+// session connected to the running Liferay bundle.
 package shell
 
 import (
@@ -16,7 +18,9 @@ var (
 		Args:    cobra.NoArgs,
 		RunE:    run,
 	}
+	// Host is the hostname or IP address of the Gogo Shell server.
 	Host string
+	// Port is the TCP port of the Gogo Shell server.
 	Port int
 )
 

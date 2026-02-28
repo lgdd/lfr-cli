@@ -1,3 +1,5 @@
+// Package trial implements the trial subcommand, which downloads a Liferay DXP
+// trial license key into the specified directory.
 package trial
 
 import (
@@ -13,6 +15,7 @@ import (
 )
 
 var (
+	// Cmd is the command 'trial' which downloads a DXP trial license key.
 	Cmd = &cobra.Command{
 		Use:     "trial",
 		Aliases: []string{"t"},
@@ -20,6 +23,7 @@ var (
 		Args:    cobra.NoArgs,
 		Run:     run,
 	}
+	// Directory is the destination path where the trial license key is saved.
 	Directory string
 )
 

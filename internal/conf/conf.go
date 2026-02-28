@@ -1,3 +1,6 @@
+// Package conf manages the CLI configuration stored in ~/.lfr/config.toml via
+// Viper, and exposes the Viper key constants and default values used throughout
+// the application.
 package conf
 
 import (
@@ -9,28 +12,49 @@ import (
 	"github.com/spf13/viper"
 )
 
+// Client extension sample repository constants.
 const (
-	ClientExtensionSamplePrefix           = "liferay-sample-"
-	ClientExtensionExtraSamplePrefix      = "sample-"
-	ClientExtensionSampleProjectName      = "liferay-client-extensions-samples"
+	// ClientExtensionSamplePrefix is the directory name prefix for official client extension samples.
+	ClientExtensionSamplePrefix = "liferay-sample-"
+	// ClientExtensionExtraSamplePrefix is the directory name prefix for extra client extension samples.
+	ClientExtensionExtraSamplePrefix = "sample-"
+	// ClientExtensionSampleProjectName is the GitHub project name for official client extension samples.
+	ClientExtensionSampleProjectName = "liferay-client-extensions-samples"
+	// ClientExtensionExtraSampleProjectName is the GitHub project name for extra client extension samples.
 	ClientExtensionExtraSampleProjectName = "liferay-client-extensions-extra-samples"
-	// Config file keys
+)
+
+// Viper config file keys used throughout the application.
+const (
+	// WorkspaceEdition is the config key for the Liferay edition (portal or dxp).
 	WorkspaceEdition = "workspace.edition"
+	// WorkspaceVersion is the config key for the target Liferay version.
 	WorkspaceVersion = "workspace.version"
-	WorkspaceBuild   = "workspace.build"
-	WorkspaceInit    = "workspace.init"
-	LogsFollow       = "logs.follow"
-	DeployClean      = "deploy.clean"
-	ModulePackage    = "module.package"
+	// WorkspaceBuild is the config key for the build tool (gradle or maven).
+	WorkspaceBuild = "workspace.build"
+	// WorkspaceInit is the config key for whether to initialize the bundle on workspace creation.
+	WorkspaceInit = "workspace.init"
+	// LogsFollow is the config key for whether to follow log output continuously.
+	LogsFollow = "logs.follow"
+	// DeployClean is the config key for whether to run a clean before deploying.
+	DeployClean = "deploy.clean"
+	// ModulePackage is the config key for the default Java package name.
+	ModulePackage = "module.package"
+	// DockerMultistage is the config key for whether to use a multi-stage Docker build.
 	DockerMultistage = "docker.multistage"
-	DockerJDK        = "docker.jdk"
-	OutputNoColor    = "output.no_color"
+	// DockerJDK is the config key for the JDK version used in Docker images.
+	DockerJDK = "docker.jdk"
+	// OutputNoColor is the config key for disabling colored output.
+	OutputNoColor = "output.no_color"
+	// OutputAccessible is the config key for enabling accessible (non-animated) output.
 	OutputAccessible = "output.accessible"
 )
 
-// NoColor allows to disable colors for printed messages, default is false
+// NoColor disables colors for printed messages when set to true.
 var NoColor bool
 
+// Init loads the configuration from the default config path (~/.lfr/config.toml),
+// creating the file with defaults if it does not exist.
 func Init() {
 	initWithPath(GetConfigPath())
 }
@@ -64,6 +88,7 @@ func initWithPath(configPath string) {
 	viper.WriteConfigAs(configFilePath)
 }
 
+// GetConfigPath returns the path to the CLI configuration directory (~/.lfr).
 func GetConfigPath() string {
 	homeDir, err := os.UserHomeDir()
 

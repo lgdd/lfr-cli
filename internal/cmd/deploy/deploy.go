@@ -1,3 +1,5 @@
+// Package deploy implements the deploy subcommand, which runs the Gradle or
+// Maven wrapper to deploy modules to the running Liferay bundle.
 package deploy
 
 import (
@@ -22,6 +24,7 @@ var (
 		Run:     run,
 	}
 
+	// DeployClean runs a clean task before deploying when set to true.
 	DeployClean bool
 )
 

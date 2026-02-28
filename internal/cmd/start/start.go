@@ -1,3 +1,5 @@
+// Package start implements the start subcommand, which launches the Liferay
+// Tomcat bundle using the Catalina startup script.
 package start
 
 import (

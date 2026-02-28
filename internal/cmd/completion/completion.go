@@ -1,3 +1,5 @@
+// Package completion implements the completion subcommand, which generates
+// shell completion scripts for Bash, Zsh, Fish, and PowerShell.
 package completion
 
 import (

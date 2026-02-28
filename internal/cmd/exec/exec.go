@@ -1,3 +1,5 @@
+// Package exec implements the exec subcommand, which locates and runs the
+// Gradle or Maven wrapper with the provided task arguments.
 package exec
 
 import (
@@ -26,7 +28,8 @@ func run(cmd *cobra.Command, args []string) {
 	RunWrapperCmd(args)
 }
 
-// Get the Maven or Gradle wrapper to execute tasks
+// RunWrapperCmd locates the Gradle or Maven wrapper and executes it with args,
+// forwarding stdout and stderr to the terminal.
 func RunWrapperCmd(args []string) {
 	wrapper, err := getWrapper()
 

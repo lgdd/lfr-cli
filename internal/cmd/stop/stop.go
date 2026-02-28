@@ -1,3 +1,5 @@
+// Package stop implements the stop subcommand, which shuts down the running
+// Liferay Tomcat bundle and waits for the process to terminate.
 package stop
 
 import (

@@ -1,3 +1,5 @@
+// Package build implements the build subcommand, which runs the Gradle or
+// Maven wrapper to build the Liferay bundle.
 package build
 
 import (

@@ -1,3 +1,7 @@
+// Package metadata fetches Liferay release information (bundle URLs, Docker
+// images, target platform versions) from lgdd/liferay-product-info on GitHub
+// and exposes it as WorkspaceData for use by the scaffold package. Hardcoded
+// offline fallback values are used when GitHub is unreachable.
 package metadata
 
 import (
@@ -17,7 +21,7 @@ import (
 	"github.com/lgdd/lfr-cli/pkg/util/logger"
 )
 
-// WorkspaceData represents the basic informations associated with a Liferay workspace
+// WorkspaceData holds the release metadata injected into workspace templates.
 type WorkspaceData struct {
 	Edition              string
 	Product              string
@@ -32,6 +36,7 @@ type WorkspaceData struct {
 	Name                 string
 }
 
+// Release represents a single Liferay product release entry from the releases JSON feed.
 type Release struct {
 	Product               string            `json:"product"`
 	ProductGroupVersion   string            `json:"productGroupVersion"`
@@ -43,6 +48,8 @@ type Release struct {
 	ReleaseProperties     ReleaseProperties `json:"releaseProperties"`
 }
 
+// ReleaseProperties contains the detailed properties of a Liferay release,
+// including bundle URLs, Docker image tags, and version identifiers.
 type ReleaseProperties struct {
 	URL                    string `json:"url"`
 	AppServerTomcatVersion string `json:"appServerTomcatVersion"`
@@ -59,22 +66,29 @@ type ReleaseProperties struct {
 	TargetPlatformVersion  string `json:"targetPlatformVersion"`
 }
 
-// Build & Edition options
+// Build tool and edition options for a Liferay workspace.
 const (
+	// Gradle is the build tool identifier for a Gradle workspace.
 	Gradle = "gradle"
-	Maven  = "maven"
-	DXP    = "dxp"
+	// Maven is the build tool identifier for a Maven workspace.
+	Maven = "maven"
+	// DXP is the edition identifier for Liferay DXP (commercial).
+	DXP = "dxp"
+	// Portal is the edition identifier for Liferay Portal (community).
 	Portal = "portal"
 )
 
-// Expected errors
+// ErrUnkownEdition is returned when the provided edition is neither "dxp" nor "portal".
 var ErrUnkownEdition = errors.New("unknown edition (it should be 'dxp' or 'portal')")
+
+// ErrUnsupportedVersion is returned when the provided Liferay version is not supported.
 var ErrUnsupportedVersion = errors.New("invalid or unsupported Liferay version")
 
-// Package name to use for the project, default is org.acme
+// PackageName is the Java package name used for generated modules, defaulting to "org.acme".
 var PackageName string
 
-// Get the group ID (base package name) associated with the Liferay workspace
+// GetGroupId returns the group ID (base Java package name) defined in the
+// current Liferay workspace's build file (build.gradle or pom.xml).
 func GetGroupId() (string, error) {
 	workspacePath, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
@@ -132,7 +146,9 @@ func GetGroupId() (string, error) {
 	return PackageName, nil
 }
 
-// Returns metadata for a given project and the chosen Liferay version
+// NewWorkspaceData returns the WorkspaceData for the given project base name,
+// Liferay version, and edition by fetching the latest release metadata from
+// GitHub. It falls back to hardcoded offline values when GitHub is unreachable.
 func NewWorkspaceData(base, version, edition string) (*WorkspaceData, error) {
 	// workaround timeout on this release
 	if edition == Portal && version == "7.0" {

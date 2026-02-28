@@ -1,3 +1,6 @@
+// Package procutil provides helpers for managing and inspecting OS processes,
+// executing shell commands, and detecting the running Liferay Tomcat bundle via
+// its PID file.
 package procutil
 
 import (
@@ -17,7 +20,8 @@ import (
 	"github.com/lgdd/lfr-cli/pkg/util/fileutil"
 )
 
-// Set the catalina pid as an environment variable
+// SetCatalinaPid sets the CATALINA_PID environment variable to the liferay.pid
+// file path inside the current workspace or Liferay home directory.
 func SetCatalinaPid() error {
 	workingPath, err := fileutil.GetLiferayWorkspacePath()
 
@@ -31,7 +35,8 @@ func SetCatalinaPid() error {
 	return os.Setenv("CATALINA_PID", filepath.Join(workingPath, "liferay.pid"))
 }
 
-// Get the catalina pid from an environment variable or file
+// GetCatalinaPid returns the Catalina process ID, read from the CATALINA_PID
+// environment variable or from the liferay.pid file in the workspace directory.
 func GetCatalinaPid() (int, error) {
 	workingPath, err := fileutil.GetLiferayWorkspacePath()
 
@@ -84,7 +89,8 @@ func GetCatalinaPid() (int, error) {
 	return pid, nil
 }
 
-// Checks if the Liferay bundle is running by checking its pid
+// IsCatalinaRunning reports whether the Liferay Tomcat bundle is running by
+// checking its PID. It returns the running state, the PID, and any error.
 func IsCatalinaRunning() (bool, int, error) {
 	pid, err := GetCatalinaPid()
 
@@ -117,6 +123,8 @@ func IsCatalinaRunning() (bool, int, error) {
 	return true, pid, nil
 }
 
+// GetCurrentJavaVersion returns the major and full Java version strings (e.g.
+// "21" and "21.0.3") by running `java -version`.
 func GetCurrentJavaVersion() (string, string, error) {
 	_, javaVersionCmdErr, err := Exec("java", "-version")
 
@@ -143,6 +151,8 @@ func getMajorJavaVersion(fullVersion string) string {
 	return versionNumbers[0]
 }
 
+// Exec runs command with the given args and returns its stdout, stderr, and any
+// execution error.
 func Exec(command string, args ...string) (bytes.Buffer, bytes.Buffer, error) {
 	var cmdOut, cmdErr bytes.Buffer
 	cmd := exec.Command(command, args...)
@@ -154,6 +164,8 @@ func Exec(command string, args ...string) (bytes.Buffer, bytes.Buffer, error) {
 	return cmdOut, cmdErr, err
 }
 
+// ExecStd runs command with the given args, forwarding stdout and stderr
+// directly to the process's own stdout and stderr.
 func ExecStd(command string, args ...string) error {
 	cmd := exec.Command(command, args...)
 	cmd.Stdout = os.Stdout

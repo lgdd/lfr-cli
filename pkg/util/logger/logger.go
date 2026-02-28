@@ -1,3 +1,7 @@
+// Package logger provides styled terminal output using charmbracelet/lipgloss
+// and charmbracelet/log. It exposes leveled log functions (Debug, Info, Warn,
+// Error, Fatal) and styled print helpers for info, error, warn, and success
+// messages. Color output is suppressed when conf.NoColor is true.
 package logger
 
 import (
@@ -24,6 +28,7 @@ var (
 	noColorStyle = lipgloss.NewStyle().UnsetForeground().UnsetBackground()
 )
 
+// Debug logs a message at the debug level with optional key-value pairs.
 func Debug(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -32,6 +37,7 @@ func Debug(msg interface{}, keyvals ...interface{}) {
 	logger.Debug(msg, keyvals...)
 }
 
+// Info logs a message at the info level with optional key-value pairs.
 func Info(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -40,6 +46,7 @@ func Info(msg interface{}, keyvals ...interface{}) {
 	logger.Info(msg, keyvals...)
 }
 
+// Warn logs a message at the warn level with optional key-value pairs.
 func Warn(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -48,6 +55,7 @@ func Warn(msg interface{}, keyvals ...interface{}) {
 	logger.Warn(msg, keyvals...)
 }
 
+// Error logs a message at the error level with optional key-value pairs.
 func Error(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -56,6 +64,7 @@ func Error(msg interface{}, keyvals ...interface{}) {
 	logger.Error(msg, keyvals...)
 }
 
+// Fatal logs a message at the fatal level with optional key-value pairs, then exits the program.
 func Fatal(msg interface{}, keyvals ...interface{}) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -64,6 +73,7 @@ func Fatal(msg interface{}, keyvals ...interface{}) {
 	logger.Fatal(msg, keyvals...)
 }
 
+// Debugf logs a formatted message at the debug level.
 func Debugf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -72,6 +82,7 @@ func Debugf(format string, a ...any) {
 	logger.Debug(format, a...)
 }
 
+// Infof logs a formatted message at the info level.
 func Infof(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -80,6 +91,7 @@ func Infof(format string, a ...any) {
 	logger.Info(format, a...)
 }
 
+// Warnf logs a formatted message at the warn level.
 func Warnf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -88,6 +100,7 @@ func Warnf(format string, a ...any) {
 	logger.Warn(format, a...)
 }
 
+// Errorf logs a formatted message at the error level.
 func Errorf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -96,6 +109,7 @@ func Errorf(format string, a ...any) {
 	logger.Error(format, a...)
 }
 
+// Fatalf logs a formatted message at the fatal level, then exits the program.
 func Fatalf(format string, a ...any) {
 	logger.SetStyles(defaultStyles())
 	if conf.NoColor {
@@ -104,31 +118,38 @@ func Fatalf(format string, a ...any) {
 	logger.Fatal(format, a...)
 }
 
+// Print prints a plain message without any styling or level prefix.
 func Print(msg string) {
 	fmt.Print(msg)
 }
 
+// Println prints a plain message followed by a newline, without any styling or level prefix.
 func Println(msg string) {
 	fmt.Println(msg)
 }
 
+// Printf prints a formatted plain message without any styling or level prefix.
 func Printf(format string, a ...any) {
 	fmt.Printf(format, a...)
 }
 
+// PrintBold prints a bold message.
 func PrintBold(msg string) {
 	fmt.Print(lipgloss.Style.Render(boldStyle, msg))
 }
 
+// PrintlnBold prints a bold message followed by a newline.
 func PrintlnBold(msg string) {
 	fmt.Println(lipgloss.Style.Render(boldStyle, msg))
 }
 
+// PrintfBold prints a bold formatted message.
 func PrintfBold(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	fmt.Print(lipgloss.Style.Render(boldStyle, msg))
 }
 
+// PrintInfo prints a message styled with the info color.
 func PrintInfo(msg string) {
 	if conf.NoColor {
 		fmt.Print(msg)
@@ -137,6 +158,7 @@ func PrintInfo(msg string) {
 	}
 }
 
+// PrintfInfo prints a formatted message styled with the info color.
 func PrintfInfo(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	if conf.NoColor {
@@ -146,6 +168,7 @@ func PrintfInfo(format string, a ...any) {
 	}
 }
 
+// PrintlnInfo prints a formatted message styled with the info color, followed by a newline.
 func PrintlnInfo(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	if conf.NoColor {
@@ -155,6 +178,7 @@ func PrintlnInfo(format string, a ...any) {
 	}
 }
 
+// PrintError prints a message styled with the error color.
 func PrintError(msg string) {
 	if conf.NoColor {
 		fmt.Print(msg)
@@ -163,6 +187,7 @@ func PrintError(msg string) {
 	}
 }
 
+// PrintfError prints a formatted message styled with the error color.
 func PrintfError(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	if conf.NoColor {
@@ -172,6 +197,7 @@ func PrintfError(format string, a ...any) {
 	}
 }
 
+// PrintlnError prints a message styled with the error color, followed by a newline.
 func PrintlnError(msg string) {
 	if conf.NoColor {
 		fmt.Println(msg)
@@ -180,6 +206,7 @@ func PrintlnError(msg string) {
 	}
 }
 
+// PrintWarn prints a message styled with the warn color.
 func PrintWarn(msg string) {
 	if conf.NoColor {
 		fmt.Print(msg)
@@ -188,6 +215,7 @@ func PrintWarn(msg string) {
 	}
 }
 
+// PrintfWarn prints a formatted message styled with the warn color.
 func PrintfWarn(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	if conf.NoColor {
@@ -197,6 +225,7 @@ func PrintfWarn(format string, a ...any) {
 	}
 }
 
+// PrintlnWarn prints a message styled with the warn color, followed by a newline.
 func PrintlnWarn(msg string) {
 	if conf.NoColor {
 		fmt.Println(msg)
@@ -205,6 +234,7 @@ func PrintlnWarn(msg string) {
 	}
 }
 
+// PrintSuccess prints a message styled with the success color.
 func PrintSuccess(msg string) {
 	if conf.NoColor {
 		fmt.Print(msg)
@@ -213,6 +243,7 @@ func PrintSuccess(msg string) {
 	}
 }
 
+// PrintfSuccess prints a formatted message styled with the success color.
 func PrintfSuccess(format string, a ...any) {
 	msg := fmt.Sprintf(format, a...)
 	if conf.NoColor {
@@ -222,6 +253,7 @@ func PrintfSuccess(format string, a ...any) {
 	}
 }
 
+// PrintlnSuccess prints a message styled with the success color, followed by a newline.
 func PrintlnSuccess(msg string) {
 	if conf.NoColor {
 		fmt.Println(msg)

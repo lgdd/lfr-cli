@@ -1,3 +1,5 @@
+// Package version implements the version subcommand and exposes the build-time
+// version variables injected by GoReleaser via ldflags.
 package version
 
 import (
@@ -13,9 +15,12 @@ var (
 		Short: "Print the version number of Liferay CLI",
 		Run:   getVersion,
 	}
+	// Number is the semantic version string, injected at build time.
 	Number string
+	// Commit is the Git commit hash, injected at build time.
 	Commit string
-	Date   string
+	// Date is the build date, injected at build time.
+	Date string
 )
 
 func getVersion(cmd *cobra.Command, args []string) {

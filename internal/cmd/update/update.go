@@ -1,3 +1,5 @@
+// Package update implements the update subcommand, which performs a self-update
+// of the lfr binary to the latest GitHub release.
 package update
 
 import (

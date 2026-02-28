@@ -12,6 +12,8 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
+// CreateClientExtension creates a client extension directory named name inside
+// the current workspace by copying the files from the given sample project.
 func CreateClientExtension(sample, name string) error {
 	liferayWorkspace, err := fileutil.GetLiferayWorkspacePath()
 	if err != nil {
