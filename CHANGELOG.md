@@ -1,5 +1,12 @@
 # Changelog
 
+## [3.3.2](https://github.com/lgdd/lfr-cli/compare/v3.3.1...v3.3.2) (2026-02-28)
+
+
+### Bug Fixes
+
+* **shell:** use net.JoinHostPort for IPv6-safe address formatting ([b8f7f9e](https://github.com/lgdd/lfr-cli/commit/b8f7f9e092514f3f11b458f2d3f5b3a967082db2))
+
 ## [3.3.1](https://github.com/lgdd/lfr-cli/compare/v3.3.0...v3.3.1) (2026-02-27)
 
 
