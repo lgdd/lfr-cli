@@ -30,7 +30,7 @@ const (
 // interactive read-eval loop.  Without the negotiation the server waits ~60s
 // for the handshake to time out before sending the first prompt.
 func connectGogoShell(host string, port int) error {
-	conn, err := net.Dial("tcp", fmt.Sprintf("%s:%d", host, port))
+	conn, err := net.Dial("tcp", net.JoinHostPort(host, fmt.Sprintf("%d", port)))
 	if err != nil {
 		return err
 	}
