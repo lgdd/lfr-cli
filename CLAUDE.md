@@ -51,7 +51,10 @@ pkg/util/procutil/       # Shell command execution and Java/process detection
 
 **Client extensions**: Samples are not bundled in the binary. On first use, `pkg/util/helper` clones `lgdd/liferay-client-extensions-samples` and `lgdd/liferay-client-extensions-extra-samples` into `~/.lfr/`. Subsequent invocations run `git pull` in the background. If GitHub is unreachable, the embedded fallback in `internal/assets/tpl/client_extension/` is used instead.
 
-**Release metadata**: `pkg/metadata` fetches Liferay version info (bundle URLs, Docker images, target platform) from `lgdd/liferay-product-info` on GitHub. Offline fallback values are hardcoded in `getOfflineWorkspaceData`.
+**Release metadata**: `pkg/metadata` fetches Liferay version info (bundle URLs, Docker images, target platform) from `lgdd/liferay-product-info` on GitHub. Three dispatch paths exist in `NewWorkspaceData`:
+- **DXP quarterly** (`YYYY.qN`, e.g. `2024.q1`): loads `~/.lfr/releases.json` from disk on subsequent calls (triggering a background refresh via `refreshReleasesJSON`), or fetches and saves it from GitHub on first use (`fetchAndWriteReleasesJSON`). Filters by `productGroupVersion`, picks the best release (preferred: `recommended` tag → `promoted == "true"` → first entry), then fetches `release.properties` from the CDN. Offline fallback: `getOfflineDXPQuarterlyData` (hardcoded data for 2023.q3–2025.q4).
+- **Portal specific GA** (`7.4.3.N-gaN`, e.g. `7.4.3.112-ga112`): fetches `release.properties` directly from the CDN. Offline fallback: `getOfflinePortalGAData` (hardcoded data for ga98–ga132).
+- **Legacy 7.x** (`7.0`–`7.4`): fetches the per-version `releases/{edition}_{version}_releases.json`. Offline fallback: `getOfflineWorkspaceData`.
 
 **Interactive vs non-interactive**: Every `create` subcommand works both with direct CLI arguments and with a charmbracelet/huh TUI prompt when no arguments are given. The prompt path re-executes the command by appending synthesized args to `os.Args`.
 

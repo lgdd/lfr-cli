@@ -1,6 +1,7 @@
 package metadata
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -97,6 +98,66 @@ func Test_NewWorkspaceData_WithPortal70_ShouldReturnLatestValid(t *testing.T) {
 	if metadata.TargetPlatform != expectedTargetPlatform {
 		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
 			metadata.TargetPlatform, expectedTargetPlatform)
+	}
+}
+
+func Test_NewWorkspaceData_WithDXPQuarterly2024Q1_ShouldReturnLatestValid(t *testing.T) {
+	metadata, err := NewWorkspaceData("liferay-workspace", "2024.q1", "dxp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(metadata.TargetPlatform, "2024.q1") {
+		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform to start with: '2024.q1'",
+			metadata.TargetPlatform)
+	}
+}
+
+func Test_NewWorkspaceData_WithDXPQuarterly2025Q4_ShouldReturnLatestValid(t *testing.T) {
+	metadata, err := NewWorkspaceData("liferay-workspace", "2025.q4", "dxp")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !strings.HasPrefix(metadata.TargetPlatform, "2025.q4") {
+		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform to start with: '2025.q4'",
+			metadata.TargetPlatform)
+	}
+}
+
+func Test_NewWorkspaceData_WithPortalGA112_ShouldReturnValid(t *testing.T) {
+	expectedTargetPlatform := "7.4.3.112"
+	metadata, err := NewWorkspaceData("liferay-workspace", "7.4.3.112-ga112", "portal")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if metadata.TargetPlatform != expectedTargetPlatform {
+		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
+			metadata.TargetPlatform, expectedTargetPlatform)
+	}
+}
+
+func Test_NewWorkspaceData_WithPortalGA132_ShouldReturnValid(t *testing.T) {
+	expectedTargetPlatform := "7.4.3.132"
+	metadata, err := NewWorkspaceData("liferay-workspace", "7.4.3.132-ga132", "portal")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if metadata.TargetPlatform != expectedTargetPlatform {
+		t.Fatalf("Found Target Platform: '%s'\nExpected Target Platform: '%s'",
+			metadata.TargetPlatform, expectedTargetPlatform)
+	}
+}
+
+func Test_NewWorkspaceData_WithDXPUnsupportedQuarter_ShouldFail(t *testing.T) {
+	_, err := NewWorkspaceData("liferay-workspace", "2022.q1", "dxp")
+	if err == nil {
+		t.Fatal("metadata with unsupported DXP quarterly version should fail")
+	}
+}
+
+func Test_NewWorkspaceData_WithPortalUnknownGA_ShouldFail(t *testing.T) {
+	_, err := NewWorkspaceData("liferay-workspace", "7.4.3.999-ga999", "portal")
+	if err == nil {
+		t.Fatal("metadata with unknown portal GA version should fail")
 	}
 }
 

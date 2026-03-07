@@ -40,7 +40,7 @@ func init() {
 	defaultEdition := viper.GetString(conf.WorkspaceEdition)
 	defaultInit := viper.GetBool(conf.WorkspaceInit)
 
-	createWorkspace.Flags().StringVarP(&Version, "version", "v", defaultVersion, "Liferay major version (7.x)")
+	createWorkspace.Flags().StringVarP(&Version, "version", "v", defaultVersion, "Liferay version (7.x, YYYY.qN for quarterly DXP, or 7.4.3.N-gaN for portal GA)")
 	createWorkspace.Flags().StringVarP(&Build, "build", "b", defaultBuild, "build tool (gradle or maven)")
 	createWorkspace.Flags().StringVarP(&Edition, "edition", "e", defaultEdition, "Liferay edition (dxp or portal)")
 	createWorkspace.Flags().BoolVarP(&Init, "init", "i", defaultInit, "executes Liferay bundle initialization (i.e. download & unzip in the workspace)")

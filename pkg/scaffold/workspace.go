@@ -139,7 +139,7 @@ func updateGradleWrapper(base string, workspaceData *metadata.WorkspaceData) err
 func updateGradleSettings(base, version, edition string) error {
 	workspaceGradlePluginVersion := "10.1.9"
 
-	if version != "7.4" || edition == metadata.Portal {
+	if (version != "7.4" && !metadata.IsQuarterlyVersion(version)) || edition == metadata.Portal {
 		err := fileutil.UpdateWithData(filepath.Join(base, "settings.gradle"), struct {
 			WorkspaceGradlePluginVersion string
 		}{WorkspaceGradlePluginVersion: workspaceGradlePluginVersion})
