@@ -19,10 +19,16 @@ brew install --cask lfr-cli
 
 ## Windows
 
-For Windows, go to the [release page](https://github.com/lgdd/lfr-cli/releases){:target="_blank"} and download the zip file corresponding to your architecture. Then extract `lfr.exe` from the archive and move to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
+You can install it using [Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/){:target="_blank"}:
+
+```shell
+winget install lgdd.lfr-cli
+```
+
+Alternatively, go to the [release page](https://github.com/lgdd/lfr-cli/releases){:target="_blank"} and download the `.exe` file corresponding to your architecture, then move it to the folder of your choice. **Make sure that the chosen folder is included in the `%PATH%` environment variable.**
 
 {: .note }
-[Winget](https://learn.microsoft.com/en-us/windows/package-manager/winget/) support is pending approval. Once available, you will be able to install via `winget install lgdd.lfr-cli`.
+Prior to v3.3.1, the release page provided `.zip` archives instead of `.exe` files.
 
 # Completions
 
