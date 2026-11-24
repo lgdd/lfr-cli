@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.4.0](https://github.com/lgdd/lfr-cli/compare/v3.3.1...v3.4.0) (2026-03-07)
+
+
+### Features
+
+* **metadata:** add support for DXP quarterly and portal GA specific versions ([5f60cbd](https://github.com/lgdd/lfr-cli/commit/5f60cbd04cc00626985c28edf973ca14406147b8))
+
+
+### Bug Fixes
+
+* **shell:** use net.JoinHostPort for IPv6-safe address formatting ([b8f7f9e](https://github.com/lgdd/lfr-cli/commit/b8f7f9e092514f3f11b458f2d3f5b3a967082db2))
+
 ## [3.3.1](https://github.com/lgdd/lfr-cli/compare/v3.3.0...v3.3.1) (2026-02-27)
 
 
